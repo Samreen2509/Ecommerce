@@ -7,6 +7,7 @@ import { PORT } from './src/constants.js';
 // dotenv configuration
 dotenv.config();
 
+
 // database connection promise
 connectDB()
   .then(() => {
