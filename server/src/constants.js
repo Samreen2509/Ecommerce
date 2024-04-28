@@ -19,3 +19,11 @@ export const cookieOptions = {
   path: '/',
   maxAge: 864000000, // 10 days
 };
+
+// order status enum
+export const orderStatus = {
+  PENDING: 'PENDING',
+  CANCELLED: 'CANCELLED',
+  DELIVERED: 'DELIVERED',
+};
+export const orderStatusEnum = Object.values(OrderStatusEnum);
