@@ -24,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Test route
+// /api/v1/healthcheck
 app.get(`${BASEPATH}/healthcheck`, (req, res) => {
   try {
     return res.status(200).json(new ApiResponse(200, 'ok'));
