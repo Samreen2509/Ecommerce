@@ -10,6 +10,10 @@ import Bag from "./screens/Bag";
 import ErrorPage from "./components/ErrorPage";
 import CategoryPage from "./components/CategoryPage";
 import About from "./components/About";
+import PlaceOrderPage from "./screens/PlaceOrderPage";
+import OrderPage from "./screens/OrderPage";
+import PaymentPage from "./screens/PaymentPage";
+import ShippingPage from "./screens/ShippingPage";
 
 const Applayout = () => {
   return (
@@ -49,6 +53,22 @@ const appRouter = createBrowserRouter([
       {
         path: "/about",
         element: <About />,
+      },
+      {
+        path: "/orderpage",
+        element: <OrderPage />,
+      },
+      {
+        path: "/payment",
+        element: <PaymentPage />,
+      },
+      {
+        path: "/shipping",
+        element: <ShippingPage />,
+      },
+      {
+        path: "/placeorderpage",
+        element: <PlaceOrderPage />,
       },
     ],
     errorElement: <ErrorPage />,
