@@ -7,6 +7,9 @@ export const availableUserRolesEnum = Object.values(availableUserRoles);
 
 // URI base path
 export const BASEPATH = '/api/v1';
+export const CLIENT_BASEPATH = 'http://localhost:3000';
+export const RESET_PASS_PAGE = '/resetPassword';
+export const EMAIL_VERIFY_PAGE = '/emailVerify';
 
 // Local http PORT
 export const PORT = 5000;
@@ -26,4 +29,4 @@ export const orderStatus = {
   CANCELLED: 'CANCELLED',
   DELIVERED: 'DELIVERED',
 };
-export const orderStatusEnum = Object.values(OrderStatusEnum);
+export const orderStatusEnum = Object.values(orderStatus);

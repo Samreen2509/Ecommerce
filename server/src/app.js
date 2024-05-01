@@ -34,6 +34,8 @@ app.get(`${BASEPATH}/healthcheck`, (req, res) => {
   }
 });
 
+import authRouter from './routes/auth.routes.js';
+app.use(`${BASEPATH}/auth`, authRouter);
 // Error middleware
 app.use(errorHandler);
 
