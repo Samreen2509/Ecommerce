@@ -12,7 +12,7 @@ const Footer = () => {
   ];
 
   return (
-    <>
+    <footer>
       <div className="grid grid-cols-1 grid-rows-2 border-t-2 bg-gradient-to-b from-white to-blue-200 px-10 py-8 sm:h-[400px] sm:grid-cols-5 sm:grid-rows-1 sm:px-20 ">
         <div className="col-span-2 flex flex-col items-start justify-start">
           <div className="flex items-center space-x-1 text-[#B91708]">
@@ -92,9 +92,9 @@ const Footer = () => {
         </div>
       </div>
       <div className="flex h-9 w-full items-center justify-center bg-blue-500 text-white">
-        <h2 cla>Copyright 2021 Hublet By Qodex</h2>
+        <h2>&copy; Copyright 2024 | Collaboration Project</h2>
       </div>
-    </>
+    </footer>
   );
 };
 
