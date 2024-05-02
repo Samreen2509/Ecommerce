@@ -1,6 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
-import { availableUserRoles, availableUserRolesEnum } from '../constants';
-import Cart from './cart.model';
+import { availableUserRoles, availableUserRolesEnum } from '../constants.js';
+import Cart from './cart.model.js';
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 
 const userSchema = new Schema(
   {
@@ -70,18 +73,18 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.post('save', async function (user, next) {
-  const cart = await Cart.findOne({ owner: user._id });
-
-  // Setup necessary ecommerce models for the user
-
-  if (!cart) {
-    await Cart.create({
-      owner: user._id,
-      items: [],
-    });
-  }
-});
+// userSchema.post('save', async function (user, next) {
+//   const cart = await Cart.findOne({ owner: user._id });
+//
+//   // Setup necessary ecommerce models for the user
+//
+//   if (!cart) {
+//     await Cart.create({
+//       owner: user._id,
+//       items: [],
+//     });
+//   }
+// });
 
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
@@ -121,7 +124,7 @@ userSchema.methods.generateTemporaryToken = function () {
     .update(unHashedToken)
     .digest('hex');
   // This is the expiry time for the token (20 minutes)
-  const tokenExpiry = Date.now() + USER_TEMPORARY_TOKEN_EXPIRY;
+  const tokenExpiry = Date.now() + process.env.USER_TEMPORARY_TOKEN_EXPIRY;
 
   return { unHashedToken, hashedToken, tokenExpiry };
 };
