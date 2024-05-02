@@ -24,7 +24,7 @@ export const createProduct = asyncHandler(async (req, res, next) => {
 
 export const updateProduct = asyncHandler(async(req, res, next) => {
     const {id} = req.params
-    const {name, description, size, price, category, stock, mainImage, otherImage, color} = req.body
+    const {name, description, size, price, category, stock, mainImage, otherImages, color} = req.body
 
     const product = await Product.findById(id)
 
@@ -53,8 +53,8 @@ export const updateProduct = asyncHandler(async(req, res, next) => {
     if(mainImage){
         product.mainImage = mainImage
     }
-    if(otherImage){
-        product.otherImage = otherImage
+    if(otherImages){
+        product.otherImages = otherImages
     }
     if(color){
         product.color = color
@@ -81,7 +81,5 @@ export const removeProduct = asyncHandler(async(req, res, next) => {
 
 })
 
-export const addProduct = asyncHandler(async(req, res, next) => {
 
-})
 

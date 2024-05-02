@@ -29,6 +29,7 @@ app.use(cookieParser());
 app.use(`${BASEPATH}/product`, productRoutes)
 
 // Test route
+// /api/v1/healthcheck
 app.get(`${BASEPATH}/healthcheck`, (req, res) => {
   try {
     return res.status(200).json(new ApiResponse(200, 'ok'));
