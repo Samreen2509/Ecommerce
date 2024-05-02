@@ -1,48 +1,51 @@
-import { model, Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
-const productSchema = new Schema({
+const productSchema = new Schema(
+  {
     name: {
-        type: String,
-        required: [true, 'Title is required'],
-        minLength: [3, 'Tittle must be atleast 8 charecters'],
-        maxLength: [59, 'Tittle shuld be less than 60 charecter']
+      type: String,
+      required: true,
     },
     description: {
-        type: String,
-        required: [true, 'Description is required'],
-        minLength: [5, 'Description must be atleast 8 charecters'],
-        maxLength: [199, 'Description shuld be less than 200 charecter']
-    },
-    size: {
-        type: String,
-        required: [true, 'Product size is requird']
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    category: {
-        type: String,
-        required: [true, 'Category is required']
-    },
-    stock: {
-        type: String
+      type: String,
+      required: true,
     },
     mainImage: {
-        type: String,
-        required: [true, 'Main Image is required']
+      required: true,
+      type: {
+        url: String,
+        localPath: String,
+      },
     },
-    otherImage: {
-        type: []
+    price: {
+      type: Number,
+      default: 0,
+    },
+    stock: {
+      type: Number,
+      default: 0,
+    },
+    otherImages: {
+      type: [
+        {
+          url: String,
+          localPath: String,
+        },
+      ],
+      default: [],
+    },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: 'categories',
+      required: true,
     },
     color: {
-        type: String
-    }
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
-}, {
-    timestamps: true
-})
-
-const Product = model('Product', productSchema)
-
-export default Product
+const Product = mongoose.model('products', productSchema);
+export default Product;
