@@ -10,7 +10,11 @@ import Bag from "./screens/Bag";
 import ErrorPage from "./components/ErrorPage";
 import CategoryPage from "./components/CategoryPage";
 import About from "./components/About";
-
+import Login from "./screens/Login";
+import RegistrationPage from "./screens/RegistratonPage";
+import PlaceOrderPage from "./screens/PlaceOrderPage";
+import Products from "./screens/Products";
+import SingleProduct from "./screens/SingleProduct";
 const Applayout = () =>{
     return(
         <div className="app">
@@ -35,6 +39,14 @@ const appRouter = createBrowserRouter([
             element : <Profile/>,
          },
          {
+          path : "/register",
+          element : <RegistrationPage/>,
+       },
+         {
+          path : "/login",
+          element : <Login/>,
+        },
+         {
             path : "/wishlist",
             element : <Wishlist/>,
          },
@@ -50,6 +62,18 @@ const appRouter = createBrowserRouter([
             path : "/about",
             element : <About/>,
          },
+         {
+          path : "/products",
+          element : <Products/>,
+         },
+         {
+          path : "/singleProduct",
+          element : <SingleProduct/>,
+         },
+         {
+          path : "/placeOrder",
+          element : <PlaceOrderPage/>,
+       },
        ],
        errorElement : <ErrorPage/>,
     },

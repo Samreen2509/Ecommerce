@@ -1,7 +1,7 @@
 import Shimmer from "./Shimmer";
   import { useState,useEffect } from "react";
   import { Link } from "react-router-dom";
-  import Carousell from "./Carousell";
+  import Carousel from "./Carousel";
   import Cards from "./Cards";
   import { useParams } from "react-router-dom";
    const Body = () => {
@@ -18,7 +18,7 @@ import Shimmer from "./Shimmer";
      },[]);
      return storeSection.length === 0?<Shimmer/>:(
       <div className="body">
-         <div className=""><Carousell/></div>
+         <div className=""><Carousel/></div>
          <div className="min-h-min">
            <div className="font-bold text-5xl mx-48"> <h1>Shop by category</h1></div>
            <div className="flex flex-wrap justify-center">
