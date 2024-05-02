@@ -41,5 +41,3 @@ import Shimmer from "./Shimmer";
   }
   export default Body;
 
-
-export default Body;
