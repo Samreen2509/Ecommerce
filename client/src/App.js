@@ -1,19 +1,19 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import Header from "./components/Header";
-import Body from "./components/Body";
-import Footer from "./components/Footer";
-import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom";
-import Profile from "./screens/Profile";
-import Wishlist from "./screens/Wishlist";
-import Bag from "./screens/Bag";
-import ErrorPage from "./components/ErrorPage";
-import CategoryPage from "./components/CategoryPage";
-import About from "./components/About";
-import PlaceOrderPage from "./screens/PlaceOrderPage";
-import OrderPage from "./screens/OrderPage";
-import PaymentPage from "./screens/PaymentPage";
-import ShippingPage from "./screens/ShippingPage";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import Header from './components/Header';
+import Body from './components/Body';
+import Footer from './components/Footer';
+import { RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
+import Profile from './screens/Profile';
+import Wishlist from './screens/Wishlist';
+import Bag from './screens/Bag';
+import ErrorPage from './components/ErrorPage';
+import CategoryPage from './components/CategoryPage';
+import About from './components/About';
+import PlaceOrderPage from './screens/PlaceOrderPage';
+import OrderPage from './screens/OrderPage';
+import PaymentPage from './screens/PaymentPage';
+import ShippingPage from './screens/ShippingPage';
 
 const Applayout = () => {
   return (
@@ -27,47 +27,47 @@ const Applayout = () => {
 
 const appRouter = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Applayout />,
     children: [
       {
-        path: "/",
+        path: '/',
         element: <Body />,
       },
       {
-        path: "/profile",
+        path: '/profile',
         element: <Profile />,
       },
       {
-        path: "/wishlist",
+        path: '/wishlist',
         element: <Wishlist />,
       },
       {
-        path: "/bag",
+        path: '/bag',
         element: <Bag />,
       },
       {
-        path: "/category/:id",
+        path: '/category/:id',
         element: <CategoryPage />,
       },
       {
-        path: "/about",
+        path: '/about',
         element: <About />,
       },
       {
-        path: "/orderpage",
+        path: '/orderpage',
         element: <OrderPage />,
       },
       {
-        path: "/payment",
+        path: '/payment',
         element: <PaymentPage />,
       },
       {
-        path: "/shipping",
+        path: '/shipping',
         element: <ShippingPage />,
       },
       {
-        path: "/placeorderpage",
+        path: '/placeorderpage',
         element: <PlaceOrderPage />,
       },
     ],
@@ -75,5 +75,5 @@ const appRouter = createBrowserRouter([
   },
 ]);
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<RouterProvider router={appRouter} />);

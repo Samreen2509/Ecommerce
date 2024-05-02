@@ -1,14 +1,21 @@
-import img from "../../images/favicon.png";
+import img from '../../images/favicon.png';
 
 const Footer = () => {
-  const firstCol = ["About us", "Contact", "Agency", "Contact", "Agency"];
+  const firstCol = [
+    'About Us',
+    'Our Blog',
+    'Careers',
+    'Store Locations',
+    'Testimonial',
+    'Sitemap',
+  ];
   const secondCol = [
-    "Animated videos",
-    "Website design",
-    "Illustration",
-    "Social Media",
-    "Brochure",
-    "Logo",
+    'Help Center',
+    'Shipping Info',
+    'Returns',
+    'How To Order',
+    'How To Track',
+    'Size Guide',
   ];
 
   return (
@@ -20,7 +27,7 @@ const Footer = () => {
             <img src={img} className="h-24 object-cover" />
           </div>
           <p className="mt-2 text-xl">
-            Reach us Monday {"-"}
+            Reach us Monday {'-'}
             Friday from 9 am to 6 pm
           </p>
           <p className="text-sm">+1 001 234 5678</p>
@@ -52,7 +59,7 @@ const Footer = () => {
               <a
                 key={index}
                 className="transition duration-150 hover:font-bold hover:text-blue-500"
-                href={"#"}
+                href={'#'}
               >
                 {item}
               </a>
@@ -61,13 +68,13 @@ const Footer = () => {
         </div>
 
         <div className="">
-          <h2 className="font-bold">Services</h2>
+          <h2 className="font-bold">Help</h2>
           <div className="mt-4 flex flex-col gap-y-3 sm:mt-12">
             {secondCol.map((service, index) => (
               <a
                 className="transition duration-150 hover:font-bold hover:text-blue-500"
                 key={index}
-                href={"#"}
+                href={'#'}
               >
                 {service}
               </a>
