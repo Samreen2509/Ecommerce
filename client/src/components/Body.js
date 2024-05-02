@@ -1,3 +1,12 @@
+import Corousel from './Carousel';
+
+const Body = () => {
+  return (
+    <div className="min-h-full w-full">
+      <Corousel />
+    </div>
+  );
+};
 import Shimmer from "./Shimmer";
   import { useState,useEffect } from "react";
   import { Link } from "react-router-dom";
@@ -33,3 +42,4 @@ import Shimmer from "./Shimmer";
   export default Body;
 
 
+export default Body;
