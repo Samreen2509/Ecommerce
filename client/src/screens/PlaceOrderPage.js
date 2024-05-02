@@ -2,7 +2,7 @@ import React from "react";
 
 function PlaceOrderPage() {
   return (
-    <div className="grid h-full w-full bg-slate-100 px-2 md:grid-cols-2 md:px-10">
+    <div className="relative bottom-0 grid h-full w-full bg-slate-100 px-2 md:grid-cols-2 md:px-10">
       <div className="flex flex-col gap-y-8 p-4">
         <h2 className="text-xl font-semibold">Delivery</h2>
         <div className="space-y-2">
