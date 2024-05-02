@@ -14,7 +14,12 @@ const productSchema = new Schema(
       required: true,
       type: {
         url: String,
-        localPath: String,
+        public_id: String,
+        url: String,
+        secure_url: String,
+        width: Number,
+        height: Number,
+        format: String,
       },
     },
     price: {
@@ -29,7 +34,12 @@ const productSchema = new Schema(
       type: [
         {
           url: String,
-          localPath: String,
+          public_id: String,
+          url: String,
+          secure_url: String,
+          width: Number,
+          height: Number,
+          format: String,
         },
       ],
       default: [],
