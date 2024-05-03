@@ -1,12 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Header from './components/Header';
 import Body from './components/Body';
 import Footer from './components/Footer';
 import { RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
 import Profile from './screens/Profile';
 import Wishlist from './screens/Wishlist';
-import Bag from './screens/Bag';
 import ErrorPage from './components/ErrorPage';
 import CategoryPage from './components/CategoryPage';
 import About from './components/About';
@@ -14,6 +12,8 @@ import PlaceOrderPage from './screens/PlaceOrderPage';
 import OrderPage from './screens/OrderPage';
 import PaymentPage from './screens/PaymentPage';
 import ShippingPage from './screens/ShippingPage';
+import Header from './components/Header/Header.js';
+import Bag from './screens/BAG/Bag.js';
 
 const Applayout = () => {
   return (

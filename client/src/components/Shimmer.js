@@ -1,23 +1,24 @@
-import "../assets/styles/shimmer.css";
+import '../assets/styles/shimmer.css';
+
 const Shimmer = () => {
-    return (
-      <div className="shimmer-container">
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-          <div className="shimmer-card"></div>
-      </div>
-    )
-  };
-  
-  export default Shimmer;
+  return (
+    <div className="shimmer-container">
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+      <div className="shimmer-card"></div>
+    </div>
+  );
+};
+
+export default Shimmer;
