@@ -18,14 +18,18 @@ import { v2 as cloudinary } from 'cloudinary';
 // import { config } from 'process';
 // config()
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-  api_key: process.env.CLOUDINARY_API_KEY,
-});
+const cloudConfig = () => {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    api_key: process.env.CLOUDINARY_API_KEY,
+  });
+};
 
 export const uploadOnCloudinary = async (localFilePath, uploadOptions) => {
   try {
+    cloudConfig();
+
     if (!localFilePath) {
       console.log('Local file path is missing');
       return null;
@@ -37,7 +41,7 @@ export const uploadOnCloudinary = async (localFilePath, uploadOptions) => {
     return res;
   } catch (error) {
     fs.rm(localFilePath);
-    return null;
+    return error;
   }
 };
 
@@ -48,6 +52,7 @@ export const uploadOnCloudinary = async (localFilePath, uploadOptions) => {
 export const deleteFromCloudinary = async (public_id) => {
   return new Promise(async (resolve, reject) => {
     try {
+      cloudConfig();
       const result = await cloudinary.uploader.destroy(public_id);
       resolve(result);
     } catch (error) {

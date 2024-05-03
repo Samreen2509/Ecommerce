@@ -15,7 +15,11 @@ const userSchema = new Schema(
     avatar: {
       type: {
         url: String,
-        localPath: String,
+        public_id: String,
+        secure_url: String,
+        width: Number,
+        height: Number,
+        format: String,
       },
     },
     username: {

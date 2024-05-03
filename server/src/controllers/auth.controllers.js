@@ -14,6 +14,10 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
+import {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} from '../utils/cloudinary.js';
 
 const ignoreFields =
   '-password -refreshToken -emailVerificationExpiry -emailVerificationToken -createdAt -updatedAt';
@@ -283,6 +287,45 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
     );
 });
 
+export const deleteUser = asyncHandler(async (req, res) => {
+  const user = await req.user;
+  const { whose } = await req?.body;
+
+  let deleteUser = user;
+  console.log(user);
+  console.log(whose);
+  if (user.role == availableUserRoles.ADMIN && whose) {
+    deleteUser = await findUser(whose?.username, whose?.email);
+  }
+
+  console.log(deleteUser);
+  if (whose && user.role === availableUserRoles.USER) {
+    deleteUser = false;
+  }
+
+  console.log(deleteUser);
+  if (!deleteUser) {
+    throw new ApiError(500, "you don't have access");
+  }
+
+  const deletedUser = await User.findByIdAndDelete(deleteUser?._id);
+  if (!deletedUser) {
+    throw new ApiError(500, 'something went worng');
+  }
+
+  if (deleteUser._id == user._id) {
+    return res
+      .status(200)
+      .clearCookie('accessToken', cookieOptions)
+      .clearCookie('refreshToken', cookieOptions)
+      .json(new ApiResponse(200, 'user deleted successfully'));
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, 'user deleted successfully'));
+});
+
 export const changeUserPass = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
@@ -503,4 +546,108 @@ export const emailVerify = asyncHandler(async (req, res) => {
   );
 
   return res.status(200).json(200, 'user verified successfully');
+});
+
+export const uploadAvatar = asyncHandler(async (req, res) => {
+  const uploadedFile = await req.file;
+  let jsonData;
+  if (req.body?.data) {
+    jsonData = JSON.parse(req.body?.data);
+  }
+  const user = await req.user;
+  let changeAvatarUser = user;
+
+  if (user.role == availableUserRoles.ADMIN && jsonData && jsonData?.whose) {
+    changeAvatarUser = await findUser(
+      jsonData.whose?.username,
+      jsonData.whose?.email
+    );
+  }
+
+  if (!uploadedFile) {
+    throw new ApiError(400, 'no file uploaded');
+  }
+
+  const uploadOptions = {
+    folder: 'avatar',
+    // gravity: 'faces',
+    width: 200,
+    height: 200,
+    crop: 'fit',
+  };
+
+  const img = await uploadOnCloudinary(uploadedFile.path, uploadOptions);
+  if (!img) {
+    throw new ApiError(500, `something went worng error`);
+  }
+
+  if (img.http_code === 400) {
+    throw new ApiError(500, `error uploading image: ${img?.message}`);
+  }
+
+  const avatarData = {
+    url: img.url,
+    public_id: img.public_id,
+    secure_url: img.secure_url,
+    width: img.width,
+    height: img.height,
+    format: img.format,
+  };
+
+  const updatedUser = await User.findByIdAndUpdate(
+    changeAvatarUser._id,
+    {
+      $set: {
+        avatar: avatarData,
+      },
+    },
+    { new: true }
+  ).select(ignoreFields);
+
+  if (!updatedUser) {
+    throw new ApiError(500, 'something went worng');
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { userInfo: updatedUser }, 'image uploaded'));
+});
+
+export const deleteAvatar = asyncHandler(async (req, res) => {
+  const user = await req.user;
+  const { whose } = await req?.body;
+
+  let deleteAvatarUser = user;
+  if (user.role == availableUserRoles.ADMIN && whose) {
+    deleteAvatarUser = await findUser(whose?.username, whose?.email);
+  }
+
+  const deleteAvatarOnCloud = await deleteFromCloudinary(
+    deleteAvatarUser.avatar?.public_id
+  );
+
+  if (!deleteAvatarOnCloud) {
+    throw new ApiError(500, `something went worng error`);
+  }
+
+  if (deleteAvatarOnCloud.http_code === 400) {
+    throw new ApiError(
+      500,
+      `error deleting image: ${deleteAvatarOnCloud?.message}`
+    );
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    deleteAvatarUser._id,
+    {
+      $unset: {
+        avatar: 1,
+      },
+    },
+    { new: true }
+  ).select(ignoreFields);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { userInfo: updatedUser }, 'image deleted'));
 });

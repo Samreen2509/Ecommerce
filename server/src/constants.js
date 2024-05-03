@@ -39,4 +39,4 @@ export const allowedImgExtensions = {
   webp: '.webp',
 };
 export const allowedImgExtensionsEnum = Object.values(allowedImgExtensions);
-export const orderStatusEnum = Object.values(orderStatus);
+// export const orderStatusEnum = Object.values(orderStatus);
