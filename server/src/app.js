@@ -8,6 +8,8 @@ import { BASEPATH } from './constants.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 import { ApiResponse } from './utils/ApiResponse.js';
 import { ApiError } from './utils/ApiError.js';
+import productRoutes from './routes/product.routes.js'
+
 
 // constants
 const app = express();
@@ -22,6 +24,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Product Routes 
+app.use(`${BASEPATH}/product`, productRoutes)
 
 // Test route
 // /api/v1/healthcheck
