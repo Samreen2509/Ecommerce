@@ -4,7 +4,7 @@
 
 import path from 'path';
 import multer from 'multer';
-import { allowedImgExtensionsEnum } from '../constants';
+import { allowedImgExtensionsEnum } from '../constants.js';
 
 export const upload = multer({
   dest: 'temp/',
