@@ -1,3 +1,7 @@
+/node_modules
+/dist
+.parcel-cachefdgtyuiop
+  
 /.vscode
 /node_modules
 ./dist

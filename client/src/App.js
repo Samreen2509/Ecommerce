@@ -39,6 +39,14 @@ const appRouter = createBrowserRouter([
         element: <Profile />,
       },
       {
+        path: '/register',
+        element: <RegistrationPage />,
+      },
+      {
+        path: '/login',
+        element: <Login />,
+      },
+      {
         path: '/wishlist',
         element: <Wishlist />,
       },
@@ -55,19 +63,15 @@ const appRouter = createBrowserRouter([
         element: <About />,
       },
       {
-        path: '/orderpage',
-        element: <OrderPage />,
+        path: '/products',
+        element: <Products />,
       },
       {
-        path: '/payment',
-        element: <PaymentPage />,
+        path: '/singleProduct',
+        element: <SingleProduct />,
       },
       {
-        path: '/shipping',
-        element: <ShippingPage />,
-      },
-      {
-        path: '/placeorderpage',
+        path: '/placeOrder',
         element: <PlaceOrderPage />,
       },
     ],
