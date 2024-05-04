@@ -11,7 +11,8 @@ const productSchema = new Schema(
       required: true,
     },
     size: {
-      default: []
+      type: Array,
+      default: [],
     },
     mainImage: {
       required: true,
