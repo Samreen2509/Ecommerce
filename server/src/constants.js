@@ -29,7 +29,6 @@ export const orderStatus = {
   CANCELLED: 'CANCELLED',
   DELIVERED: 'DELIVERED',
 };
-export const orderStatusEnum = Object.values(orderStatus);
 
 // allowed image extensions
 export const allowedImgExtensions = {
