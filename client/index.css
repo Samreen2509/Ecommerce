@@ -4,7 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-<<<<<<< HEAD
 * {
     font-family: "Jost", sans-serif;
 }
@@ -13,5 +12,15 @@ html,
 body {
     overflow-x: hidden;
 }
-=======
->>>>>>> upstream/client
+
+.account-wrapper {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+}
+
+.account-wrapper:hover .dropdown-menu {
+    display: block;
+}

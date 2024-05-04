@@ -16,12 +16,10 @@ const Bag = () => {
               </p>
 
               {/* Product */}
-              <BagProduct />
-              <BagProduct />
-              <BagProduct />
-              <BagProduct />
-              <BagProduct />
-              <BagProduct />
+              <BagProduct cart={true} />
+              <BagProduct cart={true} />
+              <BagProduct cart={true} />
+              <BagProduct cart={true} />
             </div>
           </div>
         </div>
@@ -55,7 +53,7 @@ const Bag = () => {
               </p>
             </div>
             <Link
-              to="/placeorderpage"
+              to="/placeOrder"
               className="flex w-full items-center justify-between"
             >
               <button className="w-full bg-orange-400 px-5 py-2 text-xl font-semibold text-white hover:bg-green-500">

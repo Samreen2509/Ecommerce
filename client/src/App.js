@@ -9,11 +9,15 @@ import ErrorPage from './components/ErrorPage';
 import CategoryPage from './components/CategoryPage';
 import About from './components/About';
 import PlaceOrderPage from './screens/PlaceOrderPage';
-import OrderPage from './screens/OrderPage';
-import PaymentPage from './screens/PaymentPage';
-import ShippingPage from './screens/ShippingPage';
 import Header from './components/Header/Header.js';
 import Bag from './screens/BAG/Bag.js';
+import RegistrationPage from './screens/RegistratonPage.js';
+import Login from './screens/Login.js';
+import Products from './screens/Products';
+import SingleProduct from './screens/SingleProduct.js';
+import OrderPage from './screens/OrderPage.js';
+// import SearchPage from './components/Header/SearchPage.js';
+import SearchProduct from './screens/SearchProduct.js';
 
 const Applayout = () => {
   return (
@@ -55,6 +59,10 @@ const appRouter = createBrowserRouter([
         element: <Bag />,
       },
       {
+        path: '/search/:query',
+        element: <SearchProduct />,
+      },
+      {
         path: '/category/:id',
         element: <CategoryPage />,
       },
@@ -69,6 +77,10 @@ const appRouter = createBrowserRouter([
       {
         path: '/singleProduct',
         element: <SingleProduct />,
+      },
+      {
+        path: '/myorders',
+        element: <OrderPage />,
       },
       {
         path: '/placeOrder',

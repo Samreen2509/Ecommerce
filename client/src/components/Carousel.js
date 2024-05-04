@@ -15,9 +15,9 @@ const Carousel = () => {
 
   const len = slides.length;
 
-  const leftHandle = () => {
-    setCur(cur - 1 < 0 ? len - 1 : cur - 1);
-  };
+  // const leftHandle = () => {
+  //   setCur(cur - 1 < 0 ? len - 1 : cur - 1);
+  // };
 
   const rightHandle = useCallback(() => {
     setCur(cur + 1 > len - 1 ? 0 : cur + 1);
@@ -30,10 +30,9 @@ const Carousel = () => {
     return () => clearTimeout(interval);
   }, [rightHandle]);
 
-  const handleMouseEnter = (index) => {
-    console.log(index);
-    setCur(index);
-  };
+  // const handleMouseEnter = (index) => {
+  //   setCur(index);
+  // };
 
   return (
     <div className="relative min-h-full w-full">
@@ -42,7 +41,7 @@ const Carousel = () => {
           <div
             key={index}
             className="w-full"
-            onMouseEnter={() => handleMouseEnter(index)}
+            // onMouseEnter={() => handleMouseEnter(index)}
           >
             {cur === index && (
               <div className="flex h-full w-full select-none items-center justify-center bg-orange-400 transition-all duration-300">
