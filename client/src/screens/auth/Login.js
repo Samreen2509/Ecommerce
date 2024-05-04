@@ -1,5 +1,5 @@
 import React from 'react';
-import png from '../../images/favicon.png';
+import png from '../../../images/favicon.png';
 import { Link } from 'react-router-dom';
 
 const Login = () => {

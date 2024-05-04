@@ -1,9 +1,10 @@
-import Shimmer from './Shimmer';
+import Shimmer from '../Loading/Shimmer.js';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
-import Cards from './Cards';
+import Cards from '../../screens/product/ProductCards.js';
 import { useParams } from 'react-router-dom';
+
 const Body = () => {
   const { id } = useParams();
   const [storeSection, setStoreSection] = useState([]);

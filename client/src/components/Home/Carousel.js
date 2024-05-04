@@ -1,9 +1,8 @@
-'use client';
 import { useCallback, useEffect, useState } from 'react';
 import { FaCircle } from 'react-icons/fa';
-import img1 from '../../images/banner-home1-1-min_2048x.webp';
-import img2 from '../../images/banner-home1-2-min-min_2048x.webp';
-import img3 from '../../images/s-1-3_2048x.webp';
+import img1 from '../../../images/banner-home1-1-min_2048x.webp';
+import img2 from '../../../images/banner-home1-2-min-min_2048x.webp';
+import img3 from '../../../images/s-1-3_2048x.webp';
 
 const Carousel = () => {
   const slides = [
