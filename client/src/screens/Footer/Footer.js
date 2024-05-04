@@ -1,4 +1,4 @@
-import img from '../../images/favicon.png';
+import img from '../../../images/favicon.png';
 
 const Footer = () => {
   const firstCol = [

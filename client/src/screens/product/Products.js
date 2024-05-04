@@ -1,7 +1,7 @@
-import Shimmer from '../components/Shimmer';
+import Shimmer from '../../components/Loading/Shimmer.js';
 import { Link } from 'react-router-dom';
-import CategoryCard from '../components/CategoryCard';
-import useProduct from '../utils/useProduct';
+import CategoryCard from '../../components/Home/CategoryCard.js';
+import useProduct from '../../utils/useProduct.js';
 import { useParams } from 'react-router-dom';
 
 const Products = () => {

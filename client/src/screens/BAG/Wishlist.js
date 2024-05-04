@@ -1,4 +1,4 @@
-import BagProduct from './BAG/BagProduct';
+import BagProduct from './BagProduct.js';
 
 const Wishlist = () => {
   return (

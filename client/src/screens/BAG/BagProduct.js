@@ -47,7 +47,9 @@ function BagProduct({ cart }) {
             <p className="text-base leading-6 xl:text-lg ">
               ₹36.00 <span className="text-red-300 line-through"> ₹45.00</span>
             </p>
-            <p className="text-base leading-6 text-gray-800 xl:text-lg ">01</p>
+            <p className="text-base leading-6 text-gray-800 xl:text-lg ">
+              {Qunatity}
+            </p>
             <p className="text-base font-semibold leading-6 text-gray-800 xl:text-lg ">
               ₹39.00
             </p>

@@ -4,11 +4,11 @@ const ShippingPage = () => {
       <div class="flex h-screen flex-col items-center ">
         <div class="max-h-auto mx-auto max-w-xl bg-green-600">
           <div class="text-center">
-            {" "}
-            No account?{" "}
+            {' '}
+            No account?{' '}
             <a class="text-blue-500" href="/signup">
               Create one
-            </a>{" "}
+            </a>{' '}
           </div>
         </div>
       </div>

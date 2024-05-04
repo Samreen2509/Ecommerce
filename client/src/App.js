@@ -1,23 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Body from './components/Body';
-import Footer from './components/Footer';
 import { RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
-import Profile from './screens/Profile';
-import Wishlist from './screens/Wishlist';
-import ErrorPage from './components/ErrorPage';
-import CategoryPage from './components/CategoryPage';
-import About from './components/About';
-import PlaceOrderPage from './screens/PlaceOrderPage';
+import ErrorPage from './components/Error/ErrorPage';
 import Header from './components/Header/Header.js';
+import Footer from './screens/Footer/Footer.js';
+import Body from './components/Home/Body.js';
+import Profile from './screens/User/Profile.js';
+import RegistrationPage from './screens/auth/RegistratonPage.js';
+import Login from './screens/auth/Login.js';
+import Wishlist from './screens/BAG/Wishlist.js';
 import Bag from './screens/BAG/Bag.js';
-import RegistrationPage from './screens/RegistratonPage.js';
-import Login from './screens/Login.js';
-import Products from './screens/Products';
-import SingleProduct from './screens/SingleProduct.js';
-import OrderPage from './screens/OrderPage.js';
-// import SearchPage from './components/Header/SearchPage.js';
-import SearchProduct from './screens/SearchProduct.js';
+import SearchProduct from './screens/product/SearchProduct.js';
+import ProductDetailsPage from './screens/product/ProductDetailsPage.js';
+import About from './screens/Footer/About.js';
+import Products from './screens/product/Products.js';
+import SingleProduct from './screens/product/SingleProduct.js';
+import ErrorPage from './components/Error/ErrorPage';
+import Myorders from './screens/User/MyOrderPage.js';
+import PlaceOrderPage from './screens/order/PlaceOrderPage.js';
 
 const Applayout = () => {
   return (
@@ -64,7 +64,7 @@ const appRouter = createBrowserRouter([
       },
       {
         path: '/category/:id',
-        element: <CategoryPage />,
+        element: <ProductDetailsPage />,
       },
       {
         path: '/about',
@@ -80,7 +80,7 @@ const appRouter = createBrowserRouter([
       },
       {
         path: '/myorders',
-        element: <OrderPage />,
+        element: <Myorders />,
       },
       {
         path: '/placeOrder',
