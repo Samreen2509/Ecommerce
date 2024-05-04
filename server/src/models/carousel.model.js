@@ -8,14 +8,13 @@ const carouselSchema = new Schema(
       type: {
         url: String,
         public_id: String,
-        url: String,
         secure_url: String,
         width: Number,
         height: Number,
         format: String,
       },
+      required: true,
     },
-    required: true,
   },
   { timestamps: true }
 );
