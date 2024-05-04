@@ -20,7 +20,7 @@ const Footer = () => {
 
   return (
     <footer>
-      <div className="grid grid-cols-1 grid-rows-2 border-t-2 bg-gradient-to-b from-white to-blue-200 px-10 py-8 sm:h-[400px] sm:grid-cols-5 sm:grid-rows-1 sm:px-20 ">
+      <div className="grid h-full grid-cols-1 grid-rows-2 border-t-2 bg-gradient-to-b from-white to-blue-200 px-10 py-8 sm:h-[400px] sm:grid-cols-5 sm:grid-rows-1 sm:px-20 ">
         <div className="col-span-2 flex flex-col items-start justify-start">
           <div className="flex items-center space-x-1 text-[#B91708]">
             {/* <h2 className="text-2xl font-extrabold">LOGO</h2> */}

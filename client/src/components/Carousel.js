@@ -15,9 +15,9 @@ const Carousel = () => {
 
   const len = slides.length;
 
-  const leftHandle = () => {
-    setCur(cur - 1 < 0 ? len - 1 : cur - 1);
-  };
+  // const leftHandle = () => {
+  //   setCur(cur - 1 < 0 ? len - 1 : cur - 1);
+  // };
 
   const rightHandle = useCallback(() => {
     setCur(cur + 1 > len - 1 ? 0 : cur + 1);
@@ -26,14 +26,13 @@ const Carousel = () => {
   useEffect(() => {
     const interval = setTimeout(() => {
       rightHandle();
-    }, 3000);
+    }, 5000);
     return () => clearTimeout(interval);
   }, [rightHandle]);
 
-  const handleMouseEnter = (index) => {
-    console.log(index);
-    setCur(index);
-  };
+  // const handleMouseEnter = (index) => {
+  //   setCur(index);
+  // };
 
   return (
     <div className="relative min-h-full w-full">
@@ -42,16 +41,11 @@ const Carousel = () => {
           <div
             key={index}
             className="w-full"
-            onMouseEnter={() => handleMouseEnter(index)}
+            // onMouseEnter={() => handleMouseEnter(index)}
           >
             {cur === index && (
               <div className="flex h-full w-full select-none items-center justify-center bg-orange-400 transition-all duration-300">
-                <img
-                  src={slide.img}
-                  alt="img"
-                  className="object-cover"
-                  loading="true"
-                />
+                <img src={slide.img} alt="img" className="object-cover" />
                 <div className="absolute left-10 top-1/2 hidden -translate-y-1/2 flex-col items-start gap-y-2 text-white  lg:flex ">
                   <h2 className="text-3xl font-bold lg:text-xl">
                     {slide.Category}
