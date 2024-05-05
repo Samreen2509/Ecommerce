@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import png from '../../../images/favicon.png';
 import { Link } from 'react-router-dom';
 import GlobalApi from '../../utils/GlobalApi.js';
+import { useNavigate } from 'react-router-dom';
 
 const RegistrationPage = () => {
+  const navigate = useNavigate();
+  const [isError, setIsError] = useState(null);
   const [formData, setFormData] = useState({
     username: '',
     name: '',
@@ -20,17 +23,18 @@ const RegistrationPage = () => {
   };
 
   const handleSubmit = async () => {
+    console.log(formData);
     try {
-      const res = await GlobalApi.registerUser(
-        formData.name,
-        formData.username,
-        formData.email,
-        formData.password
-      );
+      const res = await GlobalApi.registerUser({
+        name: formData.name,
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
 
       console.log(res);
       console.log('Registration successful!');
-
+      navigate('/');
       setFormData({
         username: '',
         name: '',
@@ -38,23 +42,10 @@ const RegistrationPage = () => {
         password: '',
       });
     } catch (error) {
-      console.error('Registration failed:', error);
+      console.error('Registration failed:', error.message);
+      setIsError(error);
     }
   };
-
-  // const registerUser = async (name, username, email, password) => {
-  //   try {
-  //     await axios.post('https://ecom-dqrw.onrender.com/api/v1/auth/register', {
-  //       name: name,
-  //       username: username,
-  //       email: email,
-  //       password: password,
-  //     });
-  //   } catch (error) {
-  //     console.error('Registration failed:', error.response.data); // Log the error response data
-  //     throw new Error('Registration failed:', error);
-  //   }
-  // };
 
   return (
     <div className="my-4 flex w-full flex-wrap px-4">
@@ -65,6 +56,9 @@ const RegistrationPage = () => {
               <img src={png} alt="logo" />
             </Link>
           </div>
+          {isError && (
+            <p className="text-sm text-red-400">Please Fill Details Properly</p>
+          )}
           <InputBox
             type="text"
             name="username"
@@ -101,6 +95,12 @@ const RegistrationPage = () => {
             >
               Register
             </button>
+          </div>
+          <div>
+            Already Have Account?{' '}
+            <Link to={'/login'} className="text-red-400">
+              Login
+            </Link>
           </div>
         </div>
       </div>
