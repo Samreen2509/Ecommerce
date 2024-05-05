@@ -11,7 +11,6 @@ import {
 import { upload } from '../middlewares/multer.middleware.js';
 
 const router = Router();
-const router = Router();
 
 router.route('/').post(createProduct).get(getProduct);
 
