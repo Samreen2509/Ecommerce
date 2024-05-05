@@ -1,24 +1,35 @@
 import axios from 'axios';
 
 const axiosClient = axios.create({
-  baseURL: process.env.BASEURL,
+  baseURL: 'https://ecom-dqrw.onrender.com/api/v1/',
 });
+// console.log(process.env.BASEURL);
 
 const registerUser = async ({ name, username, email, password }) => {
-  try {
-    const response = await axiosClient.post('auth/register', {
-      name,
-      username,
+  const response = await axiosClient.post('auth/register', {
+    name,
+    username,
+    email,
+    password,
+  });
+  console.log(response);
+  return response;
+};
+
+const loginUser = async ({ email, password }) => {
+  console.log('true');
+  const response = await axiosClient.post(
+    'auth/login',
+    JSON.stringify({
       email,
       password,
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Registration failed:', error);
-    throw error;
-  }
+    })
+  );
+  console.log(response);
+  return response;
 };
 
 export default {
   registerUser,
+  loginUser,
 };
