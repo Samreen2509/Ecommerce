@@ -5,7 +5,6 @@ import {
   availableUserRoles,
 } from '../constants.js';
 
-import { connectDB } from '../db/connect.js';
 import User from '../models/user.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
@@ -58,7 +57,6 @@ export const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'missing required fields');
   }
 
-  await connectDB();
   const existingUser = await findUser(username, email);
 
   if (existingUser) {
@@ -102,9 +100,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     url: `${CLIENT_BASEPATH}${EMAIL_VERIFY_PAGE}?token=${token.unHashedToken}`,
     subject: 'Email Verification',
   };
-  const sendEmail = await SendEmail(emailData);
-
-  console.log(sendEmail);
+  await SendEmail(emailData);
 
   return res
     .status(200)
@@ -128,7 +124,6 @@ export const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'missing required fields');
   }
 
-  await connectDB();
   const user = await findUser(username, email);
 
   if (!user) {
@@ -141,8 +136,17 @@ export const loginUser = asyncHandler(async (req, res) => {
   }
 
   if (!user.isEmailVerified) {
-    const token = await generateToken(user);
+    const currentDate = new Date();
+    const tokenExpired = user?.emailVerificationExpiry < currentDate;
 
+    if (!tokenExpired) {
+      throw new ApiError(
+        310,
+        'your email has not been verified. A verification link already sent to your email address'
+      );
+    }
+
+    const token = await generateToken(user);
     const emailData = {
       email: user.email,
       template: 'ConfirmEmail',
@@ -150,8 +154,7 @@ export const loginUser = asyncHandler(async (req, res) => {
       subject: 'Email Verification',
     };
 
-    const sendEmail = await SendEmail(emailData);
-    console.log(sendEmail);
+    await SendEmail(emailData);
 
     await User.findByIdAndUpdate(
       user._id,
