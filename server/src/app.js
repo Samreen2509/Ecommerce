@@ -11,6 +11,7 @@ import { ApiError } from './utils/ApiError.js';
 import productRoutes from './routes/product.routes.js';
 import authRouters from './routes/auth.routes.js';
 import carouselRoutes from './routes/carousel.routes.js';
+import addressRoutes from './routes/address.routes.js';
 
 // constants
 const app = express();
@@ -26,9 +27,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Product Routes
-app.use(`${BASEPATH}/product`, productRoutes);
-
 // Test route
 // /api/v1/healthcheck
 app.get(`${BASEPATH}/healthcheck`, (req, res) => {
@@ -41,6 +39,10 @@ app.get(`${BASEPATH}/healthcheck`, (req, res) => {
 });
 
 app.use(`${BASEPATH}/auth`, authRouters);
+// Product Routes
+app.use(`${BASEPATH}/product`, productRoutes);
+// Address Routes
+app.use(`${BASEPATH}/address`, addressRoutes);
 app.use(`${BASEPATH}/carousel`, carouselRoutes);
 // Error middleware
 app.use(errorHandler);
