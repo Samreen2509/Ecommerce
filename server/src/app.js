@@ -8,8 +8,9 @@ import { BASEPATH } from './constants.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 import { ApiResponse } from './utils/ApiResponse.js';
 import { ApiError } from './utils/ApiError.js';
-import productRoutes from './routes/product.routes.js'
-
+import productRoutes from './routes/product.routes.js';
+import authRoutes from './routes/auth.routes.js';
+import cartRoutes from './routes/cart.routes.js';
 
 // constants
 const app = express();
@@ -25,8 +26,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Product Routes 
-app.use(`${BASEPATH}/product`, productRoutes)
+// Product Routes
+app.use(`${BASEPATH}/product`, productRoutes);
+app.use(`${BASEPATH}/auth`, authRoutes);
+app.use(`${BASEPATH}/cart`, cartRoutes);
 
 // Test route
 // /api/v1/healthcheck
