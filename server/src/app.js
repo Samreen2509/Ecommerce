@@ -12,6 +12,7 @@ import productRoutes from './routes/product.routes.js';
 import authRouters from './routes/auth.routes.js';
 import carouselRoutes from './routes/carousel.routes.js';
 import addressRoutes from './routes/address.routes.js';
+import categoryRoutes from './routes/category.routes.js';
 
 // constants
 const app = express();
@@ -43,6 +44,8 @@ app.use(`${BASEPATH}/auth`, authRouters);
 app.use(`${BASEPATH}/product`, productRoutes);
 // Address Routes
 app.use(`${BASEPATH}/address`, addressRoutes);
+// Category Routes
+app.use(`${BASEPATH}/category`, categoryRoutes);
 app.use(`${BASEPATH}/carousel`, carouselRoutes);
 // Error middleware
 app.use(errorHandler);
