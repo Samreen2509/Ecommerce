@@ -6,7 +6,6 @@ import {
   cookieOptions,
 } from '../constants.js';
 
-import { connectDB } from '../db/connect.js';
 import User from '../models/user.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
@@ -55,7 +54,6 @@ export const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'missing required fields');
   }
 
-  await connectDB();
   const existingUser = await findUser(username, email);
 
   if (existingUser) {
@@ -99,9 +97,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     url: `${CLIENT_BASEPATH}${EMAIL_VERIFY_PAGE}?token=${token.unHashedToken}`,
     subject: 'Email Verification',
   };
-  const sendEmail = await SendEmail(emailData);
-
-  console.log(sendEmail);
+  await SendEmail(emailData);
 
   return res
     .status(200)
@@ -125,7 +121,6 @@ export const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'missing required fields');
   }
 
-  await connectDB();
   const user = await findUser(username, email);
 
   if (!user) {
@@ -138,8 +133,17 @@ export const loginUser = asyncHandler(async (req, res) => {
   }
 
   if (!user.isEmailVerified) {
-    const token = await generateToken(user);
+    const currentDate = new Date();
+    const tokenExpired = user?.emailVerificationExpiry < currentDate;
 
+    if (!tokenExpired) {
+      throw new ApiError(
+        310,
+        'your email has not been verified. A verification link already sent to your email address'
+      );
+    }
+
+    const token = await generateToken(user);
     const emailData = {
       email: user.email,
       template: 'ConfirmEmail',
@@ -147,8 +151,7 @@ export const loginUser = asyncHandler(async (req, res) => {
       subject: 'Email Verification',
     };
 
-    const sendEmail = await SendEmail(emailData);
-    console.log(sendEmail);
+    await SendEmail(emailData);
 
     await User.findByIdAndUpdate(
       user._id,
@@ -277,31 +280,57 @@ export const refreshUserToken = asyncHandler(async (req, res) => {
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
+  const user = await req.user;
   return res
     .status(200)
     .json(
-      new ApiResponse(200, { userInfo: req.user }, 'user fetched successfully')
+      new ApiResponse(200, { userinfo: user }, 'user fetched successfully')
+    );
+});
+
+export const getUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const user = req.user;
+
+  if (id != user._id && user.role == availableUserRoles.ADMIN) {
+    const dataUser = await User.findById(id).select(ignoreFields);
+    if (!dataUser) {
+      throw new ApiError(404, 'user not found');
+    }
+
+    return res.status(200).json(new ApiResponse(200, { userInfo: dataUser }));
+  }
+
+  if (id != user._id && user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { userinfo: req.user }, 'user fetched successfully')
     );
 });
 
 export const deleteUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
   const user = await req.user;
-  const { whose } = await req?.body;
 
   let deleteUser = user;
-  console.log(user);
-  console.log(whose);
-  if (user.role == availableUserRoles.ADMIN && whose) {
-    deleteUser = await findUser(whose?.username, whose?.email);
+  if (id != user._id && user.role == availableUserRoles.ADMIN) {
+    const findUser = await User.findById(id);
+
+    if (!findUser) {
+      throw new ApiError(404, 'user not found');
+    }
+    deleteUser = findUser;
   }
 
-  console.log(deleteUser);
-  if (whose && user.role === availableUserRoles.USER) {
-    deleteUser = false;
+  if (id == user._id) {
+    deleteUser = user;
   }
 
-  console.log(deleteUser);
-  if (!deleteUser) {
+  if (id != user._id && user.role != availableUserRoles.USER) {
     throw new ApiError(500, "you don't have access");
   }
 
@@ -310,64 +339,37 @@ export const deleteUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, 'something went worng');
   }
 
-  if (deleteUser._id == user._id) {
-    return res
-      .status(200)
-      .clearCookie('accessToken', cookieOptions)
-      .clearCookie('refreshToken', cookieOptions)
-      .json(new ApiResponse(200, 'user deleted successfully'));
-  }
-
   return res
     .status(200)
     .json(new ApiResponse(200, 'user deleted successfully'));
 });
 
-export const changeUserPass = asyncHandler(async (req, res) => {
-  const { oldPassword, newPassword } = req.body;
+export const updateUser = asyncHandler(async (req, res) => {
+  const { name, username, email, role, password, newPassword } = req.body;
+  const { id } = req.params;
+  const user = req.user;
 
-  const user = await User.findById(req.user?._id);
-  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
-
-  if (!isPasswordCorrect) {
-    throw new ApiError(400, 'invalid old password');
-  }
-
-  const updatedUser = await User.findByIdAndUpdate(
-    req.user?._id,
-    {
-      $set: {
-        password: await bcrypt.hash(newPassword, 10),
-      },
-    },
-    { new: true }
-  ).select('-password -refreshToken');
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { userInfo: updatedUser },
-        'password changed successfully'
-      )
-    );
-});
-
-export const updateAccountDetails = asyncHandler(async (req, res) => {
-  const { name, username, email, role, whose } = req.body;
-
-  let user;
-  let updaterUser = req?.user;
-  if (whose) {
-    const whoseUser = await findUser(username, email);
-    user = whoseUser;
-  } else {
-    user = req?.user;
-  }
-
-  if (!name && !username && !email) {
+  if (!name && !username && !email && !role && !newPassword) {
     throw new ApiError(404, 'no update data provided');
+  }
+
+  const findUser = await User.findById(id);
+  if (!findUser) {
+    throw new ApiError(404, 'user not found');
+  }
+  const updateUser = findUser;
+
+  if (id != user._id && user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
+  }
+
+  if (!password) {
+    throw new ApiError(404, 'please provid password');
+  }
+
+  const isPasswordCorrect = await findUser.isPasswordCorrect(password);
+  if (!isPasswordCorrect) {
+    throw new ApiError(401, 'worng password');
   }
 
   const updateData = {};
@@ -396,14 +398,18 @@ export const updateAccountDetails = asyncHandler(async (req, res) => {
     updateData.emailVerificationExpiry = token.expiry;
   }
 
-  if (role && updaterUser.role == availableUserRoles.ADMIN) {
+  if (role && user.role == availableUserRoles.ADMIN) {
     if (availableUserRoles.hasOwnProperty(role)) {
       updateData.role = availableUserRoles[role];
     }
   }
 
+  if (newPassword) {
+    updateData.password = await bcrypt.hash(newPassword, 10);
+  }
+
   const userInfo = await User.findByIdAndUpdate(
-    user._id,
+    updateUser._id,
     { $set: updateData },
     { new: true }
   ).select(ignoreFields);
@@ -549,18 +555,20 @@ export const emailVerify = asyncHandler(async (req, res) => {
 
 export const uploadAvatar = asyncHandler(async (req, res) => {
   const uploadedFile = await req.file;
-  let jsonData;
-  if (req.body?.data) {
-    jsonData = JSON.parse(req.body?.data);
-  }
+  const { id } = req.params;
   const user = await req.user;
   let changeAvatarUser = user;
 
-  if (user.role == availableUserRoles.ADMIN && jsonData && jsonData?.whose) {
-    changeAvatarUser = await findUser(
-      jsonData.whose?.username,
-      jsonData.whose?.email
-    );
+  if (id != user._id && user.role == availableUserRoles.ADMIN) {
+    const findUser = await User.findById(id);
+    if (!findUser) {
+      throw new ApiError(404, 'user not found');
+    }
+    changeAvatarUser = findUser;
+  }
+
+  if (id != user._id && user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
   }
 
   if (!uploadedFile) {
@@ -614,11 +622,20 @@ export const uploadAvatar = asyncHandler(async (req, res) => {
 
 export const deleteAvatar = asyncHandler(async (req, res) => {
   const user = await req.user;
-  const { whose } = await req?.body;
+  const { id } = await req.params;
 
   let deleteAvatarUser = user;
-  if (user.role == availableUserRoles.ADMIN && whose) {
-    deleteAvatarUser = await findUser(whose?.username, whose?.email);
+  if (id != user._id && user.role == availableUserRoles.ADMIN) {
+    const findUser = await User.findById(id);
+
+    if (!findUser) {
+      throw new ApiError(404, 'user not found');
+    }
+    deleteAvatarUser = findUser;
+  }
+
+  if (id != user._id && user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
   }
 
   const deleteAvatarOnCloud = await deleteFromCloudinary(

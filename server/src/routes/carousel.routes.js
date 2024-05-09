@@ -5,14 +5,14 @@ import {
   addCarousel,
   deleteCarousel,
   getCarousel,
-} from '../controllers/carousel.model.js';
+} from '../controllers/carousel.controllers.js';
 
 const router = Router();
 
 router
-  .route('/addCarousel')
+  .route('/')
+  .get(getCarousel)
   .post(verifyJWT, upload.single('image'), addCarousel);
-router.route('/getCarousel').post(getCarousel);
-router.route('/deleteCarousel').post(verifyJWT, deleteCarousel);
+router.route('/:id').delete(verifyJWT, deleteCarousel);
 
 export default router;
