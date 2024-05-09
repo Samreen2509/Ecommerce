@@ -3,6 +3,7 @@ import {
   EMAIL_VERIFY_PAGE,
   RESET_PASS_PAGE,
   availableUserRoles,
+  cookieOptions,
 } from '../constants.js';
 
 import { connectDB } from '../db/connect.js';
@@ -21,10 +22,6 @@ import {
 
 const ignoreFields =
   '-password -refreshToken -emailVerificationExpiry -emailVerificationToken -createdAt -updatedAt';
-const cookieOptions = {
-  httpOnly: true,
-  secure: true,
-};
 
 const findUser = async (username, email) => {
   try {
@@ -411,7 +408,9 @@ export const updateAccountDetails = asyncHandler(async (req, res) => {
     { new: true }
   ).select(ignoreFields);
 
-  const message = `details updated. ${email ? 'email verification link sent to your new email' : ''}`;
+  const message = `details updated. ${
+    email ? 'email verification link sent to your new email' : ''
+  }`;
   return res
     .status(200)
     .json(new ApiResponse(200, { userInfo: userInfo }, message));

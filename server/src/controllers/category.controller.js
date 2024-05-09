@@ -2,23 +2,43 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import Category from '../models/category.model.js';
+import { uploadOnCloudinary } from '../utils/cloudinary.js';
 
 export const createCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
 
-  if (!name) {
+  const img = req.file;
+
+  if (!name || !img) {
     throw new ApiError(400, 'All fields are required');
   }
 
-  const category = await Category.create({ name });
+  const uploadedImg = await uploadOnCloudinary(img.path, {
+    folder: 'category-images',
+  });
+
+  if (!uploadedImg) {
+    throw new ApiError(500, 'Error occured while uploading the image');
+  }
+  const category = await Category.create({
+    name,
+    image: {
+      url: uploadedImg.url,
+      public_id: uploadedImg.public_id,
+      secure_url: uploadedImg.secure_url,
+      width: uploadedImg.width,
+      height: uploadedImg.height,
+      format: uploadedImg.format,
+    },
+  });
 
   if (!category) {
-    throw new ApiError(500, 'Failed to create addresss, please try again');
+    throw new ApiError(500, 'Failed to create category, please try again');
   }
 
   return res
     .status(201)
-    .json(new ApiResponse(201, 'Address created successfully', category));
+    .json(new ApiResponse(201, category, 'Category created successfully'));
 });
 
 export const getAllCategory = asyncHandler(async (req, res) => {
@@ -30,7 +50,7 @@ export const getAllCategory = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, 'Category retrieved successfully', category));
+    .json(new ApiResponse(200, category, 'Category retrieved successfully'));
 });
 
 export const getOneCategory = asyncHandler(async (req, res) => {
@@ -39,12 +59,12 @@ export const getOneCategory = asyncHandler(async (req, res) => {
   const category = await Category.findById(categoryId);
 
   if (!category) {
-    throw new ApiError(`Category with id ${id} not found`, 404);
+    throw new ApiError(404, `Category with id ${id} not found`);
   }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, 'Category retrieved successfully', category));
+    .json(new ApiResponse(200, category, 'Category retrieved successfully'));
 });
 
 export const updateCategory = asyncHandler(async (req, res) => {
@@ -54,7 +74,7 @@ export const updateCategory = asyncHandler(async (req, res) => {
   const category = await Category.findById(categoryId);
 
   if (!category) {
-    throw new ApiError(`Category with id ${id} not found`, 404);
+    throw new ApiError(404, `Category with id ${id} not found`);
   }
 
   if (name) {
@@ -65,21 +85,21 @@ export const updateCategory = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, 'Category updated successfully', category));
+    .json(new ApiResponse(200, category, 'Category updated successfully'));
 });
 
-export const removeCategory = asyncHandler(async (req, res) => {
-  const { categoryId } = req.params;
+// export const removeCategory = asyncHandler(async (req, res) => {
+//   const { categoryId } = req.params;
 
-  const category = await Category.findById(categoryId);
+//   const category = await Category.findById(categoryId);
 
-  if (!category) {
-    throw new ApiError(`Category with id ${id} not found`, 404);
-  }
+//   if (!category) {
+//     throw new ApiError(404, `Category with id ${id} not found`);
+//   }
 
-  await Category.findByIdAndDelete(categoryId);
+//   await Category.findByIdAndDelete(categoryId);
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, 'Category deleted successfully'));
-});
+//   return res
+//     .status(200)
+//     .json(new ApiResponse(200, {}, 'Category deleted successfully'));
+// });
