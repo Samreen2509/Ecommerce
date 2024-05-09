@@ -5,35 +5,65 @@ import Product from '../models/product.model.js';
 import User from '../models/user.model.js';
 import { uploadOnCloudinary } from '../utils/cloudinary.js';
 
-export const createProduct = asyncHandler(async (req, res, next) => {
-  const { name, description, size, price, category, color } = req.body;
+export const createProduct = asyncHandler(async (req, res) => {
+  const { name, description, size, price, stock, category, color } = req.body;
+  const uploadedFile = req.file;
 
-  if (!name || !description || !size || !price || !category || !color) {
-    return next(new ApiError('All fields are required', 400));
+  if (
+    !name ||
+    !description ||
+    !size ||
+    !price ||
+    !category ||
+    !color ||
+    !uploadedFile
+  ) {
+    throw new ApiError(400, 'All fields including the');
   }
 
-  const product = await Product.create({
+  const uploadOptions = {
+    folder: 'mainImage',
+    width: 800,
+    height: 600,
+    crop: 'fit',
+  };
+
+  const img = await uploadOnCloudinary(uploadedFile.path, uploadOptions);
+
+  if (!img || img.http_code === 400) {
+    throw new ApiError(500, 'Error uploading image to Cloudinary');
+  }
+
+  const productData = {
     name,
     description,
     size,
     price,
+    stock,
     category,
-    stock: req.body.stock || 0, // Set stock to 0 if not provided
     color,
-  });
+    mainImage: {
+      url: img.url,
+      public_id: img.public_id,
+      secure_url: img.secure_url,
+      width: img.width,
+      height: img.height,
+      format: img.format,
+    },
+  };
+
+  const product = await Product.create(productData);
 
   if (!product) {
-    return next(
-      new ApiError('Failed to create product, please try again', 500)
-    );
+    throw new ApiError(500, 'Failed to create product');
   }
 
   return res
     .status(201)
-    .json(new ApiResponse(201, 'Product created successfully', product));
+    .json(new ApiResponse(201, product, 'Product created successfully'));
 });
 
-export const getProduct = asyncHandler(async (req, res, next) => {
+export const getProduct = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
@@ -42,41 +72,50 @@ export const getProduct = asyncHandler(async (req, res, next) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, 'Products retrieved successfully', products));
+    .json(new ApiResponse(200, products, 'Products retrieved successfully'));
 });
 
-export const getOneProduct = asyncHandler(async (req, res, next) => {
+export const getOneProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const product = await Product.findById(id);
 
   if (!product) {
-    return next(new ApiError(`Product with id ${id} not found`, 404));
+    throw new ApiError(404, `Product with id ${id} not found`);
   }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, 'Product retrieved successfully', product));
+    .json(new ApiResponse(200, product, 'Product retrieved successfully'));
 });
 
-export const updateProduct = asyncHandler(async (req, res, next) => {
+export const updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const {
-    name,
-    description,
-    size,
-    price,
-    category,
-    stock,
-    mainImage,
-    otherImages,
-    color,
-  } = req.body;
+  const uploadedFile = req.file;
+  const { name, description, size, price, category, stock, color } = req.body;
+
+  let imageData;
+  if (uploadedFile) {
+    const uploadOptions = {
+      folder: 'mainImage',
+      width: 800,
+      height: 600,
+      crop: 'fit',
+    };
+    const img = await uploadOnCloudinary(uploadedFile.path, uploadOptions);
+    imageData = {
+      url: img.url,
+      public_id: img.public_id,
+      secure_url: img.secure_url,
+      width: img.width,
+      height: img.height,
+      format: img.format,
+    };
+  }
 
   const product = await Product.findById(id);
-
   if (!product) {
-    return next(new ApiError('Product not found', 404));
+    throw new ApiError(404, 'Product not found');
   }
 
   if (name) {
@@ -97,11 +136,8 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
   if (stock) {
     product.stock = stock;
   }
-  if (mainImage) {
-    product.mainImage = mainImage;
-  }
-  if (otherImages) {
-    product.otherImages = otherImages;
+  if (imageData) {
+    product.mainImage = imageData;
   }
   if (color) {
     product.color = color;
@@ -114,12 +150,12 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, 'Product updated successfully', product));
 });
 
-export const removeProduct = asyncHandler(async (req, res, next) => {
+export const removeProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const product = await Product.findById(id);
 
   if (!product) {
-    return next(new ApiError('Product not found', 404));
+    throw new ApiError('Product not found', 404);
   }
 
   await Product.findByIdAndDelete(id);
@@ -129,74 +165,12 @@ export const removeProduct = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, 'Product deleted successfully'));
 });
 
-export const uploadMainImage = asyncHandler(async (req, res) => {
-  const uploadedFile = req.file;
-  const { productId } = req.params;
-  const { id } = req.params;
-
-  const proDuct = await Product.findById(productId);
-
-  const user = await User.findById(id);
-
-  if (!user || user.role !== availableUserRoles.ADMIN) {
-    throw new ApiError(403, 'Only admin users can upload product images');
-  }
-
-  if (!uploadedFile) {
-    throw new ApiError(400, 'No file uploaded');
-  }
-
-  const uploadOptions = {
-    folder: 'mainImage',
-    width: 800,
-    height: 600,
-    crop: 'fit',
-  };
-
-  const img = await uploadOnCloudinary(uploadedFile.path, uploadOptions);
-
-  if (!img) {
-    throw new ApiError(500, 'Something went wrong while uploading the image');
-  }
-
-  if (img.http_code === 400) {
-    throw new ApiError(500, `Error uploading image: ${img.message}`);
-  }
-
-  const imageData = {
-    url: img.url,
-    public_id: img.public_id,
-    secure_url: img.secure_url,
-    width: img.width,
-    height: img.height,
-    format: img.format,
-  };
-
-  if (imageData) {
-    proDuct.mainImage = imageData;
-  }
-
-  await proDuct.save();
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(200, 'Image uploaded successfully', { image: imageData })
-    );
-});
-
 export const uploadOtherImages = asyncHandler(async (req, res) => {
   const uploadedFiles = req.files;
   const { productId } = req.params;
-  const { id } = req.params;
   const imageDataArray = [];
 
   const product = await Product.findById(productId);
-  const user = await User.findById(id);
-
-  if (!user || user.role !== availableUserRoles.ADMIN) {
-    throw new ApiError(403, 'Only admin users can upload product images');
-  }
 
   if (!product) {
     throw new ApiError(404, 'Product not found');
@@ -239,9 +213,13 @@ export const uploadOtherImages = asyncHandler(async (req, res) => {
   product.otherImages.push(...imageDataArray);
   await product.save();
 
-  return res.status(200).json(
-    new ApiResponse(200, 'Images uploaded successfully', {
-      images: imageDataArray,
-    })
-  );
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { images: imageDataArray },
+        'Images uploaded successfully'
+      )
+    );
 });

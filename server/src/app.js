@@ -11,6 +11,9 @@ import { ApiError } from './utils/ApiError.js';
 import productRoutes from './routes/product.routes.js';
 import authRouters from './routes/auth.routes.js';
 import carouselRoutes from './routes/carousel.routes.js';
+import addressRoutes from './routes/address.routes.js';
+import categoryRoutes from './routes/category.routes.js';
+import colorRoutes from './routes/color.routes.js';
 
 // constants
 const app = express();
@@ -26,14 +29,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Product Routes
-app.use(`${BASEPATH}/product`, productRoutes);
-
 // Test route
 // /api/v1/healthcheck
 app.get(`${BASEPATH}/healthcheck`, (req, res) => {
   try {
-    return res.status(200).json(new ApiResponse(200, 'ok'));
+    return res.status(200).json(new ApiResponse(200, {}, 'ok'));
   } catch (error) {
     console.log(error);
     throw new ApiError(500, error.message);
@@ -41,7 +41,14 @@ app.get(`${BASEPATH}/healthcheck`, (req, res) => {
 });
 
 app.use(`${BASEPATH}/auth`, authRouters);
+// Product Routes
+app.use(`${BASEPATH}/product`, productRoutes);
+// Address Routes
+app.use(`${BASEPATH}/address`, addressRoutes);
+// Category Routes
+app.use(`${BASEPATH}/category`, categoryRoutes);
 app.use(`${BASEPATH}/carousel`, carouselRoutes);
+app.use(`${BASEPATH}/color`, colorRoutes);
 // Error middleware
 app.use(errorHandler);
 

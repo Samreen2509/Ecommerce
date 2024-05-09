@@ -3,7 +3,6 @@ import {
   createProduct,
   updateProduct,
   removeProduct,
-  uploadMainImage,
   uploadOtherImages,
   getProduct,
   getOneProduct,
@@ -12,17 +11,16 @@ import { upload } from '../middlewares/multer.middleware.js';
 
 const router = Router();
 
-router.route('/').post(createProduct).get(getProduct);
+router
+  .route('/')
+  .post(upload.single('mainImage'), createProduct)
+  .get(getProduct);
 
 router
   .route('/:id')
   .get(getOneProduct)
-  .put(updateProduct)
+  .put(upload.single('mainImage'), updateProduct)
   .delete(removeProduct);
-
-router
-  .route('/mainImage/:productId')
-  .post(upload.single('mainImage'), uploadMainImage);
 
 router
   .route('/otherImages/:productId')
