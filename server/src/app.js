@@ -13,6 +13,7 @@ import authRouters from './routes/auth.routes.js';
 import carouselRoutes from './routes/carousel.routes.js';
 import addressRoutes from './routes/address.routes.js';
 import categoryRoutes from './routes/category.routes.js';
+import colorRoutes from './routes/color.routes.js';
 
 // constants
 const app = express();
@@ -32,7 +33,7 @@ app.use(cookieParser());
 // /api/v1/healthcheck
 app.get(`${BASEPATH}/healthcheck`, (req, res) => {
   try {
-    return res.status(200).json(new ApiResponse(200, 'ok'));
+    return res.status(200).json(new ApiResponse(200, {}, 'ok'));
   } catch (error) {
     console.log(error);
     throw new ApiError(500, error.message);
@@ -47,6 +48,7 @@ app.use(`${BASEPATH}/address`, addressRoutes);
 // Category Routes
 app.use(`${BASEPATH}/category`, categoryRoutes);
 app.use(`${BASEPATH}/carousel`, carouselRoutes);
+app.use(`${BASEPATH}/color`, colorRoutes);
 // Error middleware
 app.use(errorHandler);
 

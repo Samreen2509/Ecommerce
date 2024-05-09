@@ -77,18 +77,18 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-// userSchema.post('save', async function (user, next) {
-//   const cart = await Cart.findOne({ owner: user._id });
-//
-//   // Setup necessary ecommerce models for the user
-//
-//   if (!cart) {
-//     await Cart.create({
-//       owner: user._id,
-//       items: [],
-//     });
-//   }
-// });
+userSchema.post('save', async function (user, next) {
+  const cart = await Cart.findOne({ owner: user._id });
+
+  // Setup necessary ecommerce models for the user
+
+  if (!cart) {
+    await Cart.create({
+      owner: user._id,
+      items: [],
+    });
+  }
+});
 
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);

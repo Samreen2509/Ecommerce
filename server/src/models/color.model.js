@@ -2,9 +2,12 @@ import mongoose, { Schema } from 'mongoose';
 
 const colorSchema = new Schema(
   {
-    value: {
+    name: {
       type: String,
       required: true,
+    },
+    hexCode: {
+      type: String,
     },
   },
   { timestamps: true }

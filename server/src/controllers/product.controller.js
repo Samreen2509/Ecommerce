@@ -18,7 +18,7 @@ export const createProduct = asyncHandler(async (req, res) => {
     !color ||
     !uploadedFile
   ) {
-    throw new ApiError('All fields including the', 400);
+    throw new ApiError(400, 'All fields including the');
   }
 
   const uploadOptions = {
@@ -31,7 +31,7 @@ export const createProduct = asyncHandler(async (req, res) => {
   const img = await uploadOnCloudinary(uploadedFile.path, uploadOptions);
 
   if (!img || img.http_code === 400) {
-    throw new ApiError('Error uploading image to Cloudinary', 500);
+    throw new ApiError(500, 'Error uploading image to Cloudinary');
   }
 
   const productData = {
@@ -60,7 +60,7 @@ export const createProduct = asyncHandler(async (req, res) => {
 
   return res
     .status(201)
-    .json(new ApiResponse(201, 'Product created successfully', product));
+    .json(new ApiResponse(201, product, 'Product created successfully'));
 });
 
 export const getProduct = asyncHandler(async (req, res) => {
@@ -72,7 +72,7 @@ export const getProduct = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, 'Products retrieved successfully', products));
+    .json(new ApiResponse(200, products, 'Products retrieved successfully'));
 });
 
 export const getOneProduct = asyncHandler(async (req, res) => {
@@ -81,12 +81,12 @@ export const getOneProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(id);
 
   if (!product) {
-    throw new ApiError(`Product with id ${id} not found`, 404);
+    throw new ApiError(404, `Product with id ${id} not found`);
   }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, 'Product retrieved successfully', product));
+    .json(new ApiResponse(200, product, 'Product retrieved successfully'));
 });
 
 export const updateProduct = asyncHandler(async (req, res) => {
@@ -115,7 +115,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
   const product = await Product.findById(id);
   if (!product) {
-    throw new ApiError('Product not found', 404);
+    throw new ApiError(404, 'Product not found');
   }
 
   if (name) {
@@ -168,15 +168,9 @@ export const removeProduct = asyncHandler(async (req, res) => {
 export const uploadOtherImages = asyncHandler(async (req, res) => {
   const uploadedFiles = req.files;
   const { productId } = req.params;
-  const { id } = req.params;
   const imageDataArray = [];
 
   const product = await Product.findById(productId);
-  const user = await User.findById(id);
-
-  // if (!user || user.role !== availableUserRoles.ADMIN) {
-  //   throw new ApiError(403, 'Only admin users can upload product images');
-  // }
 
   if (!product) {
     throw new ApiError(404, 'Product not found');
@@ -219,9 +213,13 @@ export const uploadOtherImages = asyncHandler(async (req, res) => {
   product.otherImages.push(...imageDataArray);
   await product.save();
 
-  return res.status(200).json(
-    new ApiResponse(200, 'Images uploaded successfully', {
-      images: imageDataArray,
-    })
-  );
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { images: imageDataArray },
+        'Images uploaded successfully'
+      )
+    );
 });
