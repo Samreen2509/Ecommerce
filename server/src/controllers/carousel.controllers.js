@@ -35,9 +35,8 @@ export const addCarousel = asyncHandler(async (req, res) => {
     throw new ApiError(500, `something went worng error`);
   }
 
-  console.log(uploadedImg);
   if (uploadedImg.http_code === 400) {
-    throw new ApiError(500, `error uploading image: ${img?.message}`);
+    throw new ApiError(500, `error uploading image: ${uploadedImg?.message}`);
   }
 
   const carouselImgData = {
@@ -50,7 +49,6 @@ export const addCarousel = asyncHandler(async (req, res) => {
   };
 
   const newCarousel = await Carousel.create({ img: carouselImgData });
-  console.log(newCarousel);
   if (!newCarousel) {
     throw new ApiError(500, 'something went worng');
   }
@@ -68,7 +66,7 @@ export const addCarousel = asyncHandler(async (req, res) => {
 
 export const deleteCarousel = asyncHandler(async (req, res) => {
   const user = await req.user;
-  const { id } = await req?.body;
+  const { id } = await req.params;
 
   if (!id) {
     throw new ApiError(404, 'missing required fields id');
