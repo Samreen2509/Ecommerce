@@ -2,7 +2,7 @@ import Shimmer from '../Loading/Shimmer.js';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
-import Cards from '../../screens/product/ProductCards.js';
+import CategoryCard from './CategoryCard.js';
 import { useParams } from 'react-router-dom';
 
 const Body = () => {
@@ -32,7 +32,7 @@ const Body = () => {
           {storeSection.map((s, i) => (
             <Link to={'/category/' + s.id} key={i} className="link">
               {' '}
-              <Cards key={s.id} sdata={s} />
+              <CategoryCard key={s.id} sdata={s} />
             </Link>
           ))}
         </div>
