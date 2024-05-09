@@ -8,7 +8,7 @@ import {
 
 const router = Router();
 
-router.route('/').post(fetchUserCart);
+router.route('/').get(fetchUserCart);
 
 router.route('/addorupdatetocart').put(addOrUpdateCart);
 

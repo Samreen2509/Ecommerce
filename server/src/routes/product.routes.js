@@ -10,7 +10,6 @@ import {
 import { upload } from '../middlewares/multer.middleware.js';
 
 const router = Router();
-const router = Router();
 
 router
   .route('/')
@@ -26,7 +25,5 @@ router
 router
   .route('/otherImages/:productId')
   .post(upload.array('otherImages', 4), uploadOtherImages);
-
-export default router;
 
 export default router;
