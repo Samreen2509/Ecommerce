@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const RegistrationPage = () => {
   const navigate = useNavigate();
   const [isError, setIsError] = useState(null);
+  const [isLoading, setisLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     name: '',
@@ -23,7 +24,8 @@ const RegistrationPage = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(formData);
+    setIsError(null);
+    setisLoading(true);
     try {
       const res = await GlobalApi.registerUser({
         name: formData.name,
@@ -32,7 +34,7 @@ const RegistrationPage = () => {
         password: formData.password,
       });
 
-      console.log(res);
+      localStorage.setItem('token', res.data.data.userInfo);
       console.log('Registration successful!');
       navigate('/');
       setFormData({
@@ -42,11 +44,13 @@ const RegistrationPage = () => {
         password: '',
       });
     } catch (error) {
-      console.error('Registration failed:', error.message);
-      setIsError(error);
+      console.error('Registration failed:', error);
+      setIsError(error.response.data.message);
+    } finally {
+      setisLoading(false);
     }
   };
-
+  console.log(isError === undefined);
   return (
     <div className="my-4 flex w-full flex-wrap px-4">
       <div className="w-full px-4 ">
@@ -56,9 +60,11 @@ const RegistrationPage = () => {
               <img src={png} alt="logo" />
             </Link>
           </div>
-          {isError && (
-            <p className="text-sm text-red-400">Please Fill Details Properly</p>
-          )}
+
+          <p className="text-sm text-red-400">
+            {isError === undefined ? 'Server Error' : isError}
+          </p>
+
           <InputBox
             type="text"
             name="username"
@@ -93,7 +99,7 @@ const RegistrationPage = () => {
               onClick={handleSubmit} // Handle click event directly
               className="w-full rounded-md  bg-slate-600 px-5 py-3 font-medium text-white transition hover:bg-opacity-90"
             >
-              Register
+              {isLoading ? 'Loading...' : 'Register'}
             </button>
           </div>
           <div>
