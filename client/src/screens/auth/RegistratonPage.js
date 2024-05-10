@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import png from '../../../images/favicon.png';
 import { Link } from 'react-router-dom';
 import GlobalApi from '../../utils/GlobalApi.js';
+import { useNavigate } from 'react-router-dom';
 
 const RegistrationPage = () => {
+  const navigate = useNavigate();
+  const [isError, setIsError] = useState(null);
+  const [isLoading, setisLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     name: '',
@@ -20,17 +24,19 @@ const RegistrationPage = () => {
   };
 
   const handleSubmit = async () => {
+    setIsError(null);
+    setisLoading(true);
     try {
-      const res = await GlobalApi.registerUser(
-        formData.name,
-        formData.username,
-        formData.email,
-        formData.password
-      );
+      const res = await GlobalApi.registerUser({
+        name: formData.name,
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
 
-      console.log(res);
+      localStorage.setItem('token', res.data.data.userInfo);
       console.log('Registration successful!');
-
+      navigate('/');
       setFormData({
         username: '',
         name: '',
@@ -39,23 +45,12 @@ const RegistrationPage = () => {
       });
     } catch (error) {
       console.error('Registration failed:', error);
+      setIsError(error.response.data.message);
+    } finally {
+      setisLoading(false);
     }
   };
-
-  // const registerUser = async (name, username, email, password) => {
-  //   try {
-  //     await axios.post('https://ecom-dqrw.onrender.com/api/v1/auth/register', {
-  //       name: name,
-  //       username: username,
-  //       email: email,
-  //       password: password,
-  //     });
-  //   } catch (error) {
-  //     console.error('Registration failed:', error.response.data); // Log the error response data
-  //     throw new Error('Registration failed:', error);
-  //   }
-  // };
-
+  console.log(isError === undefined);
   return (
     <div className="my-4 flex w-full flex-wrap px-4">
       <div className="w-full px-4 ">
@@ -65,6 +60,11 @@ const RegistrationPage = () => {
               <img src={png} alt="logo" />
             </Link>
           </div>
+
+          <p className="text-sm text-red-400">
+            {isError === undefined ? 'Server Error' : isError}
+          </p>
+
           <InputBox
             type="text"
             name="username"
@@ -99,8 +99,14 @@ const RegistrationPage = () => {
               onClick={handleSubmit} // Handle click event directly
               className="w-full rounded-md  bg-slate-600 px-5 py-3 font-medium text-white transition hover:bg-opacity-90"
             >
-              Register
+              {isLoading ? 'Loading...' : 'Register'}
             </button>
+          </div>
+          <div>
+            Already Have Account?{' '}
+            <Link to={'/login'} className="text-red-400">
+              Login
+            </Link>
           </div>
         </div>
       </div>
