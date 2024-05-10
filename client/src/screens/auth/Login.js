@@ -1,42 +1,59 @@
 import React, { useState } from 'react';
 import png from '../../../images/favicon.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import GlobalApi from '../../utils/GlobalApi';
-// import GlobalApi from '../../utils/GlobalApi';
 
 const Login = () => {
+  const [isError, setError] = useState(null);
+  const [isLoading, setLoading] = useState(false);
+  const [verifyEmailError, setverifyEmailError] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
+    e.preventDefault();
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
+
   const handleSubmit = async () => {
-    console.log(formData);
+    setError(null);
+    setLoading(true);
     try {
       const res = await GlobalApi.loginUser({
         email: formData.email,
         password: formData.password,
       });
 
-      console.log(res);
-      console.log('Registration successful!');
-      // navigate('/');
-      setFormData({
-        email: '',
-        password: '',
-      });
+      if (res.success === true) {
+        console.log('Login successful!');
+        setLoading(false);
+        navigate('/');
+        setFormData({
+          email: '',
+          password: '',
+        });
+      } else if (res.statusCode === 310) {
+        setVerify(true);
+      } else {
+        setError(res.response.data);
+      }
     } catch (error) {
-      console.error('Registration failed:', error.message);
-      // setIsError(error);
+      console.error('Login failed:', error.response);
+      setverifyEmailError(error.response.data.message);
+      setError(error.response);
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <div className="my-4 flex w-full flex-wrap px-4">
       <div className="w-full px-4">
@@ -46,7 +63,20 @@ const Login = () => {
               <img src={png} alt="logo" />
             </Link>
           </div>
-          <div>
+          {verifyEmailError ? (
+            <p className="text-start text-sm capitalize text-red-400">
+              {verifyEmailError}
+            </p>
+          ) : (
+            isError && (
+              <p className="text-xl text-red-400">
+                {isError.statusCode === 404
+                  ? isError.message
+                  : 'Please Fill Details Properly'}
+              </p>
+            )
+          )}
+          <div className="mt-2">
             <div className="mb-6">
               <InputBox
                 type="email"
@@ -72,7 +102,7 @@ const Login = () => {
                 onClick={handleSubmit}
                 className="w-full rounded-md  bg-slate-600 px-5 py-3 font-medium text-white transition hover:bg-opacity-90"
               >
-                Sign In
+                {isLoading ? 'Loading...' : 'Sign In'}
               </button>
             </div>
           </div>
@@ -102,6 +132,7 @@ const Login = () => {
     </div>
   );
 };
+
 // InputBox component remains the same
 const InputBox = ({ type, placeholder, name, value, onChange }) => {
   return (
