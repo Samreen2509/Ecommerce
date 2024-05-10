@@ -1,4 +1,3 @@
-'use client';
 import React, { useState } from 'react';
 import logo from '../../../images/favicon.png';
 import { Link } from 'react-router-dom';
@@ -31,7 +30,14 @@ function Header() {
     setOpenSearch(false);
   };
 
-  const navtext = ['Home', 'Collections', 'Products', 'Category', 'Blog'];
+  const navtext = [
+    { text: 'Home', link: '/' },
+    { text: 'Collections', link: '/collections' },
+    { text: 'Products', link: '/products' },
+    { text: 'Category', link: '/category' },
+    { text: 'Blog', link: '/blog' },
+  ];
+
   const cartItems = 0;
   const wishlistitems = 0;
 
@@ -56,7 +62,9 @@ function Header() {
                   key={index}
                   className="w-full text-center hover:bg-gray-300 hover:text-red-400"
                 >
-                  <Link key={index}>{item}</Link>
+                  <Link to={item.link} className="capitalize">
+                    {item.text}
+                  </Link>
                 </div>
               ))}
             </div>
@@ -65,7 +73,9 @@ function Header() {
         <div className="hidden justify-evenly gap-x-8 font-semibold lg:flex">
           {navtext.map((item, index) => (
             <div key={index} className="hover:text-red-400">
-              <Link key={index}>{item}</Link>
+              <Link to={item.link} className="capitalize">
+                {item.text}
+              </Link>
             </div>
           ))}
         </div>

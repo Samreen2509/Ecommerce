@@ -8,7 +8,7 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from '@heroicons/react/20/solid';
-import Products from '../screens/Products';
+import Products from '../product/Products';
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -66,7 +66,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function CategoryPage() {
+export default function ProductDetailsPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   return (

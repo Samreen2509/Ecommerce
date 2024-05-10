@@ -1,5 +1,5 @@
 import React from 'react';
-import CategoryPage from '../components/CategoryPage';
+import CategoryPage from '../../components/Home/CategoryCard';
 import { useParams } from 'react-router-dom';
 
 function SearchProduct() {
