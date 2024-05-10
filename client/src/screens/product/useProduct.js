@@ -4,7 +4,7 @@ const useProduct = (id) => {
     
     useEffect(()=>{
         const fetchData = async()=>{
-             const data= await fetch("https://api.escuelajs.co/api/v1/products");
+             const data= await fetch("https://fakestoreapi.com/products");
              const json=await data.json();
             setProductSection(json);
         }
