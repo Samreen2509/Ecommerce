@@ -2,7 +2,6 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { ApiError } from '../utils/ApiError.js';
 import Product from '../models/product.model.js';
-import User from '../models/user.model.js';
 import { uploadOnCloudinary } from '../utils/cloudinary.js';
 
 export const createProduct = asyncHandler(async (req, res) => {
@@ -18,7 +17,7 @@ export const createProduct = asyncHandler(async (req, res) => {
     !color ||
     !uploadedFile
   ) {
-    throw new ApiError(400, 'All fields including the');
+    throw new ApiError(400, 'All fields are required');
   }
 
   const uploadOptions = {
@@ -222,4 +221,47 @@ export const uploadOtherImages = asyncHandler(async (req, res) => {
         'Images uploaded successfully'
       )
     );
+});
+
+export const filterProducts = asyncHandler(async (req, res) => {
+  const { categoryId, colorId, size, sortBy } = req.query;
+  // the multiple sizes have to come in comma separated format like `S,M,L,XL...`
+  // the sortBy should be either `high_to_low` or `low_to_high`
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const query = {};
+  if (categoryId) {
+    query.category = categoryId;
+  }
+  if (colorId) {
+    query.color = colorId;
+  }
+  if (size) {
+    query.size = { $in: size.split(',') };
+  }
+
+  let sort = {};
+  if (sortBy === 'low_to_high') {
+    sort = { price: 1 };
+  } else if (sortBy === 'high_to_low') {
+    sort = { price: -1 };
+  }
+
+  if (!categoryId && !colorId) {
+    throw new ApiError(
+      400,
+      'Either color or category ID required to filer products'
+    );
+  }
+
+  const products = await Product.find(query).sort(sort).skip(skip).limit(limit);
+
+  if (!products) {
+    throw new ApiError(400, `No items found with the respective filter params`);
+  }
+
+  return res.status(200).json(new ApiResponse(200, products, ''));
 });
