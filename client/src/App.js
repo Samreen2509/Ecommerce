@@ -18,6 +18,7 @@ import SingleProduct from './screens/product/SingleProduct.js';
 import ErrorPage from './components/Error/ErrorPage';
 import Myorders from './screens/User/MyOrderPage.js';
 import PlaceOrderPage from './screens/order/PlaceOrderPage.js';
+import VerifyEmail from './screens/auth/VerifyEmail.js';
 
 const Applayout = () => {
   return (
@@ -85,6 +86,10 @@ const appRouter = createBrowserRouter([
       {
         path: '/placeOrder',
         element: <PlaceOrderPage />,
+      },
+      {
+        path: '/emailVerify',
+        element: <VerifyEmail />,
       },
     ],
     errorElement: <ErrorPage />,
