@@ -5,7 +5,7 @@ function DropDown({ handleLeave }) {
   return (
     <div
       onMouseLeave={handleLeave}
-      className="absolute right-[16%] top-[15%] z-10 h-[200px] w-[200px] bg-gray-50   "
+      className="absolute right-[16%] top-[15%] z-10 h-[240px] w-[200px] bg-gray-50   "
     >
       <div className="flex flex-col gap-y-1 border-b p-2">
         <h3>Welcome</h3>
@@ -25,12 +25,12 @@ function DropDown({ handleLeave }) {
           SIGNUP
         </Link>
       </div>
-      <div className="flex flex-col gap-y-1 p-1 px-3 text-sm">
-        <Link to={'/myorders'} className="font-normal">
-          My Orders
+      <div className="flex flex-col gap-y-1 p-1 px-3 text-base">
+        <Link to={'/myorders'} className="font-normal hover:text-orange-400">
+          Orders
         </Link>
-        <Link to={'/wishlist'} className="font-normal">
-          My Wishlist
+        <Link to={'/wishlist'} className="font-normal hover:text-orange-400">
+          Wishlist
         </Link>
       </div>
     </div>

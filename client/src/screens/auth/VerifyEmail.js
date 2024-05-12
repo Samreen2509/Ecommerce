@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GlobalApi from '../../utils/GlobalApi';
+import { toast } from 'react-toastify';
 
 function VerifyEmail() {
   const [error, seterror] = useState();
@@ -14,11 +15,17 @@ function VerifyEmail() {
       const verifyEmail = async () => {
         try {
           const res = await GlobalApi.emailVerify({ token });
+          toast.success('Your Verified Successfully', {
+            position: 'top-center',
+          });
           console.log('Email verified successfully:', res);
           navigate('/');
         } catch (error) {
-          seterror(error.response.data.statusCode);
-          console.error('Error verifying email:', error);
+          console.log(error.response.data);
+          seterror(error.response.data.message);
+          toast.error(error.response.data.message, {
+            position: 'top-center',
+          });
         }
       };
 
@@ -32,7 +39,7 @@ function VerifyEmail() {
         error === 500 ? (
           'Token is Expired'
         ) : (
-          'Server error'
+          error
         )
       ) : (
         <div className="flex animate-pulse flex-col text-center text-3xl opacity-70">

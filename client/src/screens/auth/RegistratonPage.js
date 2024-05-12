@@ -3,6 +3,7 @@ import png from '../../../images/favicon.png';
 import { Link } from 'react-router-dom';
 import GlobalApi from '../../utils/GlobalApi.js';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const RegistrationPage = () => {
   const navigate = useNavigate();
@@ -34,8 +35,13 @@ const RegistrationPage = () => {
         password: formData.password,
       });
 
-      localStorage.setItem('token', res.data.data.userInfo);
+      localStorage.setItem('token', res?.data?.data?.userInfo);
+      console.log(res);
       console.log('Registration successful!');
+      toast.success('Registration successful!');
+      toast.info('Please Check your Email and Verify your Account', {
+        position: 'top-center',
+      });
       navigate('/');
       setFormData({
         username: '',
