@@ -19,6 +19,7 @@ import ErrorPage from './components/Error/ErrorPage';
 import Myorders from './screens/User/MyOrderPage.js';
 import PlaceOrderPage from './screens/order/PlaceOrderPage.js';
 import VerifyEmail from './screens/auth/VerifyEmail.js';
+import Notification from './components/Notification.js';
 
 const Applayout = () => {
   return (
@@ -33,7 +34,12 @@ const Applayout = () => {
 const appRouter = createBrowserRouter([
   {
     path: '/',
-    element: <Applayout />,
+    element: (
+      <>
+        <Notification />
+        <Applayout />
+      </>
+    ),
     children: [
       {
         path: '/',

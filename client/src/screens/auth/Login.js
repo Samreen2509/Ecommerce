@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import png from '../../../images/favicon.png';
 import { Link, useNavigate } from 'react-router-dom';
 import GlobalApi from '../../utils/GlobalApi';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [isError, setError] = useState(null);
@@ -34,6 +35,7 @@ const Login = () => {
 
       if (res.success === true) {
         console.log('Login successful!');
+        toast.success('Login successful!');
         setLoading(false);
         navigate('/');
         setFormData({

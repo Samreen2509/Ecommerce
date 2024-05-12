@@ -111,6 +111,7 @@ function Header() {
 
         <div className="hidden justify-evenly gap-x-8 font-semibold lg:flex">
           {/* Search part */}
+
           <div
             onClick={handleSearchClick}
             className="flex cursor-pointer items-center justify-between gap-x-4 hover:text-orange-400"
