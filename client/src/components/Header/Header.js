@@ -37,6 +37,15 @@ function Header() {
     { text: 'Category', link: '/category' },
     { text: 'Blog', link: '/blog' },
   ];
+  const MobileNavtext = [
+    { text: 'Home', link: '/' },
+    { text: 'Collections', link: '/collections' },
+    { text: 'Products', link: '/products' },
+    { text: 'Category', link: '/category' },
+    { text: 'Blog', link: '/blog' },
+    { text: 'Login', link: '/login' },
+    { text: 'Register', link: '/register' },
+  ];
 
   const cartItems = 0;
   const wishlistitems = 0;
@@ -56,8 +65,8 @@ function Header() {
         </div>
         {Sidemenu && (
           <>
-            <div className="absolute left-0 top-[8%] z-20 flex h-[300px] w-full flex-col items-center gap-x-8 gap-y-8 bg-white p-4 font-semibold lg:hidden ">
-              {navtext.map((item, index) => (
+            <div className="absolute left-0 top-[10%] z-20 flex h-[400px] w-full flex-col items-center gap-x-8 gap-y-8 bg-white p-4 font-semibold lg:hidden ">
+              {MobileNavtext.map((item, index) => (
                 <div
                   key={index}
                   className="w-full text-center hover:bg-gray-300 hover:text-red-400"

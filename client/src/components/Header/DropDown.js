@@ -13,10 +13,16 @@ function DropDown({ handleLeave }) {
           To access account and manage orders
         </p>
         <Link
-          to={'/register'}
-          className="mt-2 border border-orange-400 p-2 text-center text-red-400"
+          to={'/login'}
+          className="mt-2 border border-orange-400 p-2 text-center text-red-400 hover:bg-orange-400 hover:text-white"
         >
-          LOGIN / SIGNUP
+          LOGIN
+        </Link>
+        <Link
+          to={'/register'}
+          className="mt-2 border border-orange-400 p-2 text-center text-red-400 hover:bg-orange-400 hover:text-white"
+        >
+          SIGNUP
         </Link>
       </div>
       <div className="flex flex-col gap-y-1 p-1 px-3 text-sm">
