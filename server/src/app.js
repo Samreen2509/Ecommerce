@@ -14,6 +14,7 @@ import carouselRoutes from './routes/carousel.routes.js';
 import addressRoutes from './routes/address.routes.js';
 import categoryRoutes from './routes/category.routes.js';
 import colorRoutes from './routes/color.routes.js';
+import cartRoutes from './routes/cart.routes.js';
 
 // constants
 const app = express();
@@ -49,6 +50,8 @@ app.use(`${BASEPATH}/address`, addressRoutes);
 app.use(`${BASEPATH}/category`, categoryRoutes);
 app.use(`${BASEPATH}/carousel`, carouselRoutes);
 app.use(`${BASEPATH}/color`, colorRoutes);
+app.use(`${BASEPATH}/cart`, cartRoutes);
+
 // Error middleware
 app.use(errorHandler);
 
