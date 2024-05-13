@@ -8,22 +8,23 @@ import {
   getOneProduct,
 } from '../controllers/product.controller.js';
 import { upload } from '../middlewares/multer.middleware.js';
+import { verifyJWT } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
 router
   .route('/')
-  .post(upload.single('mainImage'), createProduct)
+  .post(verifyJWT, upload.single('mainImage'), createProduct)
   .get(getProduct);
 
 router
   .route('/:id')
   .get(getOneProduct)
-  .put(upload.single('mainImage'), updateProduct)
-  .delete(removeProduct);
+  .put(verifyJWT, upload.single('mainImage'), updateProduct)
+  .delete(verifyJWT, removeProduct);
 
 router
   .route('/otherImages/:productId')
-  .post(upload.array('otherImages', 4), uploadOtherImages);
+  .post(verifyJWT, upload.array('otherImage', 4), uploadOtherImages);
 
 export default router;

@@ -1,5 +1,4 @@
 import {
-  CLIENT_BASEPATH,
   EMAIL_VERIFY_PAGE,
   RESET_PASS_PAGE,
   availableUserRoles,
@@ -91,10 +90,11 @@ export const registerUser = asyncHandler(async (req, res) => {
     { new: true }
   ).select(ignoreFields);
 
+  const basePath = process.env.CORS_ORIGIN;
   const emailData = {
     email: newUserInfo.email,
     template: 'ConfirmEmail',
-    url: `${CLIENT_BASEPATH}${EMAIL_VERIFY_PAGE}?token=${token.unHashedToken}`,
+    url: `${basePath}${EMAIL_VERIFY_PAGE}?token=${token.unHashedToken}`,
     subject: 'Email Verification',
   };
   await SendEmail(emailData);
@@ -144,10 +144,11 @@ export const loginUser = asyncHandler(async (req, res) => {
     }
 
     const token = await generateToken(user);
+    const basePath = process.env.CORS_ORIGIN;
     const emailData = {
       email: user.email,
       template: 'ConfirmEmail',
-      url: `${CLIENT_BASEPATH}${EMAIL_VERIFY_PAGE}?token=${token.unHashedToken}`,
+      url: `${basePath}${EMAIL_VERIFY_PAGE}?token=${token.unHashedToken}`,
       subject: 'Email Verification',
     };
 
@@ -384,10 +385,11 @@ export const updateUser = asyncHandler(async (req, res) => {
 
   if (email) {
     const token = await generateToken(user);
+    const basePath = process.env.CORS_ORIGIN;
     const emailData = {
       email: user.email,
       template: 'ConfirmEmail',
-      url: `${CLIENT_BASEPATH}${EMAIL_VERIFY_PAGE}?token=${token.unHashedToken}`,
+      url: `${basePath}${EMAIL_VERIFY_PAGE}?token=${token.unHashedToken}`,
       subject: 'Email Verification',
     };
     await SendEmail(emailData);
@@ -438,10 +440,11 @@ export const forgotPasswordLink = asyncHandler(async (req, res) => {
   }
 
   const token = await generateToken(user);
+  const basePath = process.env.CORS_ORIGIN;
   const emailData = {
     email: user.email,
     template: 'ForgotPassword',
-    url: `${CLIENT_BASEPATH}${RESET_PASS_PAGE}?token=${token.unHashedToken}`,
+    url: `${basePath}${RESET_PASS_PAGE}?token=${token.unHashedToken}`,
     subject: 'Reset Your Password',
   };
 

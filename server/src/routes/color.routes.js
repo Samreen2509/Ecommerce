@@ -3,13 +3,18 @@ import {
   createColor,
   listColors,
   updateColor,
+  getOneColor,
+  deleteColor,
 } from '../controllers/color.controller.js';
+import { verifyJWT } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
-router.route('/listcolors').get(listColors);
+router.route('/').get(listColors).post(verifyJWT, createColor);
+router
+  .route('/:colorId')
+  .get(getOneColor)
+  .put(verifyJWT, updateColor)
+  .delete(verifyJWT, deleteColor);
 
-router.route('/savecolor').post(createColor);
-
-router.route('/updatecolor/:colorId').put(updateColor);
 export default router;
