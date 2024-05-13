@@ -2,12 +2,15 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { ApiError } from '../utils/ApiError.js';
 import Product from '../models/product.model.js';
-import User from '../models/user.model.js';
 import { uploadOnCloudinary } from '../utils/cloudinary.js';
+import { availableUserRoles } from '../constants.js';
 
 export const createProduct = asyncHandler(async (req, res) => {
-  const { name, description, size, price, stock, category, color } = req.body;
-  const uploadedFile = req.file;
+  const { name, description, price, stock, category, color } = req.body;
+  let { size } = await req.body;
+  const uploadedFile = await req.file;
+  const user = await req.user;
+  size = size.split(',');
 
   if (
     !name ||
@@ -19,6 +22,10 @@ export const createProduct = asyncHandler(async (req, res) => {
     !uploadedFile
   ) {
     throw new ApiError(400, 'All fields including the');
+  }
+
+  if (user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
   }
 
   const uploadOptions = {
@@ -59,8 +66,14 @@ export const createProduct = asyncHandler(async (req, res) => {
   }
 
   return res
-    .status(201)
-    .json(new ApiResponse(201, product, 'Product created successfully'));
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { productInfo: product },
+        'Product created successfully'
+      )
+    );
 });
 
 export const getProduct = asyncHandler(async (req, res) => {
@@ -72,7 +85,13 @@ export const getProduct = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, products, 'Products retrieved successfully'));
+    .json(
+      new ApiResponse(
+        200,
+        { productInfo: products },
+        'Products retrieved successfully'
+      )
+    );
 });
 
 export const getOneProduct = asyncHandler(async (req, res) => {
@@ -86,13 +105,26 @@ export const getOneProduct = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, product, 'Product retrieved successfully'));
+    .json(
+      new ApiResponse(
+        200,
+        { productInfo: product },
+        'Product retrieved successfully'
+      )
+    );
 });
 
 export const updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const uploadedFile = req.file;
-  const { name, description, size, price, category, stock, color } = req.body;
+  const { name, description, price, category, stock, color } = req.body;
+  let { size } = await req.body;
+  const user = await req.user;
+  size = size.split(',');
+
+  if (user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
+  }
 
   let imageData;
   if (uploadedFile) {
@@ -147,12 +179,23 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, 'Product updated successfully', product));
+    .json(
+      new ApiResponse(
+        200,
+        { productInfo: product },
+        'Product updated successfully'
+      )
+    );
 });
 
 export const removeProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const user = await req.user;
   const product = await Product.findById(id);
+
+  if (user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
+  }
 
   if (!product) {
     throw new ApiError('Product not found', 404);
@@ -168,7 +211,12 @@ export const removeProduct = asyncHandler(async (req, res) => {
 export const uploadOtherImages = asyncHandler(async (req, res) => {
   const uploadedFiles = req.files;
   const { productId } = req.params;
+  const user = await req.user;
   const imageDataArray = [];
+
+  if (user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
+  }
 
   const product = await Product.findById(productId);
 
@@ -211,14 +259,18 @@ export const uploadOtherImages = asyncHandler(async (req, res) => {
   }
 
   product.otherImages.push(...imageDataArray);
-  await product.save();
+  const productInfo = await product.save();
+
+  if (!productInfo) {
+    throw new ApiError(500, 'Something went worng');
+  }
 
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        { images: imageDataArray },
+        { productInfo: productInfo },
         'Images uploaded successfully'
       )
     );
