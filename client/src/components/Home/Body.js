@@ -24,14 +24,12 @@ const Body = () => {
         <Carousel />
       </div>
       <div className="min-h-min">
-        <div className="mx-48 text-5xl font-bold">
-          {' '}
+        <div className="mx-48 text-5xl font-bold my-8">
           <h1>Shop by category</h1>
         </div>
         <div className="flex flex-wrap justify-center">
           {storeSection.map((s, i) => (
             <Link to={'/category/' + s.id} key={i} className="link">
-              {' '}
               <CategoryCard key={s.id} sdata={s} />
             </Link>
           ))}
