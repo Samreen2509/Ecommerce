@@ -20,6 +20,7 @@ import Myorders from './screens/User/MyOrderPage.js';
 import PlaceOrderPage from './screens/order/PlaceOrderPage.js';
 import Notification from './components/Notification.js';
 import ResetPassword from './screens/auth/ResetPassword.js';
+import VerifyEmail from './screens/auth/VerifyEmail.js';
 
 const Applayout = () => {
   return (
@@ -96,6 +97,10 @@ const appRouter = createBrowserRouter([
       {
         path: '/placeOrder',
         element: <PlaceOrderPage />,
+      },
+      {
+        path: '/emailVerify',
+        element: <VerifyEmail />,
       },
       {
         path: '/resetPassword',
