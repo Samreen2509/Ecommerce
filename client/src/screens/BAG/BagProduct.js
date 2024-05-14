@@ -12,6 +12,7 @@ function BagProduct({ cart }) {
       <Link to={'/singleProduct'} className="w-full pb-4 md:w-40 md:pb-8">
         <img
           className="hidden w-full md:block"
+          draggable="false"
           src="https://miona-vinovatheme.myshopify.com/cdn/shop/files/img-1-6_900x.jpg?v=1687334630"
           alt="dress"
         />
@@ -73,9 +74,17 @@ function BagProduct({ cart }) {
                 </div>
               </div>
             )}
+            {/* Wishlist Only */}
+            {!cart && (
+              <div className="flex w-full items-start">
+                <button className="flex rounded-md bg-green-400 px-2 py-1 text-white">
+                  Add To Cart
+                </button>
+              </div>
+            )}
             <div className="flex w-full items-end justify-end">
               <RxCross2
-                className="cursor-pointer hover:text-orange-400"
+                className="cursor-pointer rounded-full p-1 hover:bg-slate-300"
                 size={28}
               />
             </div>

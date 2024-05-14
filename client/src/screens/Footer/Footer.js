@@ -99,7 +99,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="flex h-9 w-full items-center justify-center bg-blue-500 text-white">
-        <h2>&copy; Copyright 2024 |Ecommerce Project</h2>
+        <h2>&copy; Copyright 2024 | Ecommerce Project</h2>
       </div>
     </footer>
   );

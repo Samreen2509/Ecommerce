@@ -18,6 +18,8 @@ import SingleProduct from './screens/product/SingleProduct.js';
 import ErrorPage from './components/Error/ErrorPage';
 import Myorders from './screens/User/MyOrderPage.js';
 import PlaceOrderPage from './screens/order/PlaceOrderPage.js';
+import Notification from './components/Notification.js';
+import ResetPassword from './screens/auth/ResetPassword.js';
 import VerifyEmail from './screens/auth/VerifyEmail.js';
 
 const Applayout = () => {
@@ -33,7 +35,12 @@ const Applayout = () => {
 const appRouter = createBrowserRouter([
   {
     path: '/',
-    element: <Applayout />,
+    element: (
+      <>
+        <Notification />
+        <Applayout />
+      </>
+    ),
     children: [
       {
         path: '/',
@@ -49,6 +56,10 @@ const appRouter = createBrowserRouter([
       },
       {
         path: '/login',
+        element: <Login />,
+      },
+      {
+        path: '/forgotpassword',
         element: <Login />,
       },
       {
@@ -90,6 +101,10 @@ const appRouter = createBrowserRouter([
       {
         path: '/emailVerify',
         element: <VerifyEmail />,
+      },
+      {
+        path: '/resetPassword',
+        element: <ResetPassword />,
       },
     ],
     errorElement: <ErrorPage />,

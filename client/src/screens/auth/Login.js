@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import png from '../../../images/favicon.png';
 import { Link, useNavigate } from 'react-router-dom';
 import GlobalApi from '../../utils/GlobalApi';
+import { toast } from 'react-toastify';
+import ForgotPassword from './ForgotPassword';
 
 const Login = () => {
+  const [openForgotpass, setOpenforgortpass] = useState(false);
   const [isError, setError] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [verifyEmailError, setverifyEmailError] = useState(false);
@@ -33,7 +36,8 @@ const Login = () => {
       });
 
       if (res.success === true) {
-        console.log('Login successful!');
+        console.log('Login successful!', res);
+        toast.success('Login successful!');
         setLoading(false);
         navigate('/');
         setFormData({
@@ -43,15 +47,19 @@ const Login = () => {
       } else if (res.statusCode === 310) {
         setVerify(true);
       } else {
-        setError(res.response.data);
+        setError(res?.response?.data);
       }
     } catch (error) {
       console.error('Login failed:', error.response);
-      setverifyEmailError(error.response.data.message);
-      setError(error.response);
+      setverifyEmailError(error?.response?.data?.message);
+      setError(error?.response);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleForgotPass = () => {
+    setOpenforgortpass(!openForgotpass);
   };
 
   return (
@@ -94,10 +102,10 @@ const Login = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full rounded-md border bg-transparent px-5 py-3 text-base outline-none focus-visible:shadow-none"
+                className="w-full rounded-md border border-slate-700 bg-transparent px-5 py-3 text-base outline-none focus-visible:shadow-none"
               />
             </div>
-            <div className="mb-10">
+            <div className="mb-7">
               <button
                 onClick={handleSubmit}
                 className="w-full rounded-md  bg-slate-600 px-5 py-3 font-medium text-white transition hover:bg-opacity-90"
@@ -106,19 +114,20 @@ const Login = () => {
               </button>
             </div>
           </div>
-          <p className="mb-6">Connect With</p>
+
           {/* Social media login buttons */}
           <ul className="-mx-2 mb-12 flex justify-between">
             {/* Add your social media login buttons here */}
           </ul>
           {/* Forgot password link */}
-          <Link
-            to="/forgot-password"
+          <button
+            onClick={handleForgotPass}
             className="hover:text-primary mb-2 inline-block hover:underline"
           >
             {' '}
             Forget Password?{' '}
-          </Link>
+          </button>
+          {openForgotpass && <ForgotPassword />}
           {/* Link to registration page */}
           <p className="text-body-color text-base">
             <span className="pr-0.5">Not a member yet?</span>
@@ -144,7 +153,7 @@ const InputBox = ({ type, placeholder, name, value, onChange }) => {
         required
         value={value}
         onChange={onChange}
-        className="w-full rounded-md border bg-transparent px-5 py-3 text-base outline-none focus-visible:shadow-none"
+        className="w-full rounded-md border border-gray-700 bg-transparent px-5 py-3 text-base outline-none focus-visible:shadow-none"
       />
     </div>
   );
