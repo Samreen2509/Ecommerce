@@ -2,13 +2,19 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import Address from '../models/address.model.js';
+import { availableUserRoles } from '../constants.js';
 
 export const createAdress = asyncHandler(async (req, res) => {
   const { address, city, pincode, state, country } = req.body;
   const { ownerId } = req.params;
+  const user = await req.user;
 
   if (!address || !city || !pincode || !state || !country || !ownerId) {
     throw new ApiError('All fields are required', 400);
+  }
+
+  if (ownerId != user._id && user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
   }
 
   const addressCreated = await Address.create({
@@ -30,6 +36,12 @@ export const createAdress = asyncHandler(async (req, res) => {
 });
 
 export const getAllUserAddress = asyncHandler(async (req, res) => {
+  const user = await req.user;
+
+  if (user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
+  }
+
   const allAddress = await Address.find({});
 
   return res
@@ -41,11 +53,16 @@ export const getAllUserAddress = asyncHandler(async (req, res) => {
 
 export const getOneUserAddress = asyncHandler(async (req, res) => {
   const { addressId } = req.params;
+  const user = await req.user;
 
   const address = await Address.findById(addressId);
 
   if (!address) {
     throw new ApiError(`Address with id ${addressId} not found`, 404);
+  }
+
+  if (address.owner != user._id && user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
   }
 
   return res
@@ -56,11 +73,16 @@ export const getOneUserAddress = asyncHandler(async (req, res) => {
 export const updateAddress = asyncHandler(async (req, res) => {
   const { addressId } = req.params;
   const { address, city, pincode, state, country } = req.body;
+  const user = await req.user;
 
   const findAddress = await Address.findById(addressId);
 
   if (!findAddress) {
     throw new ApiError('Address not found', 404);
+  }
+
+  if (findAddress.owner != user._id && user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
   }
 
   if (address) {
@@ -88,10 +110,15 @@ export const updateAddress = asyncHandler(async (req, res) => {
 
 export const removeAddress = asyncHandler(async (req, res) => {
   const { addressId } = req.params;
+  const user = await req.user;
 
   const address = await Address.findById(addressId);
   if (!address) {
     throw new ApiError('Address not found', 404);
+  }
+
+  if (address.owner != user._id && user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
   }
 
   await Address.findByIdAndDelete(address);
