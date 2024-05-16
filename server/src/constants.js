@@ -39,3 +39,8 @@ export const allowedImgExtensions = {
 };
 export const allowedImgExtensionsEnum = Object.values(allowedImgExtensions);
 export const orderStatusEnum = Object.values(orderStatus);
+
+export const availablePaymentMethod = {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+};

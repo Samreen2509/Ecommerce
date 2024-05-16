@@ -40,7 +40,8 @@ const orderSchema = new Schema({
     enum: orderStatusEnum,
   },
   paymentId: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: 'payments',
   },
   isPaymentDone: {
     type: Boolean,
