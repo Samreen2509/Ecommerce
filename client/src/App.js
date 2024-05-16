@@ -19,14 +19,18 @@ import ErrorPage from './components/Error/ErrorPage';
 import Myorders from './screens/User/MyOrderPage.js';
 import PlaceOrderPage from './screens/order/PlaceOrderPage.js';
 import VerifyEmail from './screens/auth/VerifyEmail.js';
+import { Provider } from 'react-redux';
+import { store } from './app/store.js';
 
 const Applayout = () => {
   return (
-    <div className="app">
-      <Header />
-      <Outlet />
-      <Footer />
-    </div>
+    <Provider store={store}>
+      <div className="app">
+        <Header />
+        <Outlet />
+        <Footer />
+      </div>
+    </Provider>
   );
 };
 
