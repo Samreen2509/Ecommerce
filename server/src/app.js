@@ -17,7 +17,7 @@ import colorRoutes from './routes/color.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import orderRoutes from './routes/order.routes.js';
 import { paymentRoutes, webhookRoutes } from './routes/payment.routes.js';
-
+import wishlistRoutes from './routes/wishlist.routes.js';
 
 // constants
 const app = express();
@@ -59,9 +59,11 @@ app.use(`${BASEPATH}/color`, colorRoutes);
 app.use(`${BASEPATH}/cart`, cartRoutes);
 // Order Routes
 app.use(`${BASEPATH}/order`, orderRoutes);
+// Wishlist Routes
+app.use(`${BASEPATH}/wishlist`, wishlistRoutes);
+
 app.use(`${BASEPATH}/payment`, paymentRoutes);
 app.use(`${BASEPATH}/webhook`, webhookRoutes);
-
 
 // Error middleware
 app.use(errorHandler);
