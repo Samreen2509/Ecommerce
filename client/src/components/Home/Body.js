@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
 import CategoryCard from './CategoryCard.js';
 import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Body = () => {
   const { id } = useParams();
@@ -16,6 +17,7 @@ const Body = () => {
     };
     fetchData();
   }, []);
+
   return storeSection.length === 0 ? (
     <Shimmer />
   ) : (
@@ -24,14 +26,12 @@ const Body = () => {
         <Carousel />
       </div>
       <div className="min-h-min">
-        <div className="mx-48 text-5xl font-bold">
-          {' '}
+        <div className="mx-48 my-8 text-5xl font-bold">
           <h1>Shop by category</h1>
         </div>
         <div className="flex flex-wrap justify-center">
           {storeSection.map((s, i) => (
             <Link to={'/category/' + s.id} key={i} className="link">
-              {' '}
               <CategoryCard key={s.id} sdata={s} />
             </Link>
           ))}
