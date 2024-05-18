@@ -18,9 +18,9 @@ const paymentSchema = new Schema({
     ref: 'orders',
   },
   status: {
-    type: Boolean,
+    type: String,
     required: true,
-    default: false,
+    default: '',
   },
 });
 

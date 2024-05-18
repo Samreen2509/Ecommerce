@@ -44,3 +44,8 @@ export const availablePaymentMethod = {
   ONLINE: 'ONLINE',
   OFFLINE: 'OFFLINE',
 };
+
+export const availablePaymentStatus = {
+  PENDING: 'PENDING',
+  CANCELLED: 'CANCELLED',
+};

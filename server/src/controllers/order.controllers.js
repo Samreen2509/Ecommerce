@@ -2,169 +2,17 @@ import {
   availableUserRoles,
   orderStatus,
   availablePaymentMethod,
+  availablePaymentStatus,
 } from '../constants.js';
-import Order from '../models/order.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ObjectId } from 'mongodb';
-import Product from '../models/product.model.js';
 import Stripe from 'stripe';
+import Order from '../models/order.model.js';
+import Product from '../models/product.model.js';
 import Payment from '../models/payment.model.js';
-
-const getOrderInfoPipeline = [
-  {
-    $lookup: {
-      from: 'users',
-      localField: 'customer',
-      foreignField: '_id',
-      as: 'customer',
-    },
-  },
-  {
-    $lookup: {
-      from: 'addresses',
-      localField: 'address',
-      foreignField: '_id',
-      as: 'address',
-    },
-  },
-  {
-    $lookup: {
-      from: 'payments',
-      localField: 'paymentId',
-      foreignField: '_id',
-      as: 'payment',
-    },
-  },
-  {
-    $unwind: '$items',
-  },
-  {
-    $lookup: {
-      from: 'products',
-      localField: 'items.productId',
-      foreignField: '_id',
-      as: 'items.product',
-    },
-  },
-  {
-    $unwind: '$items.product',
-  },
-  {
-    $lookup: {
-      from: 'categories',
-      localField: 'items.product.category',
-      foreignField: '_id',
-      as: 'items.product.category',
-    },
-  },
-  {
-    $group: {
-      _id: '$_id',
-      orderPrice: {
-        $first: '$orderPrice',
-      },
-      customer: {
-        $first: '$customer',
-      },
-      address: {
-        $first: '$address',
-      },
-      status: {
-        $first: '$status',
-      },
-      payment: {
-        $first: '$payment',
-      },
-      isPaymentDone: {
-        $first: '$isPaymentDone',
-      },
-      items: {
-        $push: '$items',
-      },
-    },
-  },
-  {
-    $addFields: {
-      customer: {
-        $mergeObjects: [
-          {
-            _id: {
-              $arrayElemAt: ['$customer._id', 0],
-            },
-            name: {
-              $arrayElemAt: ['$customer.name', 0],
-            },
-            username: {
-              $arrayElemAt: ['$customer.username', 0],
-            },
-            email: {
-              $arrayElemAt: ['$customer.email', 0],
-            },
-          },
-        ],
-      },
-      address: {
-        $mergeObjects: ['$address'],
-      },
-      payment: {
-        $mergeObjects: [
-          {
-            _id: {
-              $arrayElemAt: ['$payment._id', 0],
-            },
-            price: {
-              $arrayElemAt: ['$payment.price', 0],
-            },
-            stripeId: {
-              $arrayElemAt: ['$payment.stripeId', 0],
-            },
-            status: {
-              $arrayElemAt: ['$payment.status', 0],
-            },
-          },
-        ],
-      },
-    },
-  },
-  {
-    $project: {
-      _id: 1,
-      orderPrice: 1,
-      customer: 1,
-      address: 1,
-      status: 1,
-      payment: 1,
-      items: {
-        $map: {
-          input: '$items',
-          as: 'item',
-          in: {
-            $mergeObjects: [
-              {
-                quantity: '$$item.quantity',
-                size: '$$item.size',
-              },
-              {
-                product: {
-                  $mergeObjects: [
-                    '$$item.product',
-                    {
-                      category: {
-                        $arrayElemAt: ['$$item.product.category', 0],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      },
-    },
-  },
-];
+import { getOrderInfoPipeline } from '../utils/pipelines/orderInfo.js';
 
 const makeStripe = async (items) => {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -183,12 +31,15 @@ const makeStripe = async (items) => {
     lineItemArray.push(lineItem);
   });
 
+  const successUrl = process.env.STRIPE_SUCCESS_URL;
+  const cancelURL = process.env.STRIPE_CANCEL_URL;
+  console.log(successUrl, cancelURL);
   const sessionData = {
     payment_method_types: ['card'],
     line_items: lineItemArray,
     mode: 'payment',
-    success_url: 'http://localhost:1234/success',
-    cancel_url: 'http://localhost:1234/cancel',
+    success_url: successUrl,
+    cancel_url: cancelURL,
   };
 
   const session = await stripe.checkout.sessions.create(sessionData);
@@ -259,7 +110,7 @@ export const addOrder = asyncHandler(async (req, res) => {
   if (!Array.isArray(items)) {
     return res
       .status(400)
-      .json({ error: 'Items must be provided in an array' });
+      .json({ error: 'items must be provided in an array' });
   }
 
   for (const item of items) {
@@ -310,9 +161,14 @@ export const addOrder = asyncHandler(async (req, res) => {
       },
     },
     {
+      $addFields: {
+        totalPricePerProduct: { $multiply: ['$price', '$quantity'] },
+      },
+    },
+    {
       $group: {
         _id: null,
-        totalPrice: { $sum: '$price' },
+        totalPrice: { $sum: '$totalPricePerProduct' },
         products: { $push: '$products' },
       },
     },
