@@ -18,7 +18,7 @@ const getCart = async (userId) => {
     {
       $lookup: {
         from: 'products',
-        localFields: 'items.productId',
+        localField: 'items.productId',
         foreignField: '_id',
         as: 'product',
       },

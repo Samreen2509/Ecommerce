@@ -14,8 +14,10 @@ import carouselRoutes from './routes/carousel.routes.js';
 import addressRoutes from './routes/address.routes.js';
 import categoryRoutes from './routes/category.routes.js';
 import colorRoutes from './routes/color.routes.js';
+import cartRoutes from './routes/cart.routes.js';
 import orderRoutes from './routes/order.routes.js';
 import { paymentRoutes, webhookRoutes } from './routes/payment.routes.js';
+
 
 // constants
 const app = express();
@@ -49,11 +51,17 @@ app.use(`${BASEPATH}/product`, productRoutes);
 app.use(`${BASEPATH}/address`, addressRoutes);
 // Category Routes
 app.use(`${BASEPATH}/category`, categoryRoutes);
+// Carousel Routes
 app.use(`${BASEPATH}/carousel`, carouselRoutes);
+// Color Routes
 app.use(`${BASEPATH}/color`, colorRoutes);
+// Cart Routes
+app.use(`${BASEPATH}/cart`, cartRoutes);
+// Order Routes
 app.use(`${BASEPATH}/order`, orderRoutes);
 app.use(`${BASEPATH}/payment`, paymentRoutes);
 app.use(`${BASEPATH}/webhook`, webhookRoutes);
+
 
 // Error middleware
 app.use(errorHandler);
