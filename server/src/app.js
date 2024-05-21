@@ -16,7 +16,7 @@ import categoryRoutes from './routes/category.routes.js';
 import colorRoutes from './routes/color.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import orderRoutes from './routes/order.routes.js';
-import { paymentRoutes, webhookRoutes } from './routes/payment.routes.js';
+import paymentRoutes from './routes/payment.routes.js';
 import wishlistRoutes from './routes/wishlist.routes.js';
 
 // constants
@@ -44,6 +44,7 @@ app.get(`${BASEPATH}/healthcheck`, (req, res) => {
   }
 });
 
+// Auth & User Routes
 app.use(`${BASEPATH}/auth`, authRouters);
 // Product Routes
 app.use(`${BASEPATH}/product`, productRoutes);
@@ -61,9 +62,8 @@ app.use(`${BASEPATH}/cart`, cartRoutes);
 app.use(`${BASEPATH}/order`, orderRoutes);
 // Wishlist Routes
 app.use(`${BASEPATH}/wishlist`, wishlistRoutes);
-
+// Payment Routes
 app.use(`${BASEPATH}/payment`, paymentRoutes);
-app.use(`${BASEPATH}/webhook`, webhookRoutes);
 
 // Error middleware
 app.use(errorHandler);

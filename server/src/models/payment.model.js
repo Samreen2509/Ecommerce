@@ -1,4 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
+import {
+  availablePaymentStatus,
+  availablePaymentStatusEnum,
+} from '../constants.js';
 
 const paymentSchema = new Schema({
   price: {
@@ -19,8 +23,9 @@ const paymentSchema = new Schema({
   },
   status: {
     type: String,
+    enum: availablePaymentStatusEnum,
+    default: availablePaymentStatus.PENDING,
     required: true,
-    default: '',
   },
 });
 
