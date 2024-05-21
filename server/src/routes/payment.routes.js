@@ -11,6 +11,6 @@ router
   .get(verifyJWT, getPayment)
   .post(verifyJWT, addPayment);
 
-router.route('/webhook/checkout').post(stripeWebhook);
+router.route('/checkout/webhook').post(stripeWebhook);
 
 export default router;
