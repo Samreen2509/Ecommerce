@@ -16,10 +16,14 @@ import categoryRoutes from './routes/category.routes.js';
 import colorRoutes from './routes/color.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import orderRoutes from './routes/order.routes.js';
+import { paymentRoutes, stripeWebhookRoutes } from './routes/payment.routes.js';
 import wishlistRoutes from './routes/wishlist.routes.js';
 
 // constants
 const app = express();
+
+// stripe checkout webhook
+app.use(`${BASEPATH}/payment`, stripeWebhookRoutes);
 
 // middlewares
 app.use(
@@ -34,7 +38,7 @@ app.use(cookieParser());
 
 // Test route
 // /api/v1/healthcheck
-app.get(`${BASEPATH}/healthcheck`, (req, res) => {
+app.get(`${BASEPATH}/healthcheck`, (_, res) => {
   try {
     return res.status(200).json(new ApiResponse(200, {}, 'ok'));
   } catch (error) {
@@ -43,6 +47,7 @@ app.get(`${BASEPATH}/healthcheck`, (req, res) => {
   }
 });
 
+// Auth & User Routes
 app.use(`${BASEPATH}/auth`, authRouters);
 // Product Routes
 app.use(`${BASEPATH}/product`, productRoutes);
@@ -60,6 +65,8 @@ app.use(`${BASEPATH}/cart`, cartRoutes);
 app.use(`${BASEPATH}/order`, orderRoutes);
 // Wishlist Routes
 app.use(`${BASEPATH}/wishlist`, wishlistRoutes);
+// Payment Routes
+app.use(`${BASEPATH}/payment`, paymentRoutes);
 
 // Error middleware
 app.use(errorHandler);

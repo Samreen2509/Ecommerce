@@ -39,3 +39,20 @@ export const allowedImgExtensions = {
 };
 export const allowedImgExtensionsEnum = Object.values(allowedImgExtensions);
 export const orderStatusEnum = Object.values(orderStatus);
+
+export const availablePaymentMethod = {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+};
+
+export const availablePaymentStatus = {
+  PENDING: 'PENDING',
+  CANCELLED: 'CANCELLED',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED',
+  PROCESSING: 'PROCESSING',
+  DISPUTED: 'DISPUTED',
+  ON_HOLD: 'ON_HOLD',
+};
+export const availablePaymentStatusEnum = Object.values(availablePaymentStatus);

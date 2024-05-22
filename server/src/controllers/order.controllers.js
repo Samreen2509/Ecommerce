@@ -1,140 +1,18 @@
-import mongoose from 'mongoose';
-import { availableUserRoles, orderStatus } from '../constants.js';
-import Order from '../models/order.model.js';
+import {
+  availableUserRoles,
+  orderStatus,
+  availablePaymentMethod,
+} from '../constants.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ObjectId } from 'mongodb';
+import Order from '../models/order.model.js';
 import Product from '../models/product.model.js';
-
-const getOrderInfoPipeline = [
-  {
-    $lookup: {
-      from: 'users',
-      localField: 'customer',
-      foreignField: '_id',
-      as: 'customer',
-    },
-  },
-  {
-    $lookup: {
-      from: 'addresses',
-      localField: 'address',
-      foreignField: '_id',
-      as: 'address',
-    },
-  },
-  {
-    $unwind: '$items',
-  },
-  {
-    $lookup: {
-      from: 'products',
-      localField: 'items.productId',
-      foreignField: '_id',
-      as: 'items.product',
-    },
-  },
-  {
-    $unwind: '$items.product',
-  },
-  {
-    $lookup: {
-      from: 'categories',
-      localField: 'items.product.category',
-      foreignField: '_id',
-      as: 'items.product.category',
-    },
-  },
-  {
-    $group: {
-      _id: '$_id',
-      orderPrice: {
-        $first: '$orderPrice',
-      },
-      customer: {
-        $first: '$customer',
-      },
-      address: {
-        $first: '$address',
-      },
-      status: {
-        $first: '$status',
-      },
-      paymentId: {
-        $first: '$paymentId',
-      },
-      isPaymentDone: {
-        $first: '$isPaymentDone',
-      },
-      items: {
-        $push: '$items',
-      },
-    },
-  },
-  {
-    $addFields: {
-      customer: {
-        $mergeObjects: [
-          {
-            _id: {
-              $arrayElemAt: ['$customer._id', 0],
-            },
-            name: {
-              $arrayElemAt: ['$customer.name', 0],
-            },
-            username: {
-              $arrayElemAt: ['$customer.username', 0],
-            },
-            email: {
-              $arrayElemAt: ['$customer.email', 0],
-            },
-          },
-        ],
-      },
-      address: {
-        $mergeObjects: ['$address'],
-      },
-    },
-  },
-  {
-    $project: {
-      _id: 1,
-      orderPrice: 1,
-      customer: 1,
-      address: 1,
-      status: 1,
-      paymentId: 1,
-      isPaymentDone: 1,
-      items: {
-        $map: {
-          input: '$items',
-          as: 'item',
-          in: {
-            $mergeObjects: [
-              {
-                quantity: '$$item.quantity',
-                size: '$$item.size',
-              },
-              {
-                product: {
-                  $mergeObjects: [
-                    '$$item.product',
-                    {
-                      category: {
-                        $arrayElemAt: ['$$item.product.category', 0],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      },
-    },
-  },
-];
+import Payment from '../models/payment.model.js';
+import { getOrderInfoPipeline } from '../utils/pipelines/orderInfo.js';
+import { getItemsPipeline } from '../utils/pipelines/orderItemInfo.js';
+import { makeStripe } from '../utils/Stripe.js';
 
 export const getOrder = asyncHandler(async (req, res) => {
   const user = await req.user;
@@ -179,8 +57,7 @@ export const getOrder = asyncHandler(async (req, res) => {
 export const addOrder = asyncHandler(async (req, res) => {
   const user = req.user;
   const { userId } = req.params;
-  const { items, addressId, paymentId, paymentStatus } = req.body;
-  let { orderPrice } = req.body;
+  const { items, addressId, paymentMethod } = req.body;
 
   if (!userId) {
     throw new ApiError(404, 'please provide user id in params');
@@ -190,14 +67,14 @@ export const addOrder = asyncHandler(async (req, res) => {
     throw new ApiError(500, "you don't have access");
   }
 
-  if (!items || !addressId || !paymentId || !paymentStatus) {
+  if (!items || !addressId || !paymentMethod) {
     throw new ApiError(404, 'please provide required fields');
   }
 
   if (!Array.isArray(items)) {
     return res
       .status(400)
-      .json({ error: 'Items must be provided in an array' });
+      .json({ error: 'items must be provided in an array' });
   }
 
   for (const item of items) {
@@ -206,44 +83,51 @@ export const addOrder = asyncHandler(async (req, res) => {
     }
   }
 
-  const productIds = items.map((item) => item.productId);
-  const getPricePipeline = [
-    {
-      $match: {
-        _id: { $in: productIds.map((id) => new ObjectId(id)) },
-      },
-    },
-    {
-      $group: {
-        _id: null,
-        totalPrice: { $sum: '$price' },
-      },
-    },
-  ];
+  const itemsPipeline = await getItemsPipeline(items);
+  const itemProductData = await Product.aggregate(itemsPipeline);
 
-  const price = await Product.aggregate(getPricePipeline);
-
-  if (!price) {
+  if (!itemProductData) {
     throw new ApiError(500, 'something went worng');
   }
 
-  if (!orderPrice) {
-    orderPrice = price[0].totalPrice;
-  }
-
-  const data = {
-    orderPrice: orderPrice,
+  const orderData = {
     items: items,
     customer: userId,
     address: addressId,
     status: orderStatus.PENDING,
-    paymentId: paymentId,
-    isPaymentDone: paymentStatus,
   };
 
-  const newOrder = await Order.create(data);
+  const newOrder = await Order.create(orderData);
   if (!newOrder) {
     throw new ApiError(500, 'order not created');
+  }
+
+  let paymentSession;
+  if (paymentMethod == availablePaymentMethod.ONLINE) {
+    paymentSession = await makeStripe(itemProductData);
+
+    const paymentData = {
+      price: paymentSession.amount_total / 100,
+      stripeId: paymentSession.id,
+      user: user.id,
+      orderId: newOrder._id,
+    };
+
+    const newPayment = await Payment.create(paymentData);
+    if (!newPayment) {
+      throw new ApiError(500, 'unable to generate the payment URL');
+    }
+
+    const updateOrder = await Order.findByIdAndUpdate(newOrder._id, {
+      $set: {
+        paymentId: newPayment._id,
+        orderPrice: paymentSession.amount_total / 100,
+      },
+    });
+
+    if (!updateOrder) {
+      throw new ApiError(500, 'unable to set payment id');
+    }
   }
 
   const orderPipeline = [...getOrderInfoPipeline];
@@ -256,12 +140,13 @@ export const addOrder = asyncHandler(async (req, res) => {
   if (!orderInfo) {
     throw new ApiError(500, 'something went worng');
   }
+
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        { orderInfo: orderInfo[0] },
+        { orderInfo: orderInfo[0], paymentInfo: { url: paymentSession.url } },
         'order created successfully'
       )
     );
