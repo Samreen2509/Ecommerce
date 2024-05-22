@@ -14,10 +14,9 @@ export const stripeWebhook = asyncHandler(async (req, res) => {
   const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET_KET;
   const sig = req.headers['stripe-signature'];
 
-  let event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-  res.status(400).send(`Webhook Error: ${err.message}`);
+  let event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
 
-  const checkoutSessionId = event.data.object.id;
+  const checkoutSessionId = await event.data.object.id;
   const updatePayment = async (status) => {
     const paymentInfo = await Payment.findOne({
       stripeId: checkoutSessionId,
@@ -27,27 +26,19 @@ export const stripeWebhook = asyncHandler(async (req, res) => {
       throw new ApiError(500, 'something went worng');
     }
 
-    const updatePaymentInfo = await Payment.findByIdAndUpdate(paymentInfo._id, {
+    await Payment.findByIdAndUpdate(paymentInfo._id, {
       $set: {
         status: status,
       },
     });
-
-    return updatePaymentInfo;
   };
 
   switch (event.type) {
     case 'checkout.session.async_payment_failed':
       await updatePayment(availablePaymentStatus.FAILED);
       break;
-    case 'checkout.session.async_payment_succeeded':
-      await updatePayment(availablePaymentStatus.COMPLETED);
-      break;
     case 'checkout.session.completed':
       await updatePayment(availablePaymentStatus.COMPLETED);
-      break;
-    case 'checkout.session.expired':
-      await updatePayment(availablePaymentStatus.FAILED);
       break;
     default:
       console.log(`something went worng ${event.type}`);
