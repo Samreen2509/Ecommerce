@@ -187,11 +187,7 @@ export const loginUser = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        {
-          userInfo: loggedInUserInfo,
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-        },
+        { userInfo: loggedInUserInfo },
         'user login successfully'
       )
     );
@@ -268,16 +264,7 @@ export const refreshUserToken = asyncHandler(async (req, res) => {
     .status(200)
     .cookie('accessToken', newAccessToken, cookieOptions)
     .cookie('refreshToken', newRefreshToken, cookieOptions)
-    .json(
-      new ApiResponse(
-        200,
-        {
-          accessToken: newAccessToken,
-          refreshToken: newRefreshToken,
-        },
-        'access token refreshed'
-      )
-    );
+    .json(new ApiResponse(200, { userInfo: user }, 'access token refreshed'));
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
