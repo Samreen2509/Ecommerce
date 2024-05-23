@@ -91,7 +91,7 @@ const appRouter = createBrowserRouter([
         element: <Products />,
       },
       {
-        path: '/singleProduct',
+        path: '/singleProduct/:categoryId',
         element: <SingleProduct />,
       },
       {
