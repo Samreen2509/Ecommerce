@@ -1,8 +1,8 @@
 import Shimmer from '../../components/Loading/Shimmer.js';
 import { Link } from 'react-router-dom';
 import ProductCard from './ProductCards.js';
-import useProduct from '../../utils/useProduct.js';
 import { useParams } from 'react-router-dom';
+import useProduct from './useProduct';
 
 const Products = () => {
   const { id } = useParams();

@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
 import CategoryCard from './CategoryCard.js';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+
 
 const Body = () => {
   const { id } = useParams();
+  const { isUserVerified } = useSelector(state => state.auth)
   const [storeSection, setStoreSection] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +25,9 @@ const Body = () => {
   ) : (
     <div className="body">
       <div className="">
+        {isUserVerified ? <p className='text-white bg-black text-lg text-center'>
+          <span className='text-slate-300 hover:underline cursor-pointer mr-2'>click here</span>please verify your account. A verification link already sent to your email address
+        </p> : ''}
         <Carousel />
       </div>
       <div className="min-h-min">

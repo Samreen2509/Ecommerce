@@ -1,24 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import png from '../../../images/favicon.png';
 import { Link, useNavigate } from 'react-router-dom';
-import GlobalApi from '../../utils/GlobalApi';
+// import GlobalApi from '../../utils/GlobalApi';
+// import { toast } from 'react-toastify';
+// import ForgotPassword from './ForgotPassword';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../features/authSlice';
 import { toast } from 'react-toastify';
-import ForgotPassword from './ForgotPassword';
 
 const Login = () => {
   const [openForgotpass, setOpenforgortpass] = useState(false);
-  const [isError, setError] = useState(null);
-  const [isLoading, setLoading] = useState(false);
-  const [verifyEmailError, setverifyEmailError] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const data = useSelector(state => state.auth);
+  console.log(data, data.isLoading, data.error);
+  const { isLoading, error, isUserVerified, isUserLogin } = data
+  console.log(error);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (isUserLogin) {
+      navigate('/')
+      toast.success("User login successfully")
+
+      setFormData({
+        name: "",
+        username: "",
+        email: "",
+        password: "",
+      })
+    }
+  }, [isUserLogin])
+
 
   const handleChange = (e) => {
-    e.preventDefault();
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -26,38 +44,18 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = async () => {
-    setError(null);
-    setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const res = await GlobalApi.loginUser({
+      dispatch(login({
         email: formData.email,
         password: formData.password,
-      });
-
-      if (res.success === true) {
-        console.log('Login successful!', res);
-        toast.success('Login successful!');
-        setLoading(false);
-        navigate('/');
-        setFormData({
-          email: '',
-          password: '',
-        });
-      } else if (res.statusCode === 310) {
-        setVerify(true);
-      } else {
-        setError(res?.response?.data);
-      }
+      }));
     } catch (error) {
-      console.error('Login failed:', error.response);
-      setverifyEmailError(error?.response?.data?.message);
-      setError(error?.response);
-    } finally {
-      setLoading(false);
+
+      console.error('Failed to login:', error);
     }
   };
-
   const handleForgotPass = () => {
     setOpenforgortpass(!openForgotpass);
   };
@@ -71,19 +69,16 @@ const Login = () => {
               <img src={png} alt="logo" />
             </Link>
           </div>
-          {verifyEmailError ? (
-            <p className="text-start text-sm capitalize text-red-400">
-              {verifyEmailError}
-            </p>
-          ) : (
-            isError && (
+          {isUserVerified ? <p className="text-start text-sm capitalize text-red-400">
+            Please Verify your account. A verification link already sent to your email address
+          </p> :
+            error && (
               <p className="text-xl text-red-400">
-                {isError.statusCode === 404
-                  ? isError.message
-                  : 'Please Fill Details Properly'}
+                {/* 'Please Fill Details Properly' */}
+                {error}
               </p>
             )
-          )}
+          }
           <div className="mt-2">
             <div className="mb-6">
               <InputBox
@@ -111,6 +106,7 @@ const Login = () => {
                 className="w-full rounded-md  bg-slate-600 px-5 py-3 font-medium text-white transition hover:bg-opacity-90"
               >
                 {isLoading ? 'Loading...' : 'Sign In'}
+
               </button>
             </div>
           </div>

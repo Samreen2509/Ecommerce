@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 
 const ProductCard = (props) => {
   const { sdata } = props;
@@ -54,11 +53,7 @@ const ProductCard = (props) => {
         </div>
 
         <img
-<<<<<<< HEAD
-          className="h-64 w-64 border-2 border-solid object-contain hover:border-gray-600"
-=======
           className="ease h-96 w-72 border-2 border-solid object-contain duration-500  hover:border-gray-600"
->>>>>>> 7ead23a (Set up Redux store and add product and category management)
           alt="cardImg"
           src={image}
         />
@@ -66,17 +61,17 @@ const ProductCard = (props) => {
           QUICK ADD
         </button>
       </div>
-<<<<<<< HEAD
-      <div>
-        <h3 className="my-4 w-64 ">
-=======
+
+      
       <div className="relative bottom-20 right-8 m-auto">
         <h3 className="w-64">
->>>>>>> 7ead23a (Set up Redux store and add product and category management)
+
           {title} - {price}
         </h3>
       </div>
     </div>
   );
 };
+
+
 export default ProductCard;

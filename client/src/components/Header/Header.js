@@ -15,6 +15,7 @@ function Header() {
   const [openSearch, setOpenSearch] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+
   const handleHover = () => {
     setIsDropdownOpen(true);
   };
