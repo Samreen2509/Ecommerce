@@ -1,36 +1,38 @@
 import Shimmer from '../Loading/Shimmer.js';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
 import CategoryCard from './CategoryCard.js';
-import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllCategory } from '../../features/categorySlice.js';
 
 const Body = () => {
-  const { id } = useParams();
-  const [storeSection, setStoreSection] = useState([]);
+  const { categories } = useSelector((state) => state.category);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetch('https://fakestoreapi.com/products');
-      const json = await data.json();
-      setStoreSection(json);
-    };
-    fetchData();
-  }, []);
-  return storeSection.length === 0 ? (
+    dispatch(getAllCategory());
+  }, [dispatch]);
+
+  return categories.length === 0 ? (
     <Shimmer />
   ) : (
     <div className="body">
-      <div className="">
+      <div>
         <Carousel />
       </div>
       <div className="min-h-min">
-        <div className="mx-48 text-5xl font-bold my-8">
+        <div className="mx-48 my-8 text-5xl font-bold">
           <h1>Shop by category</h1>
         </div>
         <div className="flex flex-wrap justify-center">
-          {storeSection.map((s, i) => (
-            <Link to={'/category/' + s.id} key={i} className="link">
-              <CategoryCard key={s.id} sdata={s} />
+          {categories.data.map((category) => (
+            <Link
+              to={`/category/${category._id}`}
+              key={category._id}
+              className="link"
+            >
+              <CategoryCard sdata={category} />
             </Link>
           ))}
         </div>
@@ -38,4 +40,5 @@ const Body = () => {
     </div>
   );
 };
+
 export default Body;
