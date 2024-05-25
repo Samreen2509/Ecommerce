@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import png from '../../../images/favicon.png';
 import { Link } from 'react-router-dom';
 import GlobalApi from '../../utils/GlobalApi.js';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Register } from '../../features/authSlice.js';
+import { useDispatch, useSelector } from 'react-redux';
 
 const RegistrationPage = () => {
   const navigate = useNavigate();
-  const [isError, setIsError] = useState(null);
-  const [isLoading, setisLoading] = useState(false);
+  // const [isError, setIsError] = useState(null);
+  // const [isLoading, setisLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     name: '',
@@ -16,7 +18,26 @@ const RegistrationPage = () => {
     password: '',
   });
 
+  const discpatch = useDispatch()
+  const { isLoading, error, isUserLogin } = useSelector(state => state.auth)
+
+  useEffect(() => {
+    if (isUserLogin) {
+      navigate('/')
+      toast.success("User register successfully")
+      toast.info('Please Verify your account. A verification link already sent to your email address', { position: 'top-center' })
+      setFormData({
+        name: "",
+        username: "",
+        email: "",
+        password: "",
+      })
+    }
+  }, [isUserLogin])
+
+
   const handleChange = (e) => {
+    e.preventDefault()
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -24,39 +45,22 @@ const RegistrationPage = () => {
     }));
   };
 
-  const handleSubmit = async () => {
-    setIsError(null);
-    setisLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
-      const res = await GlobalApi.registerUser({
+      discpatch(Register({
         name: formData.name,
         username: formData.username,
         email: formData.email,
         password: formData.password,
-      });
+      }))
 
-      localStorage.setItem('token', res?.data?.data?.userInfo);
-      console.log(res);
-      console.log('Registration successful!');
-      toast.success('Registration successful!');
-      toast.info('Please Check your Email and Verify your Account', {
-        position: 'top-center',
-      });
-      navigate('/');
-      setFormData({
-        username: '',
-        name: '',
-        email: '',
-        password: '',
-      });
+
     } catch (error) {
-      console.error('Registration failed:', error);
-      setIsError(error.response.data.message);
-    } finally {
-      setisLoading(false);
+      throw error
     }
   };
-  console.log(isError === undefined);
+
   return (
     <div className="my-4 flex w-full flex-wrap px-4">
       <div className="w-full px-4 ">
@@ -67,8 +71,9 @@ const RegistrationPage = () => {
             </Link>
           </div>
 
-          <p className="text-sm text-red-400">
-            {isError === undefined ? 'Server Error' : isError}
+          <p className="text-lg text-red-400">
+            {error && error}
+
           </p>
 
           <InputBox
@@ -106,6 +111,7 @@ const RegistrationPage = () => {
               className="w-full rounded-md  bg-slate-600 px-5 py-3 font-medium text-white transition hover:bg-opacity-90"
             >
               {isLoading ? 'Loading...' : 'Register'}
+
             </button>
           </div>
           <div>
