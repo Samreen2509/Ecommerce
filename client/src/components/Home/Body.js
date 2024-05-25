@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 
 
 const Body = () => {
-  const { categories } = useSelector((state) => state.category);
+  const data = useSelector((state) => state.category);
   const dispatch = useDispatch();
 
   const { id } = useParams();
@@ -19,11 +19,12 @@ const Body = () => {
   useEffect(() => {
     dispatch(getAllCategory());
   }, [dispatch]);
-
-  return categories.length === 0 ? (
-    <Shimmer />
-  ) : (
-    <div className="body">
+console.log(data);
+  // return 
+  // categories.length === 0 ? (
+  //   <Shimmer />
+  // ) : 
+  return (  <div className="body">
       <div>
       <div className="">
         {isUserVerified ? <p className='text-white bg-black text-lg text-center'>
@@ -36,7 +37,7 @@ const Body = () => {
           <h1>Shop by category</h1>
         </div>
         <div className="flex flex-wrap justify-center">
-          {categories.data.map((category) => (
+          {/* {categories && categories.data.map((category) => (
             <Link
               to={`/category/${category._id}`}
               key={category._id}
@@ -44,9 +45,10 @@ const Body = () => {
             >
               <CategoryCard sdata={category} />
             </Link>
-          ))}
+          ))} */}
         </div>
       </div>
+    </div>
     </div>
   );
 };

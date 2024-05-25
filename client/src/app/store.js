@@ -12,6 +12,7 @@ import {
   REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import cartSlice from '../features/cartSlice';
 
 const authPersistConfig = {
   key: 'auth',
@@ -26,6 +27,7 @@ const persistedAuthReducer = persistReducer(authPersistConfig, authSlice);
 export const store = configureStore({
   reducer: {
     product: productSlice,
+    cart: cartSlice,
     auth: persistedAuthReducer
   },
   middleware: (getDefaultMiddleware) =>

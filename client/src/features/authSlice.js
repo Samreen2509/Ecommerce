@@ -1,6 +1,5 @@
-import { createAsyncThunk, createSlice, TaskAbortError } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
 
 
 export const logout = createAsyncThunk(
@@ -83,9 +82,9 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(login.fulfilled, (state, action) => {
+                state.userInfo = action.payload
                 state.isLoading = false;
                 state.isUserLogin = true;
-                state.userInfo = action.payload
                 state.isUserVerified = true;
             })
             .addCase(login.rejected, (state, action) => {

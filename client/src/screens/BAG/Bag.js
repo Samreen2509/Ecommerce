@@ -1,7 +1,21 @@
 import { Link } from 'react-router-dom';
 import BagProduct from './BagProduct';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { accessToken, getCartProducts } from '../../features/cartSlice';
 
 const Bag = () => {
+  const data = useSelector((state) => state.cart)
+  const dispatch = useDispatch();
+
+  console.log(data);
+  
+  useEffect(() => {
+    
+    dispatch(getCartProducts())
+  }, [dispatch])
+  
+
   return (
     <section className="mt-3 flex h-full w-full flex-col items-center justify-center">
       <h2 className="text-sm font-bold lg:text-xl">YOUR SHOPPING BAG</h2>
