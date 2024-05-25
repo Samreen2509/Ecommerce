@@ -1,29 +1,30 @@
 import Shimmer from '../Loading/Shimmer.js';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
 import CategoryCard from './CategoryCard.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllCategory } from '../../features/categorySlice.js';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 
 const Body = () => {
+  const { categories } = useSelector((state) => state.category);
+  const dispatch = useDispatch();
+
   const { id } = useParams();
   const { isUserVerified } = useSelector(state => state.auth)
   const [storeSection, setStoreSection] = useState([]);
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetch('https://fakestoreapi.com/products');
-      const json = await data.json();
-      setStoreSection(json);
-    };
-    fetchData();
-  }, []);
+    dispatch(getAllCategory());
+  }, [dispatch]);
 
-  return storeSection.length === 0 ? (
+  return categories.length === 0 ? (
     <Shimmer />
   ) : (
     <div className="body">
+      <div>
       <div className="">
         {isUserVerified ? <p className='text-white bg-black text-lg text-center'>
           <span className='text-slate-300 hover:underline cursor-pointer mr-2'>click here</span>please verify your account. A verification link already sent to your email address
@@ -35,9 +36,13 @@ const Body = () => {
           <h1>Shop by category</h1>
         </div>
         <div className="flex flex-wrap justify-center">
-          {storeSection.map((s, i) => (
-            <Link to={'/category/' + s.id} key={i} className="link">
-              <CategoryCard key={s.id} sdata={s} />
+          {categories.data.map((category) => (
+            <Link
+              to={`/category/${category._id}`}
+              key={category._id}
+              className="link"
+            >
+              <CategoryCard sdata={category} />
             </Link>
           ))}
         </div>
@@ -45,4 +50,5 @@ const Body = () => {
     </div>
   );
 };
+
 export default Body;

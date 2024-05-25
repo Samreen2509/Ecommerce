@@ -2,30 +2,50 @@ import Shimmer from '../../components/Loading/Shimmer.js';
 import { Link } from 'react-router-dom';
 import ProductCard from './ProductCards.js';
 import { useParams } from 'react-router-dom';
-import useProduct from './useProduct';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { getAllProducts } from '../../features/productSlice.js';
 
 const Products = () => {
   const { id } = useParams();
-  const productSection = useProduct(id);
-  if (productSection === null) return <Shimmer />;
+  const { products } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllProducts());
+  }, [dispatch]);
+
+  const singleCategoryProduct =
+    products.data?.productInfo.filter((product) => product.category === id) ||
+    [];
 
   return (
     <div className="body">
       <div className="min-h-min">
         <div className="mx-48 text-5xl font-bold">
-          {' '}
           <h1>Shop by category</h1>
         </div>
+
         <div className="flex flex-wrap justify-center">
-          {productSection.map((s) => (
-            <Link to="/singleProduct" className="link">
-              {' '}
-              <ProductCard key={s.id} sdata={s} />
-            </Link>
-          ))}
+          {singleCategoryProduct.length !== 0 ? (
+            singleCategoryProduct.map((product) => (
+              <Link
+                to={`/singleProduct/${product._id}`}
+                className="link"
+                key={product._id}
+              >
+                <ProductCard sdata={product} />
+              </Link>
+            ))
+          ) : (
+            <div className="mr-24 mt-20">
+              <h1 className="text-3xl">Product is not available</h1>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 };
+
 export default Products;

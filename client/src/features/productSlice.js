@@ -194,8 +194,6 @@ export const removeProduct = createAsyncThunk(
 // Initial state for the product slice
 const initialState = {
   products: [],
-  categories: [],
-  categorie: null,
   product: null,
   loading: false,
   error: null,
@@ -208,75 +206,6 @@ export const productSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      //Create category
-      .addCase(createCategory.pending, (state) => {
-        state.loading = true;
-        state.error = null; // Clear previous errors
-      })
-      .addCase(createCategory.fulfilled, (state, action) => {
-        state.loading = false;
-        state.categories.push(action.payload); // Append the new category to the list
-      })
-      .addCase(createCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload; // Set the error message
-      })
-      //Get all category
-      .addCase(getAllCategory.pending, (state) => {
-        state.loading = true;
-        state.error = null; // Clear previous errors
-      })
-      .addCase(getAllCategory.fulfilled, (state, action) => {
-        state.loading = false;
-        state.categories = action.payload; // // Set the category list
-      })
-      .addCase(getAllCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload; // Set the error message
-      })
-      //Get one category
-      .addCase(getOneCategory.pending, (state) => {
-        state.loading = true;
-        state.error = null; // Clear previous errors
-      })
-      .addCase(getOneCategory.fulfilled, (state, action) => {
-        state.loading = false;
-        state.categorie = action.payload; // // Set the single  category list
-      })
-      .addCase(getOneCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload; // Set the error message
-      })
-      // Update category
-      .addCase(updateCategory.pending, (state) => {
-        state.loading = true;
-        state.error = null; // Clear previous errors
-      })
-      .addCase(updateCategory.fulfilled, (state, action) => {
-        state.loading = false;
-        state.categories = state.categories.map((categorie) =>
-          categorie.id === action.payload.id ? action.payload : categorie
-        ); // Update the product in the list
-      })
-      .addCase(updateCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload; // Set the error message
-      })
-      // Delete category
-      .addCase(removeCategory.pending, (state) => {
-        state.loading = true;
-        state.error = null; // Clear previous errors
-      })
-      .addCase(removeCategory.fulfilled, (state, action) => {
-        state.loading = false;
-        state.categories = state.categories.filter(
-          (categorie) => categorie.id !== action.payload
-        ); // Remove the product from the list
-      })
-      .addCase(removeCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload; // Set the error message
-      })
       // Create product
       .addCase(createProduct.pending, (state) => {
         state.loading = true;
