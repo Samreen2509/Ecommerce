@@ -4,6 +4,7 @@ import Cart from './cart.model.js';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
+import Wishlist from './wishlist.model.js';
 
 const userSchema = new Schema(
   {
@@ -79,11 +80,19 @@ userSchema.pre('save', async function (next) {
 
 userSchema.post('save', async function (user, next) {
   const cart = await Cart.findOne({ owner: user._id });
+  const wishlist = await Wishlist.findOne({ owner: user._id });
 
   // Setup necessary ecommerce models for the user
 
   if (!cart) {
     await Cart.create({
+      owner: user._id,
+      items: [],
+    });
+  }
+
+  if (!wishlist) {
+    await Wishlist.create({
       owner: user._id,
       items: [],
     });
