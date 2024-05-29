@@ -1,6 +1,25 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+export const refreshToken = createAsyncThunk(
+  'auth/refreshToken',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${process.env.BASEURL}/auth/refreshToken`,
+        null,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
 export const logout = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
@@ -69,16 +88,17 @@ export const Register = createAsyncThunk(
 
 const initialState = {
   isLoading: false,
-  userInfo: JSON.parse(localStorage.getItem('userInfo')) || null,
+  userInfo: null,
   error: null,
-  isUserVerified: JSON.parse(localStorage.getItem('isUserVerified')) || null,
-  isUserLogin: JSON.parse(localStorage.getItem('isUserLogin')) || false,
+  isUserVerified: null,
+  isUserLogin: false,
+  refreshToken: null,
+  token: null,
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -86,16 +106,12 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.userInfo = action.payload;
+        state.userInfo = action.payload.data.userInfo;
+        state.error = null;
         state.isLoading = false;
         state.isUserLogin = true;
-
-        console.log(action.payload.data.userInfo.isEmailVerified);
+        token: action.payload.data.token;
         state.isUserVerified = action.payload.data.userInfo.isEmailVerified;
-
-        localStorage.setItem('userInfo', JSON.stringify(action.payload));
-        localStorage.setItem('isUserLogin', JSON.stringify(true));
-        localStorage.setItem('isUserVerified', JSON.stringify(true));
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -119,20 +135,20 @@ const authSlice = createSlice({
       .addCase(logout.pending, (state) => {
         state.isLoading = true;
         state.error = null;
+        state.isUserLogin = false;
+        state.userInfo = null;
+        state.isUserVerified = null;
       })
       .addCase(logout.fulfilled, (state) => {
         state.isLoading = false;
-        state.isUserLogin = false;
         state.error = null;
-        state.userInfo = null;
-        state.isUserVerified = null;
-        localStorage.removeItem('userInfo');
-        localStorage.removeItem('isUserVerified');
-        localStorage.removeItem('isUserLogin');
       })
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+      })
+      .addCase(refreshToken.fulfilled, (state, action) => {
+        state.refreshToken = action.payload.message;
       });
   },
 });

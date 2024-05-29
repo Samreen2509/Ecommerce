@@ -5,24 +5,27 @@ import CategoryCard from './CategoryCard.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../../features/categorySlice.js';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import useCheckSession from '../../hook/useCheckSession.js';
+import { getCartProducts } from '../../features/cartSlice.js';
 
 const Body = () => {
-  const data = useSelector((state) => state.category);
+  const { categories } = useSelector((state) => state.category);
   const dispatch = useDispatch();
 
-  const { isUserVerified } = useSelector((state) => state.auth);
+  const { isUserVerified, refreshToken } = useSelector((state) => state.auth);
   const [storeSection, setStoreSection] = useState([]);
+
+  useCheckSession();
 
   useEffect(() => {
     dispatch(getAllCategory());
+    dispatch(getCartProducts());
   }, [dispatch]);
-  console.log(data);
 
-  // return
-  // categories.length === 0 ? (
-  //   <Shimmer />
-  // ) :
-  return (
+  return categories.length === 0 ? (
+    <Shimmer />
+  ) : (
     <div className="body">
       <div>
         <div className="">
@@ -44,15 +47,16 @@ const Body = () => {
             <h1>Shop by category</h1>
           </div>
           <div className="flex flex-wrap justify-center">
-            {/* {categories && categories.data.map((category) => (
-            <Link
-              to={`/category/${category._id}`}
-              key={category._id}
-              className="link"
-            >
-              <CategoryCard sdata={category} />
-            </Link>
-          ))} */}
+            {categories &&
+              categories?.data?.map((category) => (
+                <Link
+                  to={`/category/${category._id}`}
+                  key={category._id}
+                  className="link"
+                >
+                  <CategoryCard sdata={category} />
+                </Link>
+              ))}
           </div>
         </div>
       </div>

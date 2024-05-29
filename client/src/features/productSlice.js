@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const BASE_URL_PRODUCT = `${process.env.BASEURL}/v1/products/`
-const BASE_URL_CATEGORY = `${process.env.BASEURL}/v1/category`
+const BASE_URL_PRODUCT = `${process.env.BASEURL}/product`;
+const BASE_URL_CATEGORY = `${process.env.BASEURL}/category`;
 
 // creating a category
 export const createCategory = createAsyncThunk(

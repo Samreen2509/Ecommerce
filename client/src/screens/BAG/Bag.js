@@ -2,19 +2,20 @@ import { Link } from 'react-router-dom';
 import BagProduct from './BagProduct';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { accessToken, getCartProducts } from '../../features/cartSlice';
+import { getCartProducts } from '../../features/cartSlice';
 
 const Bag = () => {
-  // const data = useSelector((state) => state.cart)
+  const { cartProducts, cartTotalPrice, updateCart, isLoading } = useSelector(
+    (state) => state.cart
+  );
   const dispatch = useDispatch();
+  console.log(cartProducts);
 
-  // console.log(data);
-  
   useEffect(() => {
-    
-    dispatch(getCartProducts())
-  }, [dispatch])
-  
+    dispatch(getCartProducts());
+  }, [dispatch, updateCart]);
+
+  console.log(cartTotalPrice);
 
   return (
     <section className="mt-3 flex h-full w-full flex-col items-center justify-center">
@@ -28,12 +29,17 @@ const Bag = () => {
               <p className="text-lg font-semibold leading-6 text-gray-800 md:text-xl xl:leading-5 ">
                 Customer's Cart
               </p>
-
               {/* Product */}
-              <BagProduct cart={true} />
-              <BagProduct cart={true} />
-              <BagProduct cart={true} />
-              <BagProduct cart={true} />
+
+              {cartProducts &&
+                cartProducts.map((data, index) => (
+                  <BagProduct
+                    cart={true}
+                    data={data}
+                    key={index}
+                    isLoading={isLoading}
+                  />
+                ))}
             </div>
           </div>
         </div>
@@ -47,15 +53,9 @@ const Bag = () => {
             <div className="flex w-full flex-col items-center justify-center space-y-4 border-b border-gray-200 pb-4">
               <div className="flex w-full justify-between">
                 <p className="text-base leading-4 text-gray-800 ">Subtotal</p>
-                <p className="text-base leading-4 text-gray-600 ">₹00.00</p>
-              </div>
-              <div className="flex w-full items-center justify-between">
-                <p className="text-base leading-4 text-gray-800 ">Discount </p>
-                <p className="text-base leading-4 text-gray-600 ">-₹00.00</p>
-              </div>
-              <div className="flex w-full items-center justify-between">
-                <p className="text-base leading-4 text-gray-800">Shipping</p>
-                <p className="text-base leading-4 text-gray-600">₹00.00</p>
+                <p className="text-base leading-4 text-gray-600 ">
+                  ₹{cartTotalPrice && cartTotalPrice.toFixed(0)}
+                </p>
               </div>
             </div>
             <div className="flex w-full items-center justify-between">
@@ -63,7 +63,7 @@ const Bag = () => {
                 Total
               </p>
               <p className="text-base font-semibold leading-4 text-gray-600">
-                ₹00.00
+                ₹{cartTotalPrice && cartTotalPrice.toFixed(0)}
               </p>
             </div>
             <Link

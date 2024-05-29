@@ -1,4 +1,4 @@
-import BagProduct from './BagProduct.js';
+import WishlistProduct from './WishlistProduct';
 
 const Wishlist = () => {
   return (
@@ -15,8 +15,8 @@ const Wishlist = () => {
             </p>
 
             {/* Product */}
-            <BagProduct />
-            <BagProduct />
+            <WishlistProduct />
+            <WishlistProduct />
           </div>
         </div>
       </div>
