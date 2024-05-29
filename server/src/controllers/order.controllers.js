@@ -44,7 +44,7 @@ export const getOrder = asyncHandler(async (req, res) => {
     });
   }
 
-  const data = await Order.aggregate(getOrderInfoPipeline);
+  const data = await Order.aggregate(orderPipeline);
   if (!data) {
     throw new ApiError(500, `failed to retrieve order data - ${data}`);
   }
