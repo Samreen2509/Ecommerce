@@ -10,25 +10,26 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import cartSlice from '../features/cartSlice';
+import categorySlice from '../features/categorySlice';
+import wishlistSlice from '../features/wishlistSlice';
 
 const authPersistConfig = {
   key: 'auth',
   storage,
-  whitelist: ['userInfo']
 };
 
-
 const persistedAuthReducer = persistReducer(authPersistConfig, authSlice);
-
 
 export const store = configureStore({
   reducer: {
     product: productSlice,
+    category: categorySlice,
     cart: cartSlice,
-    auth: persistedAuthReducer
+    wishlist: wishlistSlice,
+    auth: persistedAuthReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -38,4 +39,4 @@ export const store = configureStore({
     }),
 });
 
-export const persistor = persistStore(store)
+export const persistor = persistStore(store);

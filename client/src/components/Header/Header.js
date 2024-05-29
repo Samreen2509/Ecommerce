@@ -9,12 +9,13 @@ import { FiMenu } from 'react-icons/fi';
 import { RxCross2 } from 'react-icons/rx';
 import DropDown from './DropDown';
 import SearchPage from './SearchPage';
+import { useSelector } from 'react-redux';
 
 function Header() {
   const [Sidemenu, setSidemenu] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const { productTotalQty } = useSelector((state) => state.cart);
 
   const handleHover = () => {
     setIsDropdownOpen(true);
@@ -48,7 +49,6 @@ function Header() {
     { text: 'Register', link: '/register' },
   ];
 
-  const cartItems = 0;
   const wishlistitems = 0;
 
   return (
@@ -103,7 +103,7 @@ function Header() {
               <FiShoppingBag size={30} />
               <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-black text-center text-white">
                 <div className="text-[12px] font-semibold">
-                  <div>{cartItems}</div>
+                  <div>{productTotalQty}</div>
                 </div>
               </div>
             </Link>
@@ -121,18 +121,6 @@ function Header() {
             <p>Search</p>
           </div>
           {openSearch && <SearchPage handleSearchLeave={handleSearchLeave} />}
-
-          {/* Account part */}
-          <div className="flex cursor-pointer items-center justify-between gap-x-4">
-            <div
-              className={`flex cursor-pointer items-center justify-between gap-x-4 hover:text-orange-400 ${isDropdownOpen && 'text-orange-400'}`}
-              onMouseEnter={handleHover}
-            >
-              <VscAccount size={22} />
-              <p>Account</p>
-            </div>
-            {isDropdownOpen && <DropDown handleLeave={handleLeave} />}
-          </div>
 
           {/* Wishlist part */}
           <Link
@@ -159,12 +147,25 @@ function Header() {
               <div>
                 <FiShoppingBag size={22} />
                 <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-black text-center text-white">
-                  <p className="text-[12px] font-semibold">{cartItems}</p>
+                  <p className="text-[12px] font-semibold">
+                    {productTotalQty || 0}
+                  </p>
                 </div>
               </div>
             </div>
             <p>Bag</p>
           </Link>
+          {/* Account part */}
+          <div className="flex cursor-pointer items-center justify-between gap-x-4">
+            <div
+              className={`flex cursor-pointer items-center justify-between gap-x-4 hover:text-orange-400 ${isDropdownOpen && 'text-orange-400'}`}
+              onMouseEnter={handleHover}
+            >
+              <VscAccount size={22} />
+              <p>Account</p>
+            </div>
+            {isDropdownOpen && <DropDown handleLeave={handleLeave} />}
+          </div>
         </div>
       </div>
     </>
