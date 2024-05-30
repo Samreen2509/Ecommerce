@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { getAllProducts } from '../../features/productSlice.js';
+import { getWishListProducts } from '../../features/wishlistSlice.js';
 
 const Products = () => {
   const { id } = useParams();
@@ -11,6 +12,7 @@ const Products = () => {
 
   useEffect(() => {
     dispatch(getAllProducts());
+    dispatch(getWishListProducts());
   }, [dispatch]);
 
   const singleCategoryProduct =

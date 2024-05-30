@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import useCheckSession from '../../hook/useCheckSession.js';
 import { getCartProducts } from '../../features/cartSlice.js';
+import { getWishListProducts } from '../../features/wishlistSlice.js';
 
 const Body = () => {
   const { categories } = useSelector((state) => state.category);
@@ -21,6 +22,7 @@ const Body = () => {
   useEffect(() => {
     dispatch(getAllCategory());
     dispatch(getCartProducts());
+    dispatch(getWishListProducts());
   }, [dispatch]);
 
   return categories.length === 0 ? (

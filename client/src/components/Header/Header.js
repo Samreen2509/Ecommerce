@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import logo from '../../../images/favicon.png';
 import { Link } from 'react-router-dom';
 import { IoIosSearch } from 'react-icons/io';
-import { VscAccount } from 'react-icons/vsc';
-import { FaRegHeart } from 'react-icons/fa';
+import { VscAccount, VscLoading } from 'react-icons/vsc';
+import { FaRegHeart, FaStar } from 'react-icons/fa';
 import { FiShoppingBag } from 'react-icons/fi';
 import { FiMenu } from 'react-icons/fi';
 import { RxCross2 } from 'react-icons/rx';
@@ -15,7 +15,9 @@ function Header() {
   const [Sidemenu, setSidemenu] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { productTotalQty } = useSelector((state) => state.cart);
+  const { productTotalQty, isLoading } = useSelector((state) => state.cart);
+  const { totalWishProducts: wishlistitems, isLoading: loadingwishlistitems } =
+    useSelector((state) => state.wishlist);
 
   const handleHover = () => {
     setIsDropdownOpen(true);
@@ -48,8 +50,6 @@ function Header() {
     { text: 'Login', link: '/login' },
     { text: 'Register', link: '/register' },
   ];
-
-  const wishlistitems = 0;
 
   return (
     <>
@@ -102,9 +102,13 @@ function Header() {
             >
               <FiShoppingBag size={30} />
               <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-black text-center text-white">
-                <div className="text-[12px] font-semibold">
-                  <div>{productTotalQty}</div>
-                </div>
+                {isLoading ? (
+                  <p className="animate-spin text-[12px] font-semibold">0</p>
+                ) : (
+                  <p className="text-[12px] font-semibold">
+                    {productTotalQty || 0}
+                  </p>
+                )}
               </div>
             </Link>
           </div>
@@ -131,7 +135,11 @@ function Header() {
               <div>
                 <FaRegHeart size={22} />
                 <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-black text-center text-white">
-                  <p className="text-[12px] font-semibold">{wishlistitems}</p>
+                  {loadingwishlistitems ? (
+                    <p className="animate-spin text-[12px] font-semibold">0</p>
+                  ) : (
+                    <p className="text-[12px] font-semibold">{wishlistitems}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -147,9 +155,13 @@ function Header() {
               <div>
                 <FiShoppingBag size={22} />
                 <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-black text-center text-white">
-                  <p className="text-[12px] font-semibold">
-                    {productTotalQty || 0}
-                  </p>
+                  {isLoading ? (
+                    <p className="animate-spin text-[12px] font-semibold">0</p>
+                  ) : (
+                    <p className="text-[12px] font-semibold">
+                      {productTotalQty || 0}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
