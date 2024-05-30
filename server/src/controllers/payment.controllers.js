@@ -149,6 +149,12 @@ export const addPayment = asyncHandler(async (req, res) => {
     throw new ApiError(500, 'something went worng');
   }
 
+  await Order.findByIdAndUpdate(orderInfo._id, {
+    $set: {
+      paymentId: newPayment._id,
+    },
+  });
+
   return res.status(200).json(
     new ApiResponse(
       200,
