@@ -23,7 +23,7 @@ export const createProduct = createAsyncThunk(
 
 // getting all products
 export const getAllProducts = createAsyncThunk(
-  'product/getProducts',
+  'product/getAllProducts',
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(BASE_URL_PRODUCT, {

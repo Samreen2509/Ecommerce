@@ -8,22 +8,29 @@ import { getAllProducts } from '../../features/productSlice.js';
 
 const Products = () => {
   const { id } = useParams();
-  const { products } = useSelector((state) => state.product);
+  const { products, loading } = useSelector((state) => state.product);
   const dispatch = useDispatch();
 
+  console.log('products:', products);
   useEffect(() => {
     dispatch(getAllProducts());
   }, [dispatch]);
+
+  console.log('products:', products);
 
   const singleCategoryProduct =
     products.data?.productInfo.filter((product) => product.category === id) ||
     [];
 
+  if (loading) {
+    return <Shimmer />;
+  }
+
   return (
     <div className="body">
       <div className="min-h-min">
         <div className="mx-48 text-5xl font-bold">
-          <h1>Shop by category</h1>
+          <h1>Shop By Category</h1>
         </div>
 
         <div className="flex flex-wrap justify-center">

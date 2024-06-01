@@ -2,6 +2,8 @@ import Button from '../../components/Button';
 
 const ProductCard = (props) => {
   const { sdata } = props;
+  // console.log('sdata:', sdata);
+  // console.log('mainImage:', sdata.mainImage);
   const { mainImage, description, price } = sdata;
 
   return (

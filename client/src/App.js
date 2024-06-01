@@ -22,16 +22,21 @@ import Notification from './components/Notification.js';
 import ResetPassword from './screens/auth/ResetPassword.js';
 import VerifyEmail from './screens/auth/VerifyEmail.js';
 import { Provider } from 'react-redux';
-import { store } from './app/store.js';
+import { persistor, store } from './app/store.js';
+import { PersistGate } from 'redux-persist/integration/react';
+import Category from './screens/category/Category.js';
+import ProductPage from './screens/product/ProductPage.js';
 
 const Applayout = () => {
   return (
     <Provider store={store}>
-      <div className="app">
-        <Header />
-        <Outlet />
-        <Footer />
-      </div>
+      <PersistGate loading={null} persistor={persistor}>
+        <div className="app">
+          <Header />
+          <Outlet />
+          <Footer />
+        </div>
+      </PersistGate>
     </Provider>
   );
 };
@@ -87,8 +92,12 @@ const appRouter = createBrowserRouter([
         element: <About />,
       },
       {
+        path: '/category',
+        element: <Category />,
+      },
+      {
         path: '/products',
-        element: <Products />,
+        element: <ProductPage />,
       },
       {
         path: '/singleProduct/:categoryId',
