@@ -14,27 +14,26 @@ const Login = () => {
     email: '',
     password: '',
   });
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const data = useSelector(state => state.auth);
+  const data = useSelector((state) => state.auth);
   console.log(data, data.isLoading, data.error);
-  const { isLoading, error, isUserVerified, isUserLogin } = data
+  const { isLoading, error, isUserVerified, isUserLogin } = data;
   console.log(error);
 
   useEffect(() => {
     if (isUserLogin) {
-      navigate('/')
-      toast.success("User login successfully")
+      navigate('/');
+      toast.success('User login successfully');
 
       setFormData({
-        name: "",
-        username: "",
-        email: "",
-        password: "",
-      })
+        name: '',
+        username: '',
+        email: '',
+        password: '',
+      });
     }
-  }, [isUserLogin])
-
+  }, [isUserLogin]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,12 +46,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(login({
-        email: formData.email,
-        password: formData.password,
-      }));
+      dispatch(
+        login({
+          email: formData.email,
+          password: formData.password,
+        })
+      );
     } catch (error) {
-
       console.error('Failed to login:', error);
     }
   };
@@ -69,16 +69,19 @@ const Login = () => {
               <img src={png} alt="logo" />
             </Link>
           </div>
-          {isUserVerified ? <p className="text-start text-sm capitalize text-red-400">
-            Please Verify your account. A verification link already sent to your email address
-          </p> :
+          {isUserVerified ? (
+            <p className="text-start text-sm capitalize text-red-400">
+              Please Verify your account. A verification link already sent to
+              your email address
+            </p>
+          ) : (
             error && (
               <p className="text-xl text-red-400">
                 {/* 'Please Fill Details Properly' */}
                 {error}
               </p>
             )
-          }
+          )}
           <div className="mt-2">
             <div className="mb-6">
               <InputBox
@@ -106,7 +109,6 @@ const Login = () => {
                 className="w-full rounded-md  bg-slate-600 px-5 py-3 font-medium text-white transition hover:bg-opacity-90"
               >
                 {isLoading ? 'Loading...' : 'Sign In'}
-
               </button>
             </div>
           </div>

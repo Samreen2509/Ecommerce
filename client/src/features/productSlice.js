@@ -2,6 +2,92 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const BASE_URL_PRODUCT = `${process.env.BASEURL}/product`;
+const BASE_URL_CATEGORY = `${process.env.BASEURL}/category`;
+
+// creating a category
+export const createCategory = createAsyncThunk(
+  'category/createCategory',
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(BASE_URL_CATEGORY, data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
+// getting all the category
+export const getAllCategory = createAsyncThunk(
+  'category/getAllCategory',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(BASE_URL_CATEGORY, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
+// getting a single category
+export const getOneCategory = createAsyncThunk(
+  'category/getOneCategory',
+  async (categoryId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BASE_URL_CATEGORY}/${categoryId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
+// updating a category
+export const updateCategory = createAsyncThunk(
+  'category/updateCategory',
+  async ({ data, categoryId }, { rejectWithValue }) => {
+    try {
+      const response = await axios(`${BASE_URL_CATEGORY}/${categoryId}`, data, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
+// deleting a product
+export const removeCategory = createAsyncThunk(
+  'category/removeCategory',
+  async (categoryId, { rejectWithValue }) => {
+    try {
+      await axios.delete(`${BASE_URL_CATEGORY}/${categoryId}`, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      return id; // Return the id of the deleted product
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
 
 // creating a product
 export const createProduct = createAsyncThunk(

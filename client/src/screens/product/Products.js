@@ -1,5 +1,3 @@
-import Shimmer from '../../components/Loading/Shimmer.js';
-import { Link } from 'react-router-dom';
 import ProductCard from './ProductCards.js';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -19,7 +17,7 @@ const Products = () => {
   console.log('products:', products);
 
   const singleCategoryProduct =
-    products.data?.productInfo.filter((product) => product.category === id) ||
+    products?.data?.productInfo?.filter((product) => product.category === id) ||
     [];
 
   if (loading) {
@@ -35,14 +33,8 @@ const Products = () => {
 
         <div className="flex flex-wrap justify-center">
           {singleCategoryProduct.length !== 0 ? (
-            singleCategoryProduct.map((product) => (
-              <Link
-                to={`/singleProduct/${product._id}`}
-                className="link"
-                key={product._id}
-              >
-                <ProductCard sdata={product} />
-              </Link>
+            singleCategoryProduct.map((product, index) => (
+              <ProductCard sdata={product} key={index} />
             ))
           ) : (
             <div className="mr-24 mt-20">

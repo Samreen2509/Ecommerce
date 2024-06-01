@@ -1,20 +1,26 @@
 import Shimmer from '../Loading/Shimmer.js';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import Carousel from './Carousel';
 import CategoryCard from '../../screens/category/CategoryCard.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../../features/categorySlice.js';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import useCheckSession from '../../hook/useCheckSession.js';
+import { getCartProducts } from '../../features/cartSlice.js';
 
 const Body = () => {
   const { categories, loading } = useSelector((state) => state.category);
   const dispatch = useDispatch();
 
-  const { isUserVerified } = useSelector((state) => state.auth);
+  const { isUserVerified, refreshToken } = useSelector((state) => state.auth);
   const [storeSection, setStoreSection] = useState([]);
+
+  useCheckSession();
 
   useEffect(() => {
     dispatch(getAllCategory());
+    dispatch(getCartProducts());
   }, [dispatch]);
   console.log(categories);
 

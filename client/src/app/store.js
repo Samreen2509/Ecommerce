@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import productSlice from '../features/productSlice';
 import authSlice from '../features/authSlice';
-import categorySlice from '../features/categorySlice';
 import {
   persistStore,
   persistReducer,
@@ -14,11 +13,12 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import cartSlice from '../features/cartSlice';
+import categorySlice from '../features/categorySlice';
+import wishlistSlice from '../features/wishlistSlice';
 
 const authPersistConfig = {
   key: 'auth',
   storage,
-  whitelist: ['userInfo'],
 };
 
 const persistedAuthReducer = persistReducer(authPersistConfig, authSlice);
@@ -28,6 +28,7 @@ export const store = configureStore({
     product: productSlice,
     category: categorySlice,
     cart: cartSlice,
+    wishlist: wishlistSlice,
     auth: persistedAuthReducer,
   },
   middleware: (getDefaultMiddleware) =>
