@@ -18,6 +18,7 @@ import cartRoutes from './routes/cart.routes.js';
 import orderRoutes from './routes/order.routes.js';
 import { paymentRoutes, stripeWebhookRoutes } from './routes/payment.routes.js';
 import wishlistRoutes from './routes/wishlist.routes.js';
+import searchRoutes from './routes/search.routes.js';
 
 // constants
 const app = express();
@@ -67,6 +68,8 @@ app.use(`${BASEPATH}/order`, orderRoutes);
 app.use(`${BASEPATH}/wishlist`, wishlistRoutes);
 // Payment Routes
 app.use(`${BASEPATH}/payment`, paymentRoutes);
+// Search Routes
+app.use(`${BASEPATH}/search`, searchRoutes);
 
 // Error middleware
 app.use(errorHandler);
