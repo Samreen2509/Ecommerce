@@ -18,12 +18,12 @@ export const createAdress = asyncHandler(async (req, res) => {
   }
 
   const addressCreated = await Address.create({
-    address,
-    city,
-    pincode,
-    state,
-    country,
-    userId,
+    address: address,
+    city: city,
+    pincode: pincode,
+    state: state,
+    country: country,
+    owner: userId,
   });
 
   if (!addressCreated) {
