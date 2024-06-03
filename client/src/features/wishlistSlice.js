@@ -31,7 +31,7 @@ export const addToWishlist = createAsyncThunk(
           withCredentials: true,
         }
       );
-      console.log(response.data);
+
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -112,9 +112,6 @@ export const wishlistSlice = createSlice({
       .addCase(removeFromWishlist.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        // state.wishlistProducts = action.payload.data.items;
-        // state.totalWishProducts = action.payload.data.items.length;
-        // console.log(action.payload);
       })
       .addCase(removeFromWishlist.rejected, (state, action) => {
         state.isLoading = false;

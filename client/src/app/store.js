@@ -15,6 +15,7 @@ import storage from 'redux-persist/lib/storage';
 import cartSlice from '../features/cartSlice';
 import categorySlice from '../features/categorySlice';
 import wishlistSlice from '../features/wishlistSlice';
+import orderSlice from '../features/orderSlice';
 
 const authPersistConfig = {
   key: 'auth',
@@ -29,6 +30,7 @@ export const store = configureStore({
     category: categorySlice,
     cart: cartSlice,
     wishlist: wishlistSlice,
+    order: orderSlice,
     auth: persistedAuthReducer,
   },
   middleware: (getDefaultMiddleware) =>

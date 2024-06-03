@@ -213,6 +213,7 @@ export const productSlice = createSlice({
       })
       .addCase(createProduct.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.products.push(action.payload); // Append the new product to the list
       })
       .addCase(createProduct.rejected, (state, action) => {
@@ -226,6 +227,7 @@ export const productSlice = createSlice({
       })
       .addCase(getAllProducts.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.products = action.payload; // Set the products list
       })
       .addCase(getAllProducts.rejected, (state, action) => {
@@ -239,6 +241,7 @@ export const productSlice = createSlice({
       })
       .addCase(getOneProduct.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.product = action.payload; // Set the single product
       })
       .addCase(getOneProduct.rejected, (state, action) => {
@@ -252,6 +255,7 @@ export const productSlice = createSlice({
       })
       .addCase(otherImages.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.products = state.products.map((product) => {
           if (product.id === action.payload.id) {
             return { ...product, otherImages: action.payload.otherImages };
@@ -270,6 +274,7 @@ export const productSlice = createSlice({
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.products = state.products.map((product) =>
           product.id === action.payload.id ? action.payload : product
         ); // Update the product in the list
@@ -285,6 +290,7 @@ export const productSlice = createSlice({
       })
       .addCase(removeProduct.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.products = state.products.filter(
           (product) => product.id !== action.payload
         ); // Remove the product from the list

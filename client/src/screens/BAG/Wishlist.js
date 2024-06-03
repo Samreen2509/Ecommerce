@@ -8,10 +8,13 @@ const Wishlist = () => {
   const { wishlistProducts, totalWishProducts } = useSelector(
     (state) => state.wishlist
   );
+  const { isUserLogin } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    dispatch(getWishListProducts());
-  }, [dispatch, totalWishProducts]);
+    if (isUserLogin) {
+      dispatch(getWishListProducts());
+    }
+  }, [dispatch]);
 
   return (
     <section className="mb-10 h-full w-full">

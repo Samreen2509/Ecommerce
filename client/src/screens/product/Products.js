@@ -8,11 +8,14 @@ import { getWishListProducts } from '../../features/wishlistSlice.js';
 const Products = () => {
   const { id } = useParams();
   const { products } = useSelector((state) => state.product);
+  const { isUserLogin } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllProducts());
-    dispatch(getWishListProducts());
+    if (isUserLogin) {
+      dispatch(getWishListProducts());
+    }
   }, [dispatch]);
 
   const singleCategoryProduct =

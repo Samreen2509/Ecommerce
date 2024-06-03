@@ -9,13 +9,18 @@ import {
 import { useDispatch } from 'react-redux';
 
 function WishlistProduct({ data }) {
-  const quantity = 0;
   const { mainImage, price, name, _id, color } = data?.product;
   const dispatch = useDispatch();
+  const [quantity, setQuantity] = useState(1);
 
   const handleRemove = () => {
     dispatch(removeFromWishlist({ _id }));
     dispatch(getWishListProducts());
+  };
+
+  const handleSelectChange = (e) => {
+    e.preventDefault();
+    setQuantity(Number(e.target.value));
   };
 
   if (!data) return null;
@@ -67,7 +72,22 @@ function WishlistProduct({ data }) {
           </div>
           <div className="flex h-full w-full items-center justify-between space-x-8 ">
             {/* Wishlist Only */}
-
+            <div className="flex items-start justify-between gap-2">
+              <select
+                id="quantity"
+                value={quantity}
+                onChange={handleSelectChange}
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              >
+                <option value="" disabled>
+                  Choose Quantity
+                </option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
             <div className="flex w-full items-start">
               <AddToCart
                 id={_id}

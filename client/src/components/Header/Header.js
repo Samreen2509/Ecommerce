@@ -3,7 +3,7 @@ import logo from '../../../images/favicon.png';
 import { Link } from 'react-router-dom';
 import { IoIosSearch } from 'react-icons/io';
 import { VscAccount, VscLoading } from 'react-icons/vsc';
-import { FaRegHeart, FaStar } from 'react-icons/fa';
+import { FaRegHeart } from 'react-icons/fa';
 import { FiShoppingBag } from 'react-icons/fi';
 import { FiMenu } from 'react-icons/fi';
 import { RxCross2 } from 'react-icons/rx';

@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import png from '../../../images/favicon.png';
 import { Link, useNavigate } from 'react-router-dom';
-// import GlobalApi from '../../utils/GlobalApi';
-// import { toast } from 'react-toastify';
-// import ForgotPassword from './ForgotPassword';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../features/authSlice';
 import { toast } from 'react-toastify';

@@ -3,19 +3,17 @@ import BagProduct from './BagProduct';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCartProducts } from '../../features/cartSlice';
+import { VscLoading } from 'react-icons/vsc';
 
 const Bag = () => {
   const { cartProducts, cartTotalPrice, updateCart, isLoading } = useSelector(
     (state) => state.cart
   );
   const dispatch = useDispatch();
-  console.log(cartProducts);
 
   useEffect(() => {
     dispatch(getCartProducts());
   }, [dispatch, updateCart]);
-
-  console.log(cartTotalPrice);
 
   return (
     <section className="mt-3 flex h-full w-full flex-col items-center justify-center">
@@ -63,11 +61,16 @@ const Bag = () => {
                 Total
               </p>
               <p className="text-base font-semibold leading-4 text-gray-600">
-                ₹{cartTotalPrice && cartTotalPrice.toFixed(0)}
+                ₹
+                {cartTotalPrice && isLoading ? (
+                  <VscLoading className="animate-spin" />
+                ) : (
+                  cartTotalPrice.toFixed(0)
+                )}
               </p>
             </div>
             <Link
-              to="/placeOrder"
+              to="/placeOrder/payment"
               className="flex w-full items-center justify-between"
             >
               <button className="w-full bg-orange-400 px-5 py-2 text-xl font-semibold text-white hover:bg-green-500">

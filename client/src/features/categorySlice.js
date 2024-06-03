@@ -114,6 +114,7 @@ export const catgorySlice = createSlice({
       })
       .addCase(createCategory.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.categories.push(action.payload); // Append the new category to the list
       })
       .addCase(createCategory.rejected, (state, action) => {
@@ -127,6 +128,7 @@ export const catgorySlice = createSlice({
       })
       .addCase(getAllCategory.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.categories = action.payload; // // Set the category list
       })
       .addCase(getAllCategory.rejected, (state, action) => {
@@ -139,6 +141,7 @@ export const catgorySlice = createSlice({
         state.error = null; // Clear previous errors
       })
       .addCase(getOneCategory.fulfilled, (state, action) => {
+        state.error = null;
         state.loading = false;
         state.categorie = action.payload; // // Set the single  category list
       })
@@ -153,6 +156,7 @@ export const catgorySlice = createSlice({
       })
       .addCase(updateCategory.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.categories = state.categories.map((categorie) =>
           categorie.id === action.payload.id ? action.payload : categorie
         ); // Update the product in the list
@@ -168,6 +172,7 @@ export const catgorySlice = createSlice({
       })
       .addCase(removeCategory.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         state.categories = state.categories.filter(
           (categorie) => categorie.id !== action.payload
         ); // Remove the product from the list

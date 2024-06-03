@@ -1,5 +1,5 @@
 import Shimmer from '../Loading/Shimmer.js';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Carousel from './Carousel';
 import CategoryCard from './CategoryCard.js';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,15 +14,22 @@ const Body = () => {
   const { categories } = useSelector((state) => state.category);
   const dispatch = useDispatch();
 
-  const { isUserVerified, refreshToken } = useSelector((state) => state.auth);
-  const [storeSection, setStoreSection] = useState([]);
+  const { isUserVerified, isUserLogin } = useSelector((state) => state.auth);
 
-  useCheckSession();
+  const { wishlistProducts } = useSelector((state) => state.wishlist);
+
+  if (isUserLogin) {
+    useCheckSession();
+  }
 
   useEffect(() => {
+    if (isUserLogin) {
+      if (wishlistProducts.length === 0) {
+        dispatch(getWishListProducts());
+      }
+      dispatch(getCartProducts());
+    }
     dispatch(getAllCategory());
-    dispatch(getCartProducts());
-    dispatch(getWishListProducts());
   }, [dispatch]);
 
   return categories.length === 0 ? (

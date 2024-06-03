@@ -24,6 +24,9 @@ import VerifyEmail from './screens/auth/VerifyEmail.js';
 import { Provider } from 'react-redux';
 import { persistor, store } from './app/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
+import OrderSuccessPage from './screens/order/OrderSuccessPage.js';
+import PrivateRoute from './components/Routes/PrivateRoute.js';
+import OrderAddressPage from './screens/order/OrderAddressPage.js';
 
 const Applayout = () => {
   return (
@@ -59,11 +62,12 @@ const appRouter = createBrowserRouter([
       },
       {
         path: '/register',
-        element: <RegistrationPage />,
+
+        element: <PrivateRoute element={RegistrationPage} />,
       },
       {
         path: '/login',
-        element: <Login />,
+        element: <PrivateRoute element={Login} />,
       },
       {
         path: '/forgotpassword',
@@ -102,8 +106,12 @@ const appRouter = createBrowserRouter([
         element: <Myorders />,
       },
       {
-        path: '/placeOrder',
+        path: '/placeOrder/payment',
         element: <PlaceOrderPage />,
+      },
+      {
+        path: '/success',
+        element: <OrderSuccessPage />,
       },
       {
         path: '/emailVerify',
@@ -112,6 +120,10 @@ const appRouter = createBrowserRouter([
       {
         path: '/resetPassword',
         element: <ResetPassword />,
+      },
+      {
+        path: '/success',
+        element: <OrderSuccessPage />,
       },
     ],
     errorElement: <ErrorPage />,

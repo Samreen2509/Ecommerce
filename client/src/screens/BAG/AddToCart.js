@@ -7,14 +7,24 @@ import { toast } from 'react-toastify';
 function AddToCart({ id: _id, quantity, className }) {
   const dispatch = useDispatch();
   const { productTotalQty } = useSelector((state) => state.cart);
+  const { isUserLogin } = useSelector((state) => state.auth);
 
   const handleaddCart = () => {
-    dispatch(addToCart({ productId: _id, quantity: quantity }));
-    dispatch(getCartProducts());
-    if (productTotalQty > 0) {
-      toast.success('Product added to Bag successfully');
+    if (isUserLogin) {
+      dispatch(addToCart({ productId: _id, quantity: quantity }));
+      dispatch(getCartProducts());
+      if (productTotalQty > 0) {
+        toast.success('Product added to Bag successfully');
+      }
     }
   };
+
+  if (!isUserLogin)
+    return (
+      <Button type="button" className={className}>
+        Add To Cart
+      </Button>
+    );
 
   return (
     <Button
