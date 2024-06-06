@@ -2,21 +2,6 @@ import { Link } from 'react-router-dom';
 import BagProduct from './BagProduct';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-<<<<<<< HEAD
-import { accessToken, getCartProducts } from '../../features/cartSlice';
-
-const Bag = () => {
-  // const data = useSelector((state) => state.cart)
-  const dispatch = useDispatch();
-
-  // console.log(data);
-  
-  useEffect(() => {
-    
-    dispatch(getCartProducts())
-  }, [dispatch])
-  
-=======
 import { getCartProducts } from '../../features/cartSlice';
 
 const Bag = () => {
@@ -31,7 +16,6 @@ const Bag = () => {
   }, [dispatch, updateCart]);
 
   console.log(cartTotalPrice);
->>>>>>> Client
 
   return (
     <section className="mt-3 flex h-full w-full flex-col items-center justify-center">
