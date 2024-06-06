@@ -66,11 +66,28 @@ function classNames(...classes) {
 export default function SingleProduct() {
   const { categoryId } = useParams();
   const dispatch = useDispatch();
+  const [selectedSize, setSelectedSize] = useState(null);
+  const displayProductSize = ['XS', 'S', 'M', 'L', 'X', 'XL'];
   useEffect(() => {
     dispatch(getOneProduct(categoryId));
   }, []);
   const oneProduct = useSelector((state) => state.product.product);
+  // const displayProductSize = ['XS', 'S', 'M', 'L', 'XL', 'XXL']; // All sizes to display
+  // const [selectedSize, setSelectedSize] = useState(null);
+
+  // const checkSize = (siz) => {
+  //   setSelectedSize(siz);
+  // };
   console.log(oneProduct);
+
+  const displayNotAvalableSize = (siz) => {
+    displayProductSize.map((ele) => {
+      return ele === siz;
+    });
+  };
+  const checkSize = (siz) => {
+    setSelectedSize(siz);
+  };
 
   return (
     <div className="bg-white">
@@ -201,8 +218,8 @@ export default function SingleProduct() {
                   <RadioGroup.Label className="sr-only">
                     Choose a color
                   </RadioGroup.Label>
-                  {/* <div className="flex items-center space-x-3">
-                    {oneProduct &&
+                  <div className="flex items-center space-x-3">
+                    {/* {oneProduct &&
                       oneProduct.data.productInfo.color.map((color) => (
                         <RadioGroup.Option
                           key={color.name}
@@ -227,15 +244,34 @@ export default function SingleProduct() {
                             )}
                           />
                         </RadioGroup.Option>
-                      ))}
-                  </div> */}
+                      ))} */}
+                  </div>
                 </RadioGroup>
               </div>
 
               {/* Sizes */}
               <div className="mt-10">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <h3 className="text-sm font-medium text-gray-900">Size</h3>
+                  <div className="flex items-center justify-center gap-2 text-black">
+                    {displayProductSize.map((ele) => {
+                      const isAvailable =
+                        oneProduct?.data.productInfo.size.includes(ele);
+                      return (
+                        <span
+                          key={ele}
+                          onClick={() => isAvailable && checkSize(ele)}
+                          className={`cursor-pointer rounded-md border-2 border-solid px-4 py-2 text-xs ${
+                            isAvailable && selectedSize === ele
+                              ? 'bg-black text-white'
+                              : ''
+                          } ${!isAvailable ? 'bg-gray-300' : ''}`}
+                        >
+                          {ele}
+                        </span>
+                      );
+                    })}
+                  </div>
                   <a
                     href="#"
                     className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
