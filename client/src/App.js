@@ -24,13 +24,17 @@ import VerifyEmail from './screens/auth/VerifyEmail.js';
 import { Provider } from 'react-redux';
 import { persistor, store } from './app/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
-import OrderSuccessPage from './screens/order/OrderSuccessPage.js';
-import PrivateRoute from './components/Routes/PrivateRoute.js';
-import OrderAddressPage from './screens/order/OrderAddressPage.js';
 
 const Applayout = () => {
   return (
     <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <div className="app">
+          <Header />
+          <Outlet />
+          <Footer />
+        </div>
+      </PersistGate>
       <PersistGate loading={null} persistor={persistor}>
         <div className="app">
           <Header />
@@ -94,8 +98,12 @@ const appRouter = createBrowserRouter([
         element: <About />,
       },
       {
+        path: '/category',
+        element: <Category />,
+      },
+      {
         path: '/products',
-        element: <Products />,
+        element: <ProductPage />,
       },
       {
         path: '/singleProduct/:categoryId',
