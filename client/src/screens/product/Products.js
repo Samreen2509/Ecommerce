@@ -9,7 +9,6 @@ import { getWishListProducts } from '../../features/wishlistSlice.js';
 const Products = () => {
   const { id } = useParams();
   const { products, loading } = useSelector((state) => state.product);
-  const { products } = useSelector((state) => state.product);
   const { isUserLogin } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 

@@ -11,10 +11,11 @@ const ProductCard = (props) => {
 
   return (
     <div className="group m-10 mb-24 flex h-96 w-72 flex-wrap justify-center  rounded-md ">
-      <div id="one" className="items-center duration-700 hover:scale-110">
+      <div className="items-center duration-700 hover:scale-110">
         <div className=" relative flex flex-col ">
           {/* Wishlist Btn */}
           <AddToWishlistBtn id={_id} />
+
           <Link
             to={`/singleProduct/${_id}`}
             className="relative right-11 top-28 float-left ml-3 flex h-11 w-11  flex-col items-center justify-center rounded-full opacity-0 transition-all duration-500 hover:bg-black group-hover:right-0  group-hover:opacity-100"
