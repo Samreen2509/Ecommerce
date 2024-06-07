@@ -80,8 +80,29 @@ export const removeFromCart = createAsyncThunk(
   }
 );
 
+export const clearCart = createAsyncThunk(
+  'cart/clearCart',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(
+        `${BASE_URL}/cart/clearcart`,
+        {},
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
 const initialState = {
-  isLoading: 'idle',
+  isLoading: false,
   error: null,
   cartProducts: [],
   cartTotalPrice: 0,
@@ -100,6 +121,7 @@ export const cartSlice = createSlice({
       })
       .addCase(getCartProducts.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.error = null;
         state.cartProducts = action.payload?.data?.items || [];
         state.cartTotalPrice = action.payload?.data?.cartTotal || 0;
         state.productTotalQty = action.payload?.data?.items?.length || 0;
@@ -114,12 +136,13 @@ export const cartSlice = createSlice({
       })
       .addCase(addToCart.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.error = null;
         state.cartProducts = action.payload?.items || [];
         state.productTotalQty = action.payload?.data?.items?.length || 0;
         console.log(action.payload);
         state.updateCart += 1;
       })
-      .addCase(addToCart.rejected, (state, action) => {
+      .addCase(addToCart.rejected, (state) => {
         state.isLoading = false;
         state.error = 'Server Error';
       })
@@ -128,7 +151,7 @@ export const cartSlice = createSlice({
         state.error = null;
       })
       .addCase(updateToCart.fulfilled, (state, action) => {
-        console.log(action.payload);
+        state.error = null;
         state.isLoading = false;
         state.updateCart += 1;
         state.cartTotalPrice = action.payload?.data?.cartTotal || 0;
@@ -143,10 +166,26 @@ export const cartSlice = createSlice({
       })
       .addCase(removeFromCart.fulfilled, (state, action) => {
         state.isLoading = false;
-
+        state.error = null;
         state.updateCart += 1;
       })
       .addCase(removeFromCart.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(clearCart.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(clearCart.fulfilled, (state) => {
+        state.isLoading = false;
+        state.error = null;
+        state.updateCart += 1;
+        state.cartProducts = [];
+        state.cartTotalPrice = 0;
+        state.productTotalQty = 0;
+      })
+      .addCase(clearCart.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

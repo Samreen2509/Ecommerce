@@ -1,6 +1,21 @@
+import { useDispatch, useSelector } from 'react-redux';
 import WishlistProduct from './WishlistProduct';
+import { useEffect } from 'react';
+import { getWishListProducts } from '../../features/wishlistSlice';
 
 const Wishlist = () => {
+  const dispatch = useDispatch();
+  const { wishlistProducts, totalWishProducts } = useSelector(
+    (state) => state.wishlist
+  );
+  const { isUserLogin } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isUserLogin) {
+      dispatch(getWishListProducts());
+    }
+  }, [dispatch]);
+
   return (
     <section className="mb-10 h-full w-full">
       <div className="flex flex-col items-center justify-center py-6">
@@ -15,8 +30,16 @@ const Wishlist = () => {
             </p>
 
             {/* Product */}
-            <WishlistProduct />
-            <WishlistProduct />
+            {totalWishProducts === 0 ? (
+              <p className="text-lg font-semibold leading-6 text-gray-800 md:text-xl xl:leading-5 ">
+                Your Wishlist is Empty
+              </p>
+            ) : (
+              wishlistProducts &&
+              wishlistProducts.map((data, index) => (
+                <WishlistProduct data={data} key={index} />
+              ))
+            )}
           </div>
         </div>
       </div>

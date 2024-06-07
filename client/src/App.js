@@ -13,7 +13,6 @@ import Bag from './screens/BAG/Bag.js';
 import SearchProduct from './screens/product/SearchProduct.js';
 import ProductDetailsPage from './screens/product/ProductDetailsPage.js';
 import About from './screens/Footer/About.js';
-import Products from './screens/product/Products.js';
 import SingleProduct from './screens/product/SingleProduct.js';
 import ErrorPage from './components/Error/ErrorPage';
 import Myorders from './screens/User/MyOrderPage.js';
@@ -24,19 +23,14 @@ import VerifyEmail from './screens/auth/VerifyEmail.js';
 import { Provider } from 'react-redux';
 import { persistor, store } from './app/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
-import Category from './screens/category/Category.js';
 import ProductPage from './screens/product/ProductPage.js';
+import PrivateRoute from './components/Routes/PrivateRoute.js';
+import Category from './screens/category/Category.js';
+import OrderSuccessPage from './screens/order/OrderSuccessPage.js';
 
 const Applayout = () => {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <div className="app">
-          <Header />
-          <Outlet />
-          <Footer />
-        </div>
-      </PersistGate>
       <PersistGate loading={null} persistor={persistor}>
         <div className="app">
           <Header />
@@ -68,11 +62,12 @@ const appRouter = createBrowserRouter([
       },
       {
         path: '/register',
-        element: <RegistrationPage />,
+
+        element: <PrivateRoute element={RegistrationPage} />,
       },
       {
         path: '/login',
-        element: <Login />,
+        element: <PrivateRoute element={Login} />,
       },
       {
         path: '/forgotpassword',
@@ -110,13 +105,18 @@ const appRouter = createBrowserRouter([
         path: '/singleProduct/:categoryId',
         element: <SingleProduct />,
       },
+
       {
         path: '/myorders',
         element: <Myorders />,
       },
       {
-        path: '/placeOrder',
+        path: '/placeOrder/payment',
         element: <PlaceOrderPage />,
+      },
+      {
+        path: '/success',
+        element: <OrderSuccessPage />,
       },
       {
         path: '/emailVerify',
@@ -125,6 +125,10 @@ const appRouter = createBrowserRouter([
       {
         path: '/resetPassword',
         element: <ResetPassword />,
+      },
+      {
+        path: '/success',
+        element: <OrderSuccessPage />,
       },
     ],
     errorElement: <ErrorPage />,

@@ -125,6 +125,7 @@ const authSlice = createSlice({
       .addCase(Register.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isUserLogin = true;
+        state.error = null;
         state.userInfo = action.payload;
       })
       .addCase(Register.rejected, (state, action) => {
@@ -149,6 +150,7 @@ const authSlice = createSlice({
       })
       .addCase(refreshToken.fulfilled, (state, action) => {
         state.refreshToken = action.payload.message;
+        state.error = null;
       });
   },
 });

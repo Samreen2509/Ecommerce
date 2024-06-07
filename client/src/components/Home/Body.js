@@ -1,5 +1,5 @@
 import Shimmer from '../Loading/Shimmer.js';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Carousel from './Carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../../features/categorySlice.js';
@@ -8,19 +8,28 @@ import { Link } from 'react-router-dom';
 import useCheckSession from '../../hook/useCheckSession.js';
 import { getCartProducts } from '../../features/cartSlice.js';
 import CategoryCard from '../../screens/category/CategoryCard.js';
+import { getWishListProducts } from '../../features/wishlistSlice.js';
 
 const Body = () => {
   const { categories } = useSelector((state) => state.category);
   const dispatch = useDispatch();
 
-  const { isUserVerified, refreshToken } = useSelector((state) => state.auth);
-  const [storeSection, setStoreSection] = useState([]);
+  const { isUserVerified, isUserLogin } = useSelector((state) => state.auth);
 
-  useCheckSession();
+  const { wishlistProducts } = useSelector((state) => state.wishlist);
+
+  if (isUserLogin) {
+    useCheckSession();
+  }
 
   useEffect(() => {
+    if (isUserLogin) {
+      if (wishlistProducts.length === 0) {
+        dispatch(getWishListProducts());
+      }
+      dispatch(getCartProducts());
+    }
     dispatch(getAllCategory());
-    dispatch(getCartProducts());
   }, [dispatch]);
 
   return categories.length === 0 ? (
