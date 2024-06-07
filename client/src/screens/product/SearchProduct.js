@@ -1,5 +1,5 @@
 import React from 'react';
-import CategoryPage from '../../components/Home/CategoryCard';
+// import CategoryPage from '../../components/Home/CategoryCard';
 import { useParams } from 'react-router-dom';
 
 function SearchProduct() {
@@ -7,11 +7,7 @@ function SearchProduct() {
 
   // Use the query parameter for fetching search results, etc.
   console.log(query);
-  return (
-    <div>
-      <CategoryPage />
-    </div>
-  );
+  return <div>{/* <CategoryPage /> */}</div>;
 }
 
 export default SearchProduct;
