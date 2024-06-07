@@ -1,13 +1,13 @@
 import Shimmer from '../Loading/Shimmer.js';
 import { useEffect, useState } from 'react';
 import Carousel from './Carousel';
-import CategoryCard from './CategoryCard.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../../features/categorySlice.js';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import useCheckSession from '../../hook/useCheckSession.js';
 import { getCartProducts } from '../../features/cartSlice.js';
+import CategoryCard from '../../screens/category/CategoryCard.js';
 
 const Body = () => {
   const { categories } = useSelector((state) => state.category);
