@@ -40,6 +40,9 @@ export const stripeWebhook = asyncHandler(async (req, res) => {
     case 'checkout.session.completed':
       await updatePayment(availablePaymentStatus.COMPLETED);
       break;
+    case 'checkout.session.expired':
+      await updatePayment(availablePaymentStatus.FAILED);
+      break;
     default:
       console.log(`something went worng ${event.type}`);
   }
@@ -142,6 +145,7 @@ export const addPayment = asyncHandler(async (req, res) => {
     stripeId: paymentSession.id,
     user: userId,
     orderId: oldPayment.orderId,
+    url: paymentSession.url,
   };
 
   const newPayment = await Payment.create(newPaymentData);
@@ -155,16 +159,9 @@ export const addPayment = asyncHandler(async (req, res) => {
     },
   });
 
-  return res.status(200).json(
-    new ApiResponse(
-      200,
-      {
-        paymentInfo: {
-          ...newPayment.toObject(),
-          url: paymentSession.url,
-        },
-      },
-      'new payment created'
-    )
-  );
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { paymentInfo: newPayment }, 'new payment created')
+    );
 });
