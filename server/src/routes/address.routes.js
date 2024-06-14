@@ -5,7 +5,7 @@ import {
   getOneAddress,
   removeAddress,
   updateAddress,
-  getUserAdderss,
+  getUserAddress,
 } from '../controllers/address.controller.js';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
 
@@ -15,7 +15,7 @@ router.route('/').get(verifyJWT, getAllAddress);
 
 router
   .route('/:userId')
-  .get(verifyJWT, getUserAdderss)
+  .get(verifyJWT, getUserAddress)
   .post(verifyJWT, createAdress);
 
 router
