@@ -27,6 +27,9 @@ const paymentSchema = new Schema({
     default: availablePaymentStatus.PENDING,
     required: true,
   },
+  url: {
+    type: String,
+  },
 });
 
 const Payment = mongoose.model('payments', paymentSchema);

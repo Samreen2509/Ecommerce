@@ -111,6 +111,7 @@ export const addOrder = asyncHandler(async (req, res) => {
       stripeId: paymentSession.id,
       user: user.id,
       orderId: newOrder._id,
+      url: paymentSession.url,
     };
 
     const newPayment = await Payment.create(paymentData);
@@ -130,26 +131,16 @@ export const addOrder = asyncHandler(async (req, res) => {
     }
   }
 
-  const orderPipeline = [...getOrderInfoPipeline];
-  orderPipeline.unshift({
-    $match: {
-      _id: new ObjectId(newOrder._id),
-    },
-  });
-  const orderInfo = await Order.aggregate(orderPipeline);
-  if (!orderInfo) {
-    throw new ApiError(500, 'something went worng');
-  }
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { orderInfo: orderInfo[0], paymentInfo: { url: paymentSession.url } },
-        'order created successfully'
-      )
-    );
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        orderInfo: { _id: newOrder._id },
+        paymentInfo: { url: paymentSession.url },
+      },
+      'order created successfully'
+    )
+  );
 });
 
 export const updateOrder = asyncHandler(async (req, res) => {
