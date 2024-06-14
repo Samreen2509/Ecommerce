@@ -180,6 +180,10 @@ export const loginUser = asyncHandler(async (req, res) => {
     { new: true }
   ).select(ignoreFields);
 
+  if (!loggedInUserInfo) {
+    throw new ApiError(500, 'something went worng');
+  }
+
   return res
     .status(200)
     .cookie('accessToken', accessToken, cookieOptions)
