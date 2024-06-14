@@ -1,21 +1,26 @@
 import { Router } from 'express';
 import {
   createAdress,
-  getAllUserAddress,
-  getOneUserAddress,
+  getAllAddress,
+  getOneAddress,
   removeAddress,
   updateAddress,
+  getUserAdderss,
 } from '../controllers/address.controller.js';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
-router.route('/:ownerId').post(verifyJWT, createAdress);
-router.route('/').get(verifyJWT, getAllUserAddress);
+router.route('/').get(verifyJWT, getAllAddress);
 
 router
-  .route('/:addressId')
-  .get(verifyJWT, getOneUserAddress)
+  .route('/:userId')
+  .get(verifyJWT, getUserAdderss)
+  .post(verifyJWT, createAdress);
+
+router
+  .route('/:userId/:addressId')
+  .get(verifyJWT, getOneAddress)
   .put(verifyJWT, updateAddress)
   .delete(verifyJWT, removeAddress);
 
