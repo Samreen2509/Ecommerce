@@ -37,13 +37,6 @@ const Applayout = () => {
           <Footer />
         </div>
       </PersistGate>
-      <PersistGate loading={null} persistor={persistor}>
-        <div className="app">
-          <Header />
-          <Outlet />
-          <Footer />
-        </div>
-      </PersistGate>
     </Provider>
   );
 };
