@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import CategoryCard from './CategoryCard.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../../features/categorySlice';
-import Shimmer from '../../components/Loading/Shimmer.js';
+// import Shimmer from '../../components/Loading/Shimmer.js';
 import { Link } from 'react-router-dom';
 
 function Category() {

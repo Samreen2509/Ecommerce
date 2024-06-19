@@ -4,15 +4,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { getAllProducts } from '../../features/productSlice.js';
 import Shimmer from '../../components/Loading/Shimmer.js';
+import { getWishListProducts } from '../../features/wishlistSlice.js';
 
 const Products = () => {
   const { id } = useParams();
   const { products, loading } = useSelector((state) => state.product);
+  const { isUserLogin } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   console.log('products:', products);
   useEffect(() => {
     dispatch(getAllProducts());
+    if (isUserLogin) {
+      dispatch(getWishListProducts());
+    }
   }, [dispatch]);
 
   console.log('products:', products);

@@ -13,10 +13,9 @@ function BagProduct({ data, isLoading }) {
 
   const dispatch = useDispatch();
   const { mainImage, price, name, _id, color } = data.product;
-  console.log(isLoading);
 
   useEffect(() => {
-    setQuantity(data.quantity); // Update the quantity when data changes
+    setQuantity(data.quantity);
   }, [data]);
 
   const updateCartQuantity = useCallback(
@@ -88,14 +87,8 @@ function BagProduct({ data, isLoading }) {
           </div>
           <div className="flex h-full w-full items-center justify-between space-x-8">
             <div className="flex items-start justify-between gap-2">
-              <label
-                htmlFor="countries"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Choose Quantity
-              </label>
               <select
-                id="countries"
+                id="quantity"
                 value={quantity}
                 onChange={handleSelectChange}
                 className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
