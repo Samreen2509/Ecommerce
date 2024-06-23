@@ -14,7 +14,9 @@ const Body = () => {
   const { categories } = useSelector((state) => state.category);
   const dispatch = useDispatch();
 
-  const { isUserVerified, isUserLogin } = useSelector((state) => state.auth);
+  const { isUserVerified, isUserLogin, userInfo } = useSelector(
+    (state) => state.auth
+  );
 
   const { wishlistProducts } = useSelector((state) => state.wishlist);
 

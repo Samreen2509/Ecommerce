@@ -148,8 +148,18 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
+      .addCase(refreshToken.pending, (state, action) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(refreshToken.fulfilled, (state, action) => {
         state.refreshToken = action.payload.message;
+        state.error = null;
+        state.isLoading = false;
+      })
+      .addCase(refreshToken.rejected, (state, action) => {
+        state.refreshToken = null;
+        state.isLoading = false;
         state.error = null;
       });
   },
