@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
-import { FaPlus } from 'react-icons/fa6';
-import { FaMinus, FaTruckLoading } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { updateToCart, removeFromCart } from '../../features/cartSlice';
 import { useDispatch } from 'react-redux';

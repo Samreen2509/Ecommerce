@@ -20,27 +20,6 @@ export const createNewOrder = createAsyncThunk(
   }
 );
 
-// export const getMyOrders = createAsyncThunk(
-//   'order/getMyOrders',
-//   async ({ orderId, userId }, { rejectWithValue }) => {
-//     try {
-//       const response = await axios.get(
-//         `${BASE_URL}/order/${userId}/${orderId}`,
-
-//         {
-//           headers: { 'Content-Type': 'application/json' },
-//           withCredentials: true,
-//           d,
-//         }
-//       );
-//       return response.data;
-//     } catch (error) {
-//       const message = error.response?.data?.message || error.message;
-//       return rejectWithValue(message);
-//     }
-//   }
-// );
-
 export const getOrders = createAsyncThunk(
   'order/getOrders',
   async ({ userId }, { rejectWithValue }) => {
