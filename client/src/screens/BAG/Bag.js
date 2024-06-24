@@ -14,7 +14,7 @@ const Bag = () => {
   useEffect(() => {
     dispatch(getCartProducts());
   }, [dispatch, updateCart]);
-
+  console.log('cartProducts', cartProducts);
   return (
     <section className="mt-3 flex h-full w-full flex-col items-center justify-center">
       <h2 className="text-sm font-bold lg:text-xl">YOUR SHOPPING BAG</h2>
@@ -31,12 +31,7 @@ const Bag = () => {
 
               {cartProducts &&
                 cartProducts.map((data, index) => (
-                  <BagProduct
-                    cart={true}
-                    data={data}
-                    key={index}
-                    isLoading={isLoading}
-                  />
+                  <BagProduct data={data} key={index} isLoading={isLoading} />
                 ))}
             </div>
           </div>

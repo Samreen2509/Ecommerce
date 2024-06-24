@@ -27,6 +27,8 @@ import ProductPage from './screens/product/ProductPage.js';
 import PrivateRoute from './components/Routes/PrivateRoute.js';
 import Category from './screens/category/Category.js';
 import OrderSuccessPage from './screens/order/OrderSuccessPage.js';
+import CollectionPage from './screens/Collertion/CollectionPage.js';
+import Dashboard from './screens/admin/Dashboard.js';
 
 const Applayout = () => {
   return (
@@ -39,6 +41,14 @@ const Applayout = () => {
         </div>
       </PersistGate>
     </Provider>
+  );
+};
+
+const DashboardLayout = () => {
+  return (
+    <div className="app">
+      <Outlet />
+    </div>
   );
 };
 
@@ -90,6 +100,14 @@ const appRouter = createBrowserRouter([
         element: <ProductDetailsPage />,
       },
       {
+        path: '/blog',
+        element: <CollectionPage />,
+      },
+      {
+        path: '/collections',
+        element: <CollectionPage />,
+      },
+      {
         path: '/about',
         element: <About />,
       },
@@ -132,6 +150,28 @@ const appRouter = createBrowserRouter([
       },
     ],
     errorElement: <ErrorPage />,
+  },
+  {
+    path: '/admin',
+    element: (
+      <>
+        <DashboardLayout />
+      </>
+    ),
+    children: [
+      {
+        path: '/admin/dashboard',
+        element: <Dashboard />,
+      },
+      {
+        path: '/admin/dashboard/product',
+        element: <Dashboard />,
+      },
+      {
+        path: '/admin/dashboard/user',
+        element: <Dashboard />,
+      },
+    ],
   },
 ]);
 
