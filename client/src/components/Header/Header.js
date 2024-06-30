@@ -179,7 +179,7 @@ function Header() {
             </div>
             {isDropdownOpen && <DropDown handleLeave={handleLeave} />}
           </div>
-          {userdata?.userInfo?.role === 'USER' && (
+          {userdata?.userInfo?.role === 'ADMIN' && (
             <Link
               to="/admin/dashboard"
               className="flex cursor-pointer items-center justify-between gap-x-4"
