@@ -5,22 +5,27 @@
 @tailwind utilities;
 
 * {
-    font-family: "Jost", sans-serif;
+  font-family: 'Jost', sans-serif;
 }
 
 html,
 body {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 .account-wrapper {
-    position: relative;
+  position: relative;
 }
 
 .dropdown-menu {
-    display: none;
+  display: none;
 }
 
 .account-wrapper:hover .dropdown-menu {
-    display: block;
+  display: block;
 }
+
+.custom-h-sidebar {
+  height: calc(100vh - 44px);
+}
+

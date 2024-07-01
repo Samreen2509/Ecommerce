@@ -27,8 +27,17 @@ import ProductPage from './screens/product/ProductPage.js';
 import PrivateRoute from './components/Routes/PrivateRoute.js';
 import Category from './screens/category/Category.js';
 import OrderSuccessPage from './screens/order/OrderSuccessPage.js';
-import CollectionPage from './screens/Collertion/CollectionPage.js';
-import Dashboard from './screens/admin/Dashboard.js';
+import CollectionPage from './screens/collertion/CollectionPage.js';
+
+// dashboard imports
+import DashboardHeader from './components/Dashboard/Header/Header.js';
+import DashboardSidebar from './components/Dashboard/Sidebar/Sidebar.js';
+import Dashboard from './screens/dashboard/Dashboard.js';
+import DashboardOrder from './screens/dashboard/Order.js';
+import DashboardProduct from './screens/dashboard/Product.js';
+import DashboardUser from './screens/dashboard/User.js';
+import DashboardCategory from './screens/dashboard/Category.js';
+import DashboardSetting from './screens/dashboard/Setting.js';
 
 const Applayout = () => {
   return (
@@ -46,8 +55,14 @@ const Applayout = () => {
 
 const DashboardLayout = () => {
   return (
-    <div className="app">
-      <Outlet />
+    <div className="fixed h-full w-full">
+      <DashboardHeader />
+      <div className="flex">
+        <DashboardSidebar />
+        <div className="custom-h-sidebar flex-grow overflow-auto px-5 py-5">
+          <Outlet />
+        </div>
+      </div>
     </div>
   );
 };
@@ -151,7 +166,7 @@ const appRouter = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: '/admin',
+    path: '/dashboard',
     element: (
       <>
         <DashboardLayout />
@@ -159,16 +174,28 @@ const appRouter = createBrowserRouter([
     ),
     children: [
       {
-        path: '/admin/dashboard',
+        path: '/dashboard',
         element: <Dashboard />,
       },
       {
-        path: '/admin/dashboard/product',
-        element: <Dashboard />,
+        path: '/dashboard/order',
+        element: <DashboardOrder />,
       },
       {
-        path: '/admin/dashboard/user',
-        element: <Dashboard />,
+        path: '/dashboard/product',
+        element: <DashboardProduct />,
+      },
+      {
+        path: '/dashboard/user',
+        element: <DashboardUser />,
+      },
+      {
+        path: '/dashboard/category',
+        element: <DashboardCategory />,
+      },
+      {
+        path: '/dashboard/setting',
+        element: <DashboardSetting />,
       },
     ],
   },
