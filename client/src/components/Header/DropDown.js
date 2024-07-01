@@ -1,14 +1,16 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../../features/authSlice';
 import { toast } from 'react-toastify';
 
 function DropDown({ handleLeave }) {
-  const { isUserLogin, userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const { isUserLogin, userInfo } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
+    navigate('/');
     dispatch(logout());
     toast.success('User logged out');
   };

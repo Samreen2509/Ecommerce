@@ -136,13 +136,13 @@ const authSlice = createSlice({
       .addCase(logout.pending, (state) => {
         state.isLoading = true;
         state.error = null;
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
         state.isUserLogin = false;
         state.userInfo = null;
         state.isUserVerified = null;
-      })
-      .addCase(logout.fulfilled, (state) => {
-        state.isLoading = false;
-        state.error = null;
       })
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;

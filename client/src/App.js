@@ -72,12 +72,11 @@ const appRouter = createBrowserRouter([
       },
       {
         path: '/register',
-
-        element: <PrivateRoute element={RegistrationPage} />,
+        element: <RegistrationPage />,
       },
       {
         path: '/login',
-        element: <PrivateRoute element={Login} />,
+        element: <Login />,
       },
       {
         path: '/forgotpassword',
