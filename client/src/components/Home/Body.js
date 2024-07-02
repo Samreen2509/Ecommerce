@@ -87,38 +87,40 @@ const Body = () => {
         </div>
 
         {/* Category Section */}
-        <div className="mt-36 flex min-h-min flex-col items-center justify-center">
-          <div className="text-4xl font-semibold">
+        <div className="mt-20 flex min-h-min flex-col items-center justify-center md:mt-28 lg:mt-36">
+          <div className="m-auto text-3xl font-semibold md:text-3xl lg:text-4xl">
             <h1>Shop by category</h1>
           </div>
-          <div className="flex flex-wrap justify-center">
+          <div className="m-auto flex flex-wrap justify-center">
             {categories &&
-              categories?.data?.slice(0, 3).map((category) => (
-                <Link
-                  to={`/category/${category._id}`}
-                  key={category._id}
-                  className="link"
-                >
-                  <CategoryCard sdata={category} />
-                </Link>
-              ))}
+              categories?.data
+                ?.slice(0, window.innerWidth < 1024 ? 2 : 3)
+                .map((category) => (
+                  <Link
+                    to={`/category/${category._id}`}
+                    key={category._id}
+                    className="link"
+                  >
+                    <CategoryCard sdata={category} />
+                  </Link>
+                ))}
           </div>
 
           <Button
             title="View All"
-            bgColor="tranparent"
+            bgColor="transparent"
             textColer="black"
-            className="text-1xl h-14 w-60 border border-solid duration-500 ease-linear hover:bg-slate-950 hover:text-white"
+            className="h-12 w-40 border border-solid text-base duration-500 ease-linear hover:bg-slate-950 hover:text-white sm:h-14 sm:w-48 sm:text-lg md:mt-4 md:h-16 md:w-60 md:text-xl lg:mt-4"
             onClick={() => navigate('/category')}
           />
         </div>
 
         {/* Product Section */}
-        <div className="m-14 mt-36 flex w-full flex-col items-center justify-evenly">
+        <div className="m-auto mt-36 flex w-full flex-col items-center justify-evenly md:m-10 lg:m-14">
           <div className="relative top-12">
             <span className="mr-28 text-4xl font-bold">New Arrival</span>
           </div>
-          <div className="flex flex-wrap items-center justify-center">
+          <div className="m-auto flex flex-wrap items-center justify-center">
             {products &&
               products.data?.productInfo.slice(0, 4).map((product) => (
                 <Link
@@ -141,22 +143,22 @@ const Body = () => {
         </div>
 
         {/* Details */}
-        <div className="mt-24 flex w-full flex-wrap items-center justify-evenly gap-5">
-          <div className="flex w-1/3 items-center gap-2">
+        <div className="m-2 mt-24 flex w-full flex-col items-center justify-evenly gap-5 md:flex-row lg:flex-row">
+          <div className="flex w-full items-center gap-2 md:w-1/3 lg:w-1/3">
             <img src={img1} alt="img" className="h-8 w-10 object-contain" />
             <p className="text-xs">
               <strong>FREE SHIPPING : </strong>All orders of 499/- or more of
               eligible items across any product category qualify.
             </p>
           </div>
-          <div className="flex w-1/3 items-center gap-2">
+          <div className="flex w-full items-center gap-2 md:w-1/3 lg:w-1/3">
             <img src={img2} alt="img" className="h-8 w-10 object-contain" />
             <p className="text-xs">
               <strong>CREDIT CARDS : </strong> We accept Visa, American Express,
-              Mastercard, and Discover
+              Mastercard, and Discover.
             </p>
           </div>
-          <div className="flex w-1/3 items-center gap-2">
+          <div className="flex w-full items-center gap-2 md:w-1/3 lg:w-1/3">
             <img src={img3} alt="img" className="h-8 w-10 object-contain" />
             <p className="text-xs">
               <strong>RETURN POLICY : </strong>You can return your online order
@@ -172,7 +174,7 @@ const Body = () => {
             <span className="m-auto text-xs">Trending Outfits Men</span>
           </div>
 
-          <div className="mt-10 flex h-auto w-full items-center justify-center gap-10">
+          <div className="mt-10 flex h-auto w-full items-center justify-center gap-5 md:gap-10 lg:gap-10">
             <div className="h-auto w-auto duration-300 hover:scale-110">
               <img
                 src={img4}
@@ -191,7 +193,7 @@ const Body = () => {
         </div>
 
         {/* TESTIMONIAL */}
-        <div className="m-auto mb-40 mt-24 w-3/5">
+        <div className="m-auto mb-40 mt-24 w-4/5 md:w-3/5 lg:w-3/5">
           <Carousel slides={slidesText} />
         </div>
       </div>
