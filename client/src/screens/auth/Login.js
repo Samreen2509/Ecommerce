@@ -14,9 +14,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const data = useSelector((state) => state.auth);
-  console.log(data, data.isLoading, data.error);
   const { isLoading, error, isUserVerified, isUserLogin } = data;
-  console.log(error);
 
   useEffect(() => {
     if (isUserLogin) {

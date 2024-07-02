@@ -22,6 +22,7 @@ function SearchPage({ handleSearchLeave }) {
       setResult(response.data.data.searchInfo);
       const productId = response.data.data.searchInfo[0]._id;
       navigate(`/singleProduct/${productId}`);
+      handleSearchLeave();
       setError('');
     } catch (error) {
       setError(error.response?.data?.message || 'An error occurred');

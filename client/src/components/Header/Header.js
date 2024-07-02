@@ -18,6 +18,7 @@ function Header() {
   const { productTotalQty, isLoading } = useSelector((state) => state.cart);
   const { totalWishProducts: wishlistitems, isLoading: loadingwishlistitems } =
     useSelector((state) => state.wishlist);
+  const userdata = useSelector((state) => state.auth);
 
   const handleHover = () => {
     setIsDropdownOpen(true);
@@ -178,6 +179,16 @@ function Header() {
             </div>
             {isDropdownOpen && <DropDown handleLeave={handleLeave} />}
           </div>
+          {userdata?.userInfo?.role === 'ADMIN' && (
+            <Link
+              to="/admin/dashboard"
+              className="flex cursor-pointer items-center justify-between gap-x-4"
+            >
+              <div className="flex cursor-pointer items-center justify-between gap-x-4  hover:text-orange-400">
+                <p>Dashboard</p>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
     </>

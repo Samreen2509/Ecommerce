@@ -27,6 +27,17 @@ import ProductPage from './screens/product/ProductPage.js';
 import PrivateRoute from './components/Routes/PrivateRoute.js';
 import Category from './screens/category/Category.js';
 import OrderSuccessPage from './screens/order/OrderSuccessPage.js';
+import CollectionPage from './screens/collertion/CollectionPage.js';
+
+// dashboard imports
+import DashboardHeader from './components/Dashboard/Header/Header.js';
+import DashboardSidebar from './components/Dashboard/Sidebar/Sidebar.js';
+import Dashboard from './screens/dashboard/Dashboard.js';
+import DashboardOrder from './screens/dashboard/Order.js';
+import DashboardProduct from './screens/dashboard/Product.js';
+import DashboardUser from './screens/dashboard/User.js';
+import DashboardCategory from './screens/dashboard/Category.js';
+import DashboardSetting from './screens/dashboard/Setting.js';
 
 const Applayout = () => {
   return (
@@ -39,6 +50,20 @@ const Applayout = () => {
         </div>
       </PersistGate>
     </Provider>
+  );
+};
+
+const DashboardLayout = () => {
+  return (
+    <div className="fixed h-full w-full">
+      <DashboardHeader />
+      <div className="flex">
+        <DashboardSidebar />
+        <div className="custom-h-sidebar flex-grow overflow-auto px-5 py-5">
+          <Outlet />
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -90,6 +115,14 @@ const appRouter = createBrowserRouter([
         element: <ProductDetailsPage />,
       },
       {
+        path: '/blog',
+        element: <CollectionPage />,
+      },
+      {
+        path: '/collections',
+        element: <CollectionPage />,
+      },
+      {
         path: '/about',
         element: <About />,
       },
@@ -132,6 +165,40 @@ const appRouter = createBrowserRouter([
       },
     ],
     errorElement: <ErrorPage />,
+  },
+  {
+    path: '/dashboard',
+    element: (
+      <>
+        <DashboardLayout />
+      </>
+    ),
+    children: [
+      {
+        path: '/dashboard',
+        element: <Dashboard />,
+      },
+      {
+        path: '/dashboard/order',
+        element: <DashboardOrder />,
+      },
+      {
+        path: '/dashboard/product',
+        element: <DashboardProduct />,
+      },
+      {
+        path: '/dashboard/user',
+        element: <DashboardUser />,
+      },
+      {
+        path: '/dashboard/category',
+        element: <DashboardCategory />,
+      },
+      {
+        path: '/dashboard/setting',
+        element: <DashboardSetting />,
+      },
+    ],
   },
 ]);
 
