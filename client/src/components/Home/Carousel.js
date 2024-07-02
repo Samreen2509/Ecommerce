@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FaCircle } from 'react-icons/fa';
+import Button from '../Button';
 
 const Carousel = ({ slides }) => {
   const [cur, setCur] = useState(0);
@@ -62,18 +63,20 @@ const Carousel = ({ slides }) => {
                       alt="img"
                       className="h-3/4 w-full object-cover"
                     />
-
-                    <div className="absolute left-10 top-1/2 hidden -translate-y-1/2 flex-col items-start gap-y-2 text-white  lg:flex ">
-                      <h2 className="text-3xl font-bold lg:text-xl">
+                    <div className="absolute left-10 flex-col items-start gap-y-2 text-white lg:flex">
+                      <h2 className="text-xl font-bold md:text-2xl lg:text-3xl">
                         {slide.Category}
                       </h2>
-                      <h1 className="max-w-sm font-extrabold lg:text-7xl">
+                      <h1 className="max-w-sm text-2xl font-extrabold md:text-6xl lg:text-7xl">
                         {slide.text}
                       </h1>
-                      <button className="mt-4 rounded-sm bg-white px-8 py-3 font-semibold text-black hover:bg-black hover:text-white">
-                        SHOP NOW
-                      </button>
+                      <Button
+                        textColer="text-black"
+                        title="SHOP NOW"
+                        className="mt-4 rounded-sm bg-white px-4 py-2 font-semibold hover:bg-orange-600 hover:text-white md:px-6 md:py-2 lg:px-8 lg:py-3"
+                      />
                     </div>
+
                     <div className="absolute right-5 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-3">
                       {slides.map((_, index) => (
                         <FaCircle
