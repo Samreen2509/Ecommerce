@@ -1,19 +1,21 @@
 import React from 'react';
 
 function Button({
-  //   childern,
+  title,
   type = 'button',
   textColer = 'text-white',
   bgColor = 'bg-black',
+  px = 'px-4',
+  py = 'py-2',
   className = '',
   ...props
 }) {
   return (
     <button
-      className={`rounded-lg px-4 py-2 ${bgColor} ${textColer} ${className}`}
+      className={`rounded-lg ${px} ${py} ${bgColor} ${textColer} ${className}`}
       {...props}
     >
-      {/* {childern} */}
+      {title}
     </button>
   );
 }

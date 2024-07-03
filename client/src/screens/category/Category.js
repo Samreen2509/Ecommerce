@@ -15,11 +15,11 @@ function Category() {
   console.log(categories);
 
   return (
-    <div className="min-h-min">
-      <div className="mx-48 my-8 text-5xl font-bold">
-        <h1>All Category</h1>
-      </div>
-      <div className="flex flex-wrap justify-center">
+    <div className="items-cente mt-10 flex h-auto w-full flex-col">
+      <h1 className=" m-auto text-2xl font-bold md:text-4xl lg:text-5xl">
+        All Category
+      </h1>
+      <div className="mb-20 flex flex-wrap justify-center">
         {categories &&
           categories?.data?.map((category) => (
             <Link
