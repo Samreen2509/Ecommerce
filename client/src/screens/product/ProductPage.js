@@ -51,105 +51,107 @@ function ProductPage() {
 
   return (
     <div className="body m-auto">
-      <div className="flex justify-center">
+      <div className="mt-5 flex flex-col justify-center md:flex-row lg:flex-row">
         {/* Filter section */}
-        <div className="m-32">
+        <div className="md:m-32 lg:m-32">
           <h3>FILTERS</h3>
-          {/* CATEGORIES */}
-          <div className="w-56 border-2 border-gray-200 p-3">
-            <div>
-              <div className="flex justify-between">
-                <h4 className="mb-2">CATEGORIES</h4>
-                <h3
-                  onClick={() => setIsInLargeDiv(!isCategoyInLargeDiv)}
-                  className=" cursor-pointer"
-                >
-                  +
-                </h3>
-              </div>
-              {categories?.data?.map((category) => (
-                <div
-                  className="flex items-center gap-2"
-                  style={{ display: isCategoyInLargeDiv ? 'block' : 'none' }}
-                  key={category._id}
-                >
-                  <input
-                    type="radio"
-                    id={category._id}
-                    className="m-1 text-black"
-                    onClick={() => filterCategoryData(category._id)}
-                  />
-                  <label htmlFor={category._id}>{category.name}</label>
+          <div className="flex items-center md:flex-col lg:flex-col">
+            {/* CATEGORIES */}
+            <div className="w-56 border-2 border-gray-200 p-3">
+              <div>
+                <div className="flex justify-between">
+                  <h4 className="mb-2">CATEGORIES</h4>
+                  <h3
+                    onClick={() => setIsInLargeDiv(!isCategoyInLargeDiv)}
+                    className=" cursor-pointer"
+                  >
+                    +
+                  </h3>
                 </div>
-              ))}
+                {categories?.data?.map((category) => (
+                  <div
+                    className="flex items-center gap-2"
+                    style={{ display: isCategoyInLargeDiv ? 'block' : 'none' }}
+                    key={category._id}
+                  >
+                    <input
+                      type="radio"
+                      id={category._id}
+                      className="m-1 text-black"
+                      onClick={() => filterCategoryData(category._id)}
+                    />
+                    <label htmlFor={category._id}>{category.name}</label>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-          {/* SIZE */}
-          <div className="w-56 border-2 border-gray-200 p-3">
-            <div>
-              <div className="flex justify-between">
-                <h4 className="mb-2">SIZE</h4>
-                <h3
-                  onClick={() => setIsSizeInlargeDiv(!isSizeInlargeDiv)}
-                  className=" cursor-pointer"
-                >
-                  +
-                </h3>
-              </div>
-              {displayProductSize.map((size, i) => (
-                <div
-                  className="flex items-center gap-2"
-                  style={{ display: isSizeInlargeDiv ? 'block' : 'none' }}
-                  key={i}
-                >
-                  <input
-                    type="radio"
-                    id={i}
-                    className="m-1 text-black"
-                    onClick={() => filterSizeData(size)}
-                  />
-                  <label htmlFor={i}>{size}</label>
+            {/* SIZE */}
+            <div className="w-56 border-2 border-gray-200 p-3">
+              <div>
+                <div className="flex justify-between">
+                  <h4 className="mb-2">SIZE</h4>
+                  <h3
+                    onClick={() => setIsSizeInlargeDiv(!isSizeInlargeDiv)}
+                    className=" cursor-pointer"
+                  >
+                    +
+                  </h3>
                 </div>
-              ))}
+                {displayProductSize.map((size, i) => (
+                  <div
+                    className="flex items-center gap-2"
+                    style={{ display: isSizeInlargeDiv ? 'block' : 'none' }}
+                    key={i}
+                  >
+                    <input
+                      type="radio"
+                      id={i}
+                      className="m-1 text-black"
+                      onClick={() => filterSizeData(size)}
+                    />
+                    <label htmlFor={i}>{size}</label>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-          {/* PRICE */}
-          <div className="w-56 border-2 border-gray-200 p-3">
-            <div>
-              <div className="flex justify-between">
-                <h4 className="mb-2">PRICE</h4>
-                <h3
-                  onClick={() => setIsPriceInlargeDiv(!isPriceInlargeDiv)}
-                  className=" cursor-pointer"
-                >
-                  +
-                </h3>
-              </div>
-              {products.data?.productInfo.map((product) => (
-                <div
-                  className="flex items-center gap-2"
-                  style={{ display: isPriceInlargeDiv ? 'block' : 'none' }}
-                  key={product._id}
-                >
-                  <input
-                    type="radio"
-                    id={product._id}
-                    className="m-1 text-black"
-                    onClick={() => filterDataCall(product._id)}
-                  />
-                  <label htmlFor={product._id}>{product.price}</label>
+            {/* PRICE */}
+            <div className="w-56 border-2 border-gray-200 p-3">
+              <div>
+                <div className="flex justify-between">
+                  <h4 className="mb-2">PRICE</h4>
+                  <h3
+                    onClick={() => setIsPriceInlargeDiv(!isPriceInlargeDiv)}
+                    className=" cursor-pointer"
+                  >
+                    +
+                  </h3>
                 </div>
-              ))}
+                {products.data?.productInfo.map((product) => (
+                  <div
+                    className="flex items-center gap-2"
+                    style={{ display: isPriceInlargeDiv ? 'block' : 'none' }}
+                    key={product._id}
+                  >
+                    <input
+                      type="radio"
+                      id={product._id}
+                      className="m-1 text-black"
+                      onClick={() => filterDataCall(product._id)}
+                    />
+                    <label htmlFor={product._id}>{product.price}</label>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
         {/* Product section */}
-        <div className="mt-32 min-h-min">
-          <hr />
-          <div className="flex flex-col items-center justify-center text-5xl font-bold">
-            <h1>All Products</h1>
-          </div>
-          <div className="flex flex-wrap justify-center">
+        <div className="mt-5 h-auto w-full md:mt-32 lg:mt-32">
+          {/* <hr className="block hidden" /> */}
+          <h1 className="m-auto ml-10 text-2xl font-bold md:text-3xl lg:text-5xl">
+            All Products
+          </h1>
+          <div className="mb-32 flex flex-wrap justify-center">
             {!IsCallFilterData ? (
               products.data?.productInfo.length ? (
                 products.data?.productInfo.map((product) => (
