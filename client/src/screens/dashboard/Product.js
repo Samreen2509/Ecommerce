@@ -12,7 +12,7 @@ function Product() {
 
   return (
     <>
-      <div className="h-screen w-full ">
+      <div className="h-screen w-full">
         <div className="mb-6">
           <h1 className="text-3xl font-semibold text-black text-opacity-80">
             {id ? 'Product Edit' : 'Product'}
@@ -21,6 +21,7 @@ function Product() {
             {'> dashboard > product'}
           </p>
         </div>
+
         <div className="mb-4 w-full p-3">
           {id ? (
             <ProductEdit id={id} edit={edit} otherImages={otherImages} />

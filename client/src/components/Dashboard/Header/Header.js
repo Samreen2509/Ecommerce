@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../../../images/favicon.png';
 import HeaderProfileBtn from './HeaderProfileBtn';
+import { useSelector } from 'react-redux';
 
 function Header() {
+  const { isUserLogin, userInfo } = useSelector((state) => state.auth);
   const navtext = [
     { text: 'Home', link: '/' },
     { text: 'Update', link: './update' },
@@ -30,7 +32,10 @@ function Header() {
               );
             })}
           </nav>
-          <HeaderProfileBtn username="gaurav" />
+          <HeaderProfileBtn
+            username={userInfo.username}
+            isUserLogin={isUserLogin}
+          />
         </div>
       </div>
     </>

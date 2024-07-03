@@ -181,7 +181,7 @@ function Header() {
           </div>
           {userdata?.userInfo?.role === 'ADMIN' && (
             <Link
-              to="/admin/dashboard"
+              to="/dashboard"
               className="flex cursor-pointer items-center justify-between gap-x-4"
             >
               <div className="flex cursor-pointer items-center justify-between gap-x-4  hover:text-orange-400">

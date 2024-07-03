@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import DashCard from '../../components/Dashboard/Dashboard/DashCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProducts } from '../../features/dashboardSlice';
 
 function Dashboard() {
+  const dispatch = useDispatch();
+  const { products } = useSelector((state) => state.dashboard);
+
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
+
+  console.log(products);
   return (
     <>
       <div className="h-screen w-full">
@@ -14,14 +24,11 @@ function Dashboard() {
           </p>
         </div>
         <div className="grid grid-cols-4 gap-3 p-3">
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
+          <DashCard
+            name="PRODUCTS"
+            value={products ? products.length : '0'}
+            link="./product"
+          />
         </div>
       </div>
     </>

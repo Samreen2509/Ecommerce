@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ImagePreview from '../Utils/ImagePreview';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getCategory,
+  getColors,
+  updateProduct,
+} from '../../../features/dashboardSlice';
+import { toast } from 'react-toastify';
 
 function ProductEditDetails({ id, edit }) {
-  const [categories, setCategrories] = useState([]);
-  const [colors, setColors] = useState([]);
   const [productData, setProductData] = useState({
     name: '',
     description: '',
@@ -18,29 +24,52 @@ function ProductEditDetails({ id, edit }) {
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-
+  const { categories, colors, SuccessMsg, error } = useSelector(
+    (state) => state.dashboard
+  );
+  const BASE_URL = process.env.BASEURL;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchProductData = () => {
-      // fetch product data and return
-    };
+    if (id !== 'new') {
+      const fetchProductData = async () => {
+        try {
+          const response = await axios.get(`${BASE_URL}/product/${id}`, {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
+          });
+          return response.data.data.productInfo;
+        } catch (error) {
+          console.error('Error fetching product data:', error);
+        }
+      };
 
-    const fetchCategoriesData = () => {
-      // fetch categories and return
-    };
+      dispatch(getCategory());
+      dispatch(getColors());
 
-    const fetchColorsData = () => {
-      // fetch colors and return
-    };
+      const fetchData = async () => {
+        if (id !== 'new' && edit) {
+          const productData = await fetchProductData();
+          if (productData) {
+            setProductData({
+              name: productData.name,
+              description: productData.description,
+              size: productData.size,
+              price: productData.price,
+              stock: productData.stock,
+              mainImage: productData.mainImage,
+              mainImageName: productData.mainImage?.public_id,
+              category: productData.category,
+              color: productData.color,
+            });
+          }
+        }
+      };
 
-    if (id != 'new' && edit) {
-      setProductData(fetchProductData);
+      fetchData();
     }
-
-    setCategrories(fetchCategoriesData);
-    setColors(fetchColorsData);
-  }, [id, edit]);
+  }, [id, edit, dispatch]);
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
@@ -66,36 +95,31 @@ function ProductEditDetails({ id, edit }) {
     }
   };
 
-  console.log(productData);
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
     console.log(productData);
-    const addProduct = (productData) => {
-      // addProduct api call and .. add product
-    };
-
-    const updateProduct = (productData) => {
-      // update Product api .. call and update product data
-      // you can use id variable
-    };
 
     if (id != 'new' && edit != 'true') {
       navigate(`./?id=${id}&edit=true`);
     }
 
     if (id == 'new' && edit != 'true') {
-      navigate('./');
+      // navigate('./');
     }
 
     if (id != 'new' && edit == 'true') {
-      updateProduct(productData);
-      navigate('./');
+      dispatch(updateProduct({ productData, id }));
+      if (SuccessMsg !== null) {
+        toast.success(SuccessMsg);
+        navigate('./');
+      }
+      toast.error(error);
     }
 
     if (id == 'new' && edit == 'true') {
       addProduct(productData);
-      navigate('./');
+      // navigate('./');
     }
   };
 
@@ -121,7 +145,7 @@ function ProductEditDetails({ id, edit }) {
               name="name"
               placeholder="Product Name"
               className="h-10 rounded-md border border-gray-400 px-2 py-2 text-base"
-              value={productData?.name || ''}
+              value={productData.name}
               onChange={handleInputChange}
             />
           </div>
@@ -134,19 +158,19 @@ function ProductEditDetails({ id, edit }) {
               name="description"
               placeholder="Product Description"
               className="rounded-md border border-gray-400 px-2 py-2 text-base"
-              value={productData?.description || ''}
+              value={productData.description}
               onChange={handleInputChange}
             />
           </div>
           <div className="flex flex-col">
-            <label htmlFor="size">Size</label>
+            <label htmlFor="size">Size - ("S M L XL XXL" Not use Commas)</label>
             <input
               type="text"
               id="size"
               name="size"
               placeholder="Product Size"
               className="h-10 rounded-md border border-gray-400 px-2 py-2 text-base"
-              value={productData?.size || ''}
+              value={productData.size}
               onChange={handleInputChange}
             />
           </div>
@@ -159,7 +183,7 @@ function ProductEditDetails({ id, edit }) {
                 name="price"
                 placeholder="Product Price"
                 className="h-10 rounded-md border border-gray-400 px-2 py-2 text-base"
-                value={productData?.price || ''}
+                value={productData.price}
                 onChange={handleInputChange}
               />
             </div>
@@ -171,14 +195,14 @@ function ProductEditDetails({ id, edit }) {
                 name="stock"
                 placeholder="Product Stock"
                 className="h-10 rounded-md border border-gray-400 px-2 py-2 text-base"
-                value={productData?.stock || ''}
+                value={productData.stock}
                 onChange={handleInputChange}
               />
             </div>
           </div>
           <div className="flex w-full flex-col">
             <label htmlFor="mainImage">Main Image</label>
-            {!productData?.mainImage ? (
+            {!productData.mainImage ? (
               <input
                 type="file"
                 id="mainImage"
@@ -189,7 +213,7 @@ function ProductEditDetails({ id, edit }) {
               />
             ) : (
               <div className="flex h-10 w-full items-center justify-center rounded-md px-2 ">
-                <h1 className="w-full">{productData?.mainImageName}</h1>
+                <h1 className="w-full">{productData.mainImageName}</h1>
                 <div
                   onClick={handleClearImage}
                   className="mx-3 flex h-full w-20 cursor-pointer items-center justify-center rounded-md border border-gray-400 hover:bg-gray-200"
@@ -218,19 +242,18 @@ function ProductEditDetails({ id, edit }) {
                 id="category"
                 name="category"
                 className="h-10 rounded-md border border-gray-400 bg-transparent px-2 py-2 text-base"
-                value={productData?.category || ''}
+                value={productData.category}
                 onChange={handleInputChange}
               >
                 <option value="" disabled>
-                  select
+                  Select
                 </option>
-                {categories?.map((item, index) => {
-                  return (
+                {categories &&
+                  categories.map((item, index) => (
                     <option value={item._id} key={index}>
                       {item.name}
                     </option>
-                  );
-                })}
+                  ))}
               </select>
             </div>
             <div className="flex w-1/2 flex-col">
@@ -239,19 +262,18 @@ function ProductEditDetails({ id, edit }) {
                 id="color"
                 name="color"
                 className="h-10 rounded-md border border-gray-400 bg-transparent px-2 py-2 text-base"
-                value={productData?.color || ''}
+                value={productData.color}
                 onChange={handleInputChange}
               >
                 <option value="" disabled>
-                  select color
+                  Select color
                 </option>
-                {colors?.map((item, index) => {
-                  return (
+                {colors &&
+                  colors.map((item, index) => (
                     <option value={item._id} key={index}>
                       {item.name}
                     </option>
-                  );
-                })}
+                  ))}
               </select>
             </div>
           </div>
@@ -268,7 +290,7 @@ function ProductEditDetails({ id, edit }) {
               type="submit"
               className="flex h-10 w-36 cursor-pointer items-center justify-center rounded-md border border-gray-800 bg-gray-800 text-white hover:border-gray-700 hover:bg-gray-700"
             >
-              {edit == 'true' ? 'Publish' : 'Edit'}
+              {edit ? 'Publish' : 'Edit'}
             </button>
           </div>
         </form>

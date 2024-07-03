@@ -16,6 +16,7 @@ import cartSlice from '../features/cartSlice';
 import categorySlice from '../features/categorySlice';
 import wishlistSlice from '../features/wishlistSlice';
 import orderSlice from '../features/orderSlice';
+import dashboardSlice from '../features/dashboardSlice';
 
 const authPersistConfig = {
   key: 'auth',
@@ -32,6 +33,7 @@ export const store = configureStore({
     wishlist: wishlistSlice,
     order: orderSlice,
     auth: persistedAuthReducer,
+    dashboard: dashboardSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
