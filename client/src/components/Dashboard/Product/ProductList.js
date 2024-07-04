@@ -1,8 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import ProductListItem from './ProductListItem';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProducts } from '../../../features/dashboardSlice';
+import { FaPlusSquare } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 function ProductList() {
-  // const [data, setData] = useState([])
+  const discpatch = useDispatch();
+  const { products } = useSelector((state) => state.dashboard)
+  
+  useEffect(() => {
+    discpatch(getProducts());
+  }, []);
+
   const data = [
     {
       _id: '665aef6a063c039a8c19c5a4',
@@ -32,6 +42,15 @@ function ProductList() {
               Canceled
             </li>
           </ul>
+          <div className="my-4 px-4">
+            <Link
+              to={'./?id=new&edit=true'}
+              className="flex h-10 items-center justify-center gap-2 rounded-md bg-gray-800 px-5 font-semibold text-white"
+            >
+              <FaPlusSquare />
+              Add
+            </Link>
+          </div>
         </div>
         <div className="flex h-12 w-full items-center justify-center rounded-tl-md rounded-tr-md bg-gray-800 text-white">
           <div className="flex h-full w-10 items-center justify-center border-r px-3">
@@ -57,7 +76,7 @@ function ProductList() {
           </div>
         </div>
         <div className="my-1 flex w-full flex-col items-center justify-center rounded-bl-md rounded-br-md border text-gray-800">
-          {data.map((item, index) => {
+          {products.map((item, index) => {
             return (
               <ProductListItem
                 key={index}

@@ -24,7 +24,6 @@ import { Provider } from 'react-redux';
 import { persistor, store } from './app/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
 import ProductPage from './screens/product/ProductPage.js';
-import PrivateRoute from './components/Routes/PrivateRoute.js';
 import Category from './screens/category/Category.js';
 import OrderSuccessPage from './screens/order/OrderSuccessPage.js';
 import CollectionPage from './screens/collertion/CollectionPage.js';
@@ -55,15 +54,19 @@ const Applayout = () => {
 
 const DashboardLayout = () => {
   return (
-    <div className="fixed h-full w-full">
-      <DashboardHeader />
-      <div className="flex">
-        <DashboardSidebar />
-        <div className="custom-h-sidebar flex-grow overflow-auto px-5 py-5">
-          <Outlet />
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <div className="fixed h-full w-full">
+          <DashboardHeader />
+          <div className="flex">
+            <DashboardSidebar />
+            <div className="custom-h-sidebar flex-grow overflow-auto px-5 py-5">
+              <Outlet />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </PersistGate>
+    </Provider>
   );
 };
 
@@ -87,12 +90,11 @@ const appRouter = createBrowserRouter([
       },
       {
         path: '/register',
-
-        element: <PrivateRoute element={RegistrationPage} />,
+        element: <RegistrationPage />,
       },
       {
         path: '/login',
-        element: <PrivateRoute element={Login} />,
+        element: <Login />,
       },
       {
         path: '/forgotpassword',

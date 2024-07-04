@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import png from '../../../images/favicon.png';
 import { Link } from 'react-router-dom';
-import GlobalApi from '../../utils/GlobalApi.js';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Register } from '../../features/authSlice.js';
@@ -18,26 +17,28 @@ const RegistrationPage = () => {
     password: '',
   });
 
-  const discpatch = useDispatch()
-  const { isLoading, error, isUserLogin } = useSelector(state => state.auth)
+  const discpatch = useDispatch();
+  const { isLoading, error, isUserLogin } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isUserLogin) {
-      navigate('/')
-      toast.success("User register successfully")
-      toast.info('Please Verify your account. A verification link already sent to your email address', { position: 'top-center' })
+      navigate('/');
+      toast.success('User register successfully');
+      toast.info(
+        'Please Verify your account. A verification link already sent to your email address',
+        { position: 'top-center' }
+      );
       setFormData({
-        name: "",
-        username: "",
-        email: "",
-        password: "",
-      })
+        name: '',
+        username: '',
+        email: '',
+        password: '',
+      });
     }
-  }, [isUserLogin])
-
+  }, [isUserLogin]);
 
   const handleChange = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -46,18 +47,18 @@ const RegistrationPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      discpatch(Register({
-        name: formData.name,
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-      }))
-
-
+      discpatch(
+        Register({
+          name: formData.name,
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        })
+      );
     } catch (error) {
-      throw error
+      throw error;
     }
   };
 
@@ -71,10 +72,7 @@ const RegistrationPage = () => {
             </Link>
           </div>
 
-          <p className="text-lg text-red-400">
-            {error && error}
-
-          </p>
+          <p className="text-lg text-red-400">{error && error}</p>
 
           <InputBox
             type="text"
@@ -111,7 +109,6 @@ const RegistrationPage = () => {
               className="w-full rounded-md  bg-slate-600 px-5 py-3 font-medium text-white transition hover:bg-opacity-90"
             >
               {isLoading ? 'Loading...' : 'Register'}
-
             </button>
           </div>
           <div>

@@ -47,15 +47,9 @@ const Body = () => {
     },
   ];
 
-  const { isUserVerified, isUserLogin, userInfo } = useSelector(
-    (state) => state.auth
-  );
+  const { isUserVerified, isUserLogin } = useSelector((state) => state.auth);
 
   const { wishlistProducts } = useSelector((state) => state.wishlist);
-
-  if (isUserLogin) {
-    useCheckSession();
-  }
 
   useEffect(() => {
     if (isUserLogin) {

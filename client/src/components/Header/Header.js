@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import logo from '../../../images/favicon.png';
 import { Link } from 'react-router-dom';
 import { IoIosSearch } from 'react-icons/io';
-import { VscAccount, VscLoading } from 'react-icons/vsc';
+import { VscAccount } from 'react-icons/vsc';
 import { FaRegHeart } from 'react-icons/fa';
 import { FiShoppingBag } from 'react-icons/fi';
 import { FiMenu } from 'react-icons/fi';
@@ -181,7 +181,7 @@ function Header() {
           </div>
           {userdata?.userInfo?.role === 'ADMIN' && (
             <Link
-              to="/admin/dashboard"
+              to="/dashboard"
               className="flex cursor-pointer items-center justify-between gap-x-4"
             >
               <div className="flex cursor-pointer items-center justify-between gap-x-4  hover:text-orange-400">

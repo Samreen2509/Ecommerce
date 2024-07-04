@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MdArrowDropDown } from 'react-icons/md';
 import { IoMdNotifications } from 'react-icons/io';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { logout } from '../../../features/authSlice';
 
-function HeaderProfileBtn({ username }) {
+function HeaderProfileBtn({ username, isUserLogin }) {
   const [isDropdown, setIsDropdown] = useState(false);
   const toggleDropdown = () => {
     setIsDropdown(!isDropdown);
   };
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    // logout api call
+    navigate('/');
+    dispatch(logout());
+    toast.success('User logged out');
   };
 
   return (
@@ -48,12 +55,16 @@ function HeaderProfileBtn({ username }) {
               Settings
             </Link>
           </div>
-          <div
-            onClick={handleLogout}
-            className="flex h-10 cursor-pointer items-center justify-start border-b px-3 hover:bg-gray-200"
-          >
-            Logout
-          </div>
+          {isUserLogin ? (
+            <button
+              onClick={handleLogout}
+              className="flex h-10 cursor-pointer items-center justify-start border-b px-3 hover:bg-gray-200"
+            >
+              Logout
+            </button>
+          ) : (
+            ''
+          )}
         </div>
       )}
     </>
