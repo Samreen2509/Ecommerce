@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom';
 
 function ProductList() {
   const discpatch = useDispatch();
-  const { products } = useSelector((state) => state.dashboard);
-  console.log(products);
+  const { products } = useSelector((state) => state.dashboard)
+  
   useEffect(() => {
     discpatch(getProducts());
   }, []);

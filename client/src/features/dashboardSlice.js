@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 const BASE_URL = process.env.BASEURL;
 
@@ -20,16 +19,34 @@ export const getProducts = createAsyncThunk(
   }
 );
 
+export const getSingleProducts = createAsyncThunk(
+  'dashboard/getSingleProducts',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/product/${id}`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+      return response.data.data.productInfo;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
 export const addProduct = createAsyncThunk(
   'dashboard/addProduct',
-  async (_, { rejectWithValue }) => {
+  async ({ productData }, { rejectWithValue }) => {
+    console.log(productData);
     try {
-      const response = await axios.post(`${BASE_URL}/product`, {
+      const response = await axios.post(`${BASE_URL}/product`, productData, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
       return response.data;
     } catch (error) {
+      console.log(error);
       const message = error.response?.data?.message || error.message;
       return rejectWithValue(message);
     }
@@ -113,6 +130,7 @@ const initialState = {
   error: null,
   products: [],
   colors: [],
+  singleProduct: [],
   categories: [],
   SuccessMsg: null,
 };
@@ -132,6 +150,19 @@ export const dashboardSlice = createSlice({
         state.products = action.payload.data.productInfo;
       })
       .addCase(getProducts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(getSingleProducts.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getSingleProducts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.singleProduct = action.payload;
+      })
+      .addCase(getSingleProducts.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
@@ -156,6 +187,7 @@ export const dashboardSlice = createSlice({
       .addCase(addProduct.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
+        console.log(action.payload);
         // state.products = action.payload.data.productInfo;
       })
       .addCase(addProduct.rejected, (state, action) => {

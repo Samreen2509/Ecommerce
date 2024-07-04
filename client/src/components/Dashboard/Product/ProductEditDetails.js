@@ -4,8 +4,10 @@ import ImagePreview from '../Utils/ImagePreview';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  addProduct,
   getCategory,
   getColors,
+  getSingleProducts,
   updateProduct,
 } from '../../../features/dashboardSlice';
 import { toast } from 'react-toastify';
@@ -24,44 +26,31 @@ function ProductEditDetails({ id, edit }) {
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-  const { categories, colors, SuccessMsg, error } = useSelector(
+  const { categories, colors, SuccessMsg, error, singleProduct } = useSelector(
     (state) => state.dashboard
   );
-  const BASE_URL = process.env.BASEURL;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(getColors());
+    dispatch(getCategory());
     if (id !== 'new') {
-      const fetchProductData = async () => {
-        try {
-          const response = await axios.get(`${BASE_URL}/product/${id}`, {
-            headers: { 'Content-Type': 'application/json' },
-            withCredentials: true,
-          });
-          return response.data.data.productInfo;
-        } catch (error) {
-          console.error('Error fetching product data:', error);
-        }
-      };
-
-      dispatch(getCategory());
-      dispatch(getColors());
+      dispatch(getSingleProducts(id));
 
       const fetchData = async () => {
         if (id !== 'new' && edit) {
-          const productData = await fetchProductData();
-          if (productData) {
+          if (singleProduct) {
             setProductData({
-              name: productData.name,
-              description: productData.description,
-              size: productData.size,
-              price: productData.price,
-              stock: productData.stock,
-              mainImage: productData.mainImage,
-              mainImageName: productData.mainImage?.public_id,
-              category: productData.category,
-              color: productData.color,
+              name: singleProduct.name,
+              description: singleProduct.description,
+              size: singleProduct.size,
+              price: singleProduct.price,
+              stock: singleProduct.stock,
+              mainImage: singleProduct.mainImage,
+              mainImageName: singleProduct.mainImage?.public_id,
+              category: singleProduct.category,
+              color: singleProduct.color,
             });
           }
         }
@@ -69,9 +58,10 @@ function ProductEditDetails({ id, edit }) {
 
       fetchData();
     }
-  }, [id, edit, dispatch]);
+  }, [id, edit, dispatch, singleProduct]);
 
   const handleInputChange = (e) => {
+    e.preventDefault();
     const { name, value, files } = e.target;
 
     if (name === 'mainImage' && files && files.length > 0) {
@@ -110,6 +100,7 @@ function ProductEditDetails({ id, edit }) {
 
     if (id != 'new' && edit == 'true') {
       dispatch(updateProduct({ productData, id }));
+      console.log(SuccessMsg);
       if (SuccessMsg !== null) {
         toast.success(SuccessMsg);
         navigate('./');
@@ -118,7 +109,8 @@ function ProductEditDetails({ id, edit }) {
     }
 
     if (id == 'new' && edit == 'true') {
-      addProduct(productData);
+      dispatch(addProduct({ productData }));
+      toast.success('Product added successfully');
       // navigate('./');
     }
   };
@@ -133,73 +125,75 @@ function ProductEditDetails({ id, edit }) {
     setIsPreviewVisible(false);
   };
 
+  const inputFields = [
+    {
+      id: 'name',
+      name: 'name',
+      type: 'text',
+      label: 'Name',
+      placeholder: 'Product Name',
+    },
+    {
+      id: 'description',
+      name: 'description',
+      type: 'textarea',
+      label: 'Description',
+      placeholder: 'Product Description',
+      defaultValue: 'description',
+    },
+    {
+      id: 'size',
+      name: 'size',
+      type: 'text',
+      label: 'Size - ("S M L XL XXL" Not use Commas)',
+      placeholder: 'Product Size',
+    },
+    {
+      id: 'price',
+      name: 'price',
+      type: 'number',
+      label: 'Price',
+      placeholder: 'Product Price',
+    },
+    {
+      id: 'stock',
+      name: 'stock',
+      type: 'number',
+      label: 'Stock',
+      placeholder: 'Product Stock',
+    },
+  ];
+
   return (
     <>
       <div>
         <form onSubmit={handleFormSubmit} className="flex flex-col gap-y-10">
-          <div className="flex flex-col">
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Product Name"
-              className="h-10 rounded-md border border-gray-400 px-2 py-2 text-base"
-              value={productData.name}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="description">Description</label>
-            <textarea
-              rows={10}
-              type="text"
-              id="description"
-              name="description"
-              placeholder="Product Description"
-              className="rounded-md border border-gray-400 px-2 py-2 text-base"
-              value={productData.description}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="size">Size - ("S M L XL XXL" Not use Commas)</label>
-            <input
-              type="text"
-              id="size"
-              name="size"
-              placeholder="Product Size"
-              className="h-10 rounded-md border border-gray-400 px-2 py-2 text-base"
-              value={productData.size}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="flex items-center justify-center gap-x-5">
-            <div className="flex w-full flex-col">
-              <label htmlFor="price">Price</label>
-              <input
-                type="number"
-                id="price"
-                name="price"
-                placeholder="Product Price"
-                className="h-10 rounded-md border border-gray-400 px-2 py-2 text-base"
-                value={productData.price}
-                onChange={handleInputChange}
-              />
+          {inputFields.map((field) => (
+            <div className="flex flex-col" key={field.id}>
+              <label htmlFor={field.id}>{field.label}</label>
+              {field.type === 'textarea' ? (
+                <textarea
+                  rows={10}
+                  id={field.id}
+                  name={field.name}
+                  placeholder={field.placeholder}
+                  className="rounded-md border border-gray-400 px-2 py-2 text-base"
+                  value={productData[field.name] || ''}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <input
+                  type={field.type}
+                  id={field.id}
+                  name={field.name}
+                  placeholder={field.placeholder}
+                  className="h-10 rounded-md border border-gray-400 px-2 py-2 text-base"
+                  value={productData[field.name] || ''}
+                  onChange={handleInputChange}
+                />
+              )}
             </div>
-            <div className="flex w-full flex-col ">
-              <label htmlFor="stock">Stock</label>
-              <input
-                type="number"
-                id="stock"
-                name="stock"
-                placeholder="Product Stock"
-                className="h-10 rounded-md border border-gray-400 px-2 py-2 text-base"
-                value={productData.stock}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
+          ))}
           <div className="flex w-full flex-col">
             <label htmlFor="mainImage">Main Image</label>
             {!productData.mainImage ? (
@@ -213,7 +207,11 @@ function ProductEditDetails({ id, edit }) {
               />
             ) : (
               <div className="flex h-10 w-full items-center justify-center rounded-md px-2 ">
-                <h1 className="w-full">{productData.mainImageName}</h1>
+                <h1 className="w-full">
+                  {productData.mainImage.public_id
+                    ? productData.mainImage.public_id
+                    : productData.mainImageName}
+                </h1>
                 <div
                   onClick={handleClearImage}
                   className="mx-3 flex h-full w-20 cursor-pointer items-center justify-center rounded-md border border-gray-400 hover:bg-gray-200"
@@ -230,7 +228,11 @@ function ProductEditDetails({ id, edit }) {
             )}
             {isPreviewVisible && (
               <ImagePreview
-                image={imagePreview}
+                image={
+                  productData.mainImage.secure_url
+                    ? productData.mainImage.secure_url
+                    : imagePreview
+                }
                 onClose={() => setIsPreviewVisible(false)}
               />
             )}
