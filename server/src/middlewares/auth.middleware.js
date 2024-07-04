@@ -40,3 +40,17 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
   req.user = user;
   next();
 });
+
+export const verifyPermission =
+  (roles = []) =>
+  async (req, res, next) => {
+    if (!req.user?._id) {
+      throw new ApiError(401, 'Unauthorized request');
+    }
+
+    if (roles.includes(req.user?.role)) {
+      next();
+    } else {
+      throw new ApiError(401, 'Not permitted to access');
+    }
+  };
