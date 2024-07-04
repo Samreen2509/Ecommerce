@@ -19,6 +19,7 @@ import orderRoutes from './routes/order.routes.js';
 import { paymentRoutes, stripeWebhookRoutes } from './routes/payment.routes.js';
 import wishlistRoutes from './routes/wishlist.routes.js';
 import searchRoutes from './routes/search.routes.js';
+import dashboardRoutes from './routes/dashboard.routes.js';
 
 // constants
 const app = express();
@@ -70,6 +71,8 @@ app.use(`${BASEPATH}/wishlist`, wishlistRoutes);
 app.use(`${BASEPATH}/payment`, paymentRoutes);
 // Search Routes
 app.use(`${BASEPATH}/search`, searchRoutes);
+// Dashboard Routes
+app.use(`${BASEPATH}/dashboard`, dashboardRoutes);
 
 // Error middleware
 app.use(errorHandler);
