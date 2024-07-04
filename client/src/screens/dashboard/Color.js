@@ -1,9 +1,9 @@
 import React from 'react';
-import CategoryList from '../../components/Dashboard/Product/ProductList';
-import CategoryEdit from '../../components/Dashboard/Category/CategoryEdit';
+import ColorList from '../../components/Dashboard/Color/ColorList';
+import ColorEdit from '../../components/Dashboard/Color/ColorEdit';
 import { useLocation } from 'react-router-dom';
 
-function Category() {
+function Color() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get('id');
@@ -14,18 +14,18 @@ function Category() {
       <div className="h-screen w-full ">
         <div className="mb-6">
           <h1 className="text-3xl font-semibold text-black text-opacity-80">
-            {id ? 'Category Edit' : 'Category'}
+            {id ? 'Color Edit' : 'Color'}
           </h1>
           <p className="mt-1 cursor-pointer text-sm font-medium text-black text-opacity-50 underline">
-            {'> dashboard > category'}
+            {'> dashboard > color'}
           </p>
         </div>
         <div className="mb-4 w-full p-3">
-          {id ? <CategoryEdit id={id} edit={edit} /> : <CategoryList />}
+          {id ? <ColorEdit id={id} edit={edit} /> : <ColorList />}
         </div>
       </div>
     </>
   );
 }
 
-export default Category;
+export default Color;

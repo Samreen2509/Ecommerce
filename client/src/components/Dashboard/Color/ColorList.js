@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import ProductListItem from './ProductListItem';
+import React, { useEffect, useState } from 'react';
+import ColorListItem from './ColorListItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProducts } from '../../../features/dashboardSlice';
+import { getAllColor } from '../../../features/dashboardSlice/dashColorSlice';
 import AddButton from '../Utils/AddButton';
 
-function ProductList() {
-  const discpatch = useDispatch();
-  const { products } = useSelector((state) => state.dashboard);
+function ColorList() {
+  const dispatch = useDispatch();
+  const { colors } = useSelector((state) => state.dashColor);
 
   useEffect(() => {
-    discpatch(getProducts());
+    dispatch(getAllColor());
   }, []);
 
   return (
@@ -21,13 +21,13 @@ function ProductList() {
               All
             </li>
             <li className="flex h-10 cursor-pointer items-center justify-center rounded-md border px-4 text-gray-700 hover:bg-gray-200">
-              Pending
+              Warm
             </li>
             <li className="flex h-10 cursor-pointer items-center justify-center rounded-md border px-4 text-gray-700 hover:bg-gray-200">
-              Completed
+              Cool
             </li>
             <li className="flex h-10 cursor-pointer items-center justify-center rounded-md border px-4 text-gray-700 hover:bg-gray-200">
-              Canceled
+              Neutral
             </li>
           </ul>
           <AddButton />
@@ -39,32 +39,31 @@ function ProductList() {
           <div className="flex h-full w-16 items-center justify-center border-r px-3 text-base font-medium">
             S.No
           </div>
-          <div className="flex h-full w-full cursor-pointer items-center justify-start border-r px-2 text-base font-medium hover:underline">
+          <div className="flex h-full flex-1 cursor-pointer items-center justify-start border-r px-2 text-base font-medium hover:underline">
             Name
           </div>
-          <div className="flex h-full w-36 items-center justify-center border-r px-3 text-base font-medium">
-            Stock
+          <div className="flex h-full w-28 items-center justify-center border-r px-3 text-base font-medium">
+            HexCode
           </div>
-          <div className="flex h-full w-36 items-center justify-center border-r px-3 text-base font-medium">
-            Price
+          <div className="flex h-full w-28 items-center justify-center border-r px-3 text-base font-medium">
+            Color
           </div>
-          <div className="flex h-full w-36 items-center justify-center border-r px-3 text-base font-medium">
+          <div className="flex h-full w-28 items-center justify-center border-r px-3 text-base font-medium">
             Edit
           </div>
-          <div className="flex h-full w-36 items-center justify-center px-3 text-base font-medium">
+          <div className="flex h-full w-28 items-center justify-center px-3 text-base font-medium">
             Setting
           </div>
         </div>
         <div className="my-1 flex w-full flex-col items-center justify-center rounded-bl-md rounded-br-md border text-gray-800">
-          {products.map((item, index) => {
+          {colors?.map((item, index) => {
             return (
-              <ProductListItem
+              <ColorListItem
                 key={index}
                 id={item._id}
                 index={index + 1}
                 name={item.name}
-                stock={item.stock}
-                price={item.price}
+                hexCode={item.hexCode}
               />
             );
           })}
@@ -74,4 +73,4 @@ function ProductList() {
   );
 }
 
-export default ProductList;
+export default ColorList;

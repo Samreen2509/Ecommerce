@@ -17,6 +17,10 @@ import categorySlice from '../features/categorySlice';
 import wishlistSlice from '../features/wishlistSlice';
 import orderSlice from '../features/orderSlice';
 import dashboardSlice from '../features/dashboardSlice';
+import dashUserSlice from '../features/dashboardSlice/dashUserSlice';
+import dashColorSlice from '../features/dashboardSlice/dashColorSlice';
+import dashCategorySlice from '../features/dashboardSlice/dashCategorySlice';
+import dashNotificationSlice from '../features/dashboardSlice/dashNotificationSlice';
 
 const authPersistConfig = {
   key: 'auth',
@@ -34,6 +38,10 @@ export const store = configureStore({
     order: orderSlice,
     auth: persistedAuthReducer,
     dashboard: dashboardSlice,
+    dashUser: dashUserSlice,
+    dashColor: dashColorSlice,
+    dashCategory: dashCategorySlice,
+    dashNotification: dashNotificationSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
