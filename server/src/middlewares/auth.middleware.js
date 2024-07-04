@@ -40,3 +40,22 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
   req.user = user;
   next();
 });
+
+export const verifyPermission =
+  (roles = []) =>
+  async (req, res, next) => {
+    if (!req.user?._id) {
+      return res
+        .status(401)
+        .json({ success: false, msg: 'Unauthorized request' });
+    }
+
+    if (roles.includes(req.user?.role)) {
+      next();
+    } else {
+      return res.status(403).json({
+        success: false,
+        msg: "You're not allowed to perform this task",
+      });
+    }
+  };
