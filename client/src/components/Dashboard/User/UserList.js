@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
-import ProductListItem from './ProductListItem';
+import UserListItem from './UserListItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProducts } from '../../../features/dashboardSlice';
+import { getAllUsers } from '../../../features/dashboardSlice/dashUserSlice';
 import AddButton from '../Utils/AddButton';
 
-function ProductList() {
+function UserList() {
   const discpatch = useDispatch();
-  const { products } = useSelector((state) => state.dashboard);
+  const { users } = useSelector((state) => state.dashUser);
 
   useEffect(() => {
-    discpatch(getProducts());
+    discpatch(getAllUsers());
   }, []);
 
   return (
@@ -21,13 +21,11 @@ function ProductList() {
               All
             </li>
             <li className="flex h-10 cursor-pointer items-center justify-center rounded-md border px-4 text-gray-700 hover:bg-gray-200">
-              Pending
+              Admin
             </li>
+
             <li className="flex h-10 cursor-pointer items-center justify-center rounded-md border px-4 text-gray-700 hover:bg-gray-200">
-              Completed
-            </li>
-            <li className="flex h-10 cursor-pointer items-center justify-center rounded-md border px-4 text-gray-700 hover:bg-gray-200">
-              Canceled
+              User
             </li>
           </ul>
           <AddButton />
@@ -39,32 +37,36 @@ function ProductList() {
           <div className="flex h-full w-16 items-center justify-center border-r px-3 text-base font-medium">
             S.No
           </div>
-          <div className="flex h-full w-full cursor-pointer items-center justify-start border-r px-2 text-base font-medium hover:underline">
+          <div className="flex h-full flex-1 cursor-pointer items-center justify-start border-r px-2 text-base font-medium hover:underline">
             Name
           </div>
           <div className="flex h-full w-36 items-center justify-center border-r px-3 text-base font-medium">
-            Stock
+            Username
           </div>
-          <div className="flex h-full w-36 items-center justify-center border-r px-3 text-base font-medium">
-            Price
+          <div className="flex h-full flex-1 items-center justify-center border-r px-3 text-base font-medium">
+            Email
           </div>
-          <div className="flex h-full w-36 items-center justify-center border-r px-3 text-base font-medium">
+          <div className="flex h-full w-20 items-center justify-center border-r px-3 text-base font-medium">
+            Role
+          </div>
+          <div className="flex h-full w-20 items-center justify-center border-r px-3 text-base font-medium">
             Edit
           </div>
-          <div className="flex h-full w-36 items-center justify-center px-3 text-base font-medium">
+          <div className="flex h-full w-20 items-center justify-center px-3 text-base font-medium">
             Setting
           </div>
         </div>
         <div className="my-1 flex w-full flex-col items-center justify-center rounded-bl-md rounded-br-md border text-gray-800">
-          {products.map((item, index) => {
+          {users?.map((item, index) => {
             return (
-              <ProductListItem
+              <UserListItem
                 key={index}
-                id={item._id}
+                id={item?._id}
                 index={index + 1}
-                name={item.name}
-                stock={item.stock}
-                price={item.price}
+                name={item?.name}
+                username={item?.username}
+                email={item?.email}
+                role={item?.role}
               />
             );
           })}
@@ -74,4 +76,4 @@ function ProductList() {
   );
 }
 
-export default ProductList;
+export default UserList;
