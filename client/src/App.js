@@ -45,7 +45,9 @@ const Applayout = () => {
   return (
     <div className="app">
       <Header />
-      <Outlet />
+      <div className="pt-20">
+        <Outlet />
+      </div>
       <Footer />
     </div>
   );
@@ -57,7 +59,7 @@ const DashboardLayout = () => {
       <DashboardHeader />
       <div className="flex">
         <DashboardSidebar />
-        <div className=" flex-grow overflow-auto px-5 py-5">
+        <div className="custom-h-sidebar flex-grow overflow-auto px-5 py-5">
           <Outlet />
         </div>
       </div>
@@ -165,7 +167,11 @@ const appRouter = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: <DashboardLayout />,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         path: '/dashboard',
@@ -181,14 +187,6 @@ const appRouter = createBrowserRouter([
       },
       {
         path: '/dashboard/user',
-        element: <DashboardUser />,
-      },
-      {
-        path: '/dashboard/profile',
-        element: <DashboardUser />,
-      },
-      {
-        path: '/dashboard/notification',
         element: <DashboardUser />,
       },
       {

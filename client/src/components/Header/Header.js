@@ -40,14 +40,12 @@ function Header() {
     { text: 'Collections', link: '/collections' },
     { text: 'Products', link: '/products' },
     { text: 'Category', link: '/category' },
-    { text: 'Blog', link: '/blog' },
   ];
   const MobileNavtext = [
     { text: 'Home', link: '/' },
     { text: 'Collections', link: '/collections' },
     { text: 'Products', link: '/products' },
     { text: 'Category', link: '/category' },
-    { text: 'Blog', link: '/blog' },
     { text: 'Login', link: '/login' },
     { text: 'Register', link: '/register' },
   ];
@@ -55,7 +53,7 @@ function Header() {
   return (
     <>
       {/* <Sidemenu /> */}
-      <div className="flex h-[80px] items-center justify-between border-b bg-white px-5 text-black lg:h-[100px]">
+      <div className="fixed z-40 flex h-20 w-full items-center justify-start gap-x-11 border-b bg-white px-10 text-black">
         <div className="flex gap-x-5 lg:hidden">
           {Sidemenu ? (
             <RxCross2 size={30} onClick={() => setSidemenu(!Sidemenu)} />
@@ -81,6 +79,9 @@ function Header() {
             </div>
           </>
         )}
+        <Link to="/">
+          <img src={logo} alt="logo" className="h-16" />
+        </Link>
         <div className="hidden justify-evenly gap-x-8 font-semibold lg:flex">
           {navtext.map((item, index) => (
             <div key={index} className="hover:text-red-400">
@@ -90,16 +91,13 @@ function Header() {
             </div>
           ))}
         </div>
-        <Link to="/">
-          <img src={logo} alt="logo" className="h-14 lg:h-20" />
-        </Link>
 
         {/* Mobile Only Cart */}
         <div className="flex justify-evenly gap-x-8 font-semibold lg:hidden">
           <div className="flex cursor-pointer items-center justify-between gap-x-4 hover:text-orange-400">
             <Link
               to={'/bag'}
-              className="relative flex h-10 w-10 items-center justify-center "
+              className="relative flex w-10 items-center justify-center "
             >
               <FiShoppingBag size={30} />
               <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-black text-center text-white">
@@ -115,24 +113,17 @@ function Header() {
           </div>
         </div>
 
-        <div className="hidden justify-evenly gap-x-8 font-semibold lg:flex">
+        <div className="hidden flex-1 justify-end gap-x-8 font-semibold lg:flex">
           {/* Search part */}
 
-          <div
-            onClick={handleSearchClick}
-            className="flex cursor-pointer items-center justify-between gap-x-4 hover:text-orange-400"
-          >
-            <IoIosSearch size={22} />
-            <p>Search</p>
-          </div>
           {openSearch && <SearchPage handleSearchLeave={handleSearchLeave} />}
 
           {/* Wishlist part */}
           <Link
             to={'/wishlist'}
-            className="flex cursor-pointer items-center justify-between gap-x-4 hover:text-orange-400"
+            className="flex cursor-pointer flex-col items-center justify-between gap-x-4 hover:text-orange-400"
           >
-            <div className="relative flex h-10 w-10 items-center justify-center ">
+            <div className="relative flex w-10 items-center justify-center ">
               <div>
                 <FaRegHeart size={22} />
                 <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-black text-center text-white">
@@ -144,15 +135,15 @@ function Header() {
                 </div>
               </div>
             </div>
-            <p>Wishlist</p>
+            <p className="text-sm font-normal">Wishlist</p>
           </Link>
 
           {/* Bag part */}
           <Link
             to={'/bag'}
-            className="flex cursor-pointer items-center justify-between gap-x-4 hover:text-orange-400"
+            className="flex cursor-pointer flex-col items-center justify-between gap-x-4 hover:text-orange-400"
           >
-            <div className="relative flex h-10 w-10 items-center justify-center ">
+            <div className="relative flex w-10 items-center justify-center ">
               <div>
                 <FiShoppingBag size={22} />
                 <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-black text-center text-white">
@@ -166,29 +157,20 @@ function Header() {
                 </div>
               </div>
             </div>
-            <p>Bag</p>
+            <p className="text-sm font-normal">Bag</p>
           </Link>
+
           {/* Account part */}
           <div className="flex cursor-pointer items-center justify-between gap-x-4">
             <div
-              className={`flex cursor-pointer items-center justify-between gap-x-4 hover:text-orange-400 ${isDropdownOpen && 'text-orange-400'}`}
+              className={`flex cursor-pointer flex-col items-center justify-between gap-x-4 hover:text-orange-400 ${isDropdownOpen && 'text-orange-400'}`}
               onMouseEnter={handleHover}
             >
               <VscAccount size={22} />
-              <p>Account</p>
+              <p className="text-sm font-normal">Account</p>
             </div>
             {isDropdownOpen && <DropDown handleLeave={handleLeave} />}
           </div>
-          {userdata?.userInfo?.role === 'ADMIN' && (
-            <Link
-              to="/dashboard"
-              className="flex cursor-pointer items-center justify-between gap-x-4"
-            >
-              <div className="flex cursor-pointer items-center justify-between gap-x-4  hover:text-orange-400">
-                <p>Dashboard</p>
-              </div>
-            </Link>
-          )}
         </div>
       </div>
     </>

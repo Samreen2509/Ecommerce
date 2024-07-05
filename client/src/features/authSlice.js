@@ -124,6 +124,7 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.userInfo = action.payload.data.userInfo;
+        state.userData = action.payload.data.userInfo;
         state.error = null;
         state.isLoading = false;
         state.isUserLogin = true;
@@ -184,7 +185,7 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(User.fulfilled, (state, action) => {
-        state.userData = action.payload.data.userinfo;
+        state.userData = action.payload.data.userInfo;
         state.error = null;
         state.isLoading = false;
       })

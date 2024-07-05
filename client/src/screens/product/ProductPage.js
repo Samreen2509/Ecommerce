@@ -68,7 +68,7 @@ function ProductPage() {
                     +
                   </h3>
                 </div>
-                {categories?.data?.map((category) => (
+                {categories?.data?.categoryInfo?.map((category) => (
                   <div
                     className="flex items-center gap-2"
                     style={{ display: isCategoyInLargeDiv ? 'block' : 'none' }}

@@ -21,7 +21,7 @@ function Category() {
       </h1>
       <div className="mb-20 flex flex-wrap justify-center">
         {categories &&
-          categories?.data?.map((category) => (
+          categories?.data?.categoryInfo?.map((category) => (
             <Link
               to={`/category/${category._id}`}
               key={category._id}
