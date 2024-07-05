@@ -15,7 +15,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.auth);
   const { isLoading, error, isUserVerified, isUserLogin } = data;
-  console.log(data);
+
   useEffect(() => {
     if (isUserLogin) {
       navigate('/');
