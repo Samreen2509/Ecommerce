@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, getCartProducts } from '../../features/cartSlice';
 import { toast } from 'react-toastify';
 
-function AddToCart({ id: _id, quantity, className }) {
+function AddToCart({ id: _id, quantity, className, title }) {
   const dispatch = useDispatch();
   const { productTotalQty } = useSelector((state) => state.cart);
   const { isUserLogin } = useSelector((state) => state.auth);
@@ -22,7 +22,7 @@ function AddToCart({ id: _id, quantity, className }) {
   if (!isUserLogin)
     return (
       <Button type="button" className={className}>
-        Add To Cart
+        {title}
       </Button>
     );
 
@@ -32,7 +32,7 @@ function AddToCart({ id: _id, quantity, className }) {
       type="button"
       className={className}
     >
-      Add To Cart
+      {title}
     </Button>
   );
 }

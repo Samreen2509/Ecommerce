@@ -193,6 +193,14 @@ const appRouter = createBrowserRouter([
         element: <DashboardUser />,
       },
       {
+        path: '/dashboard/profile',
+        element: <DashboardUser />,
+      },
+      {
+        path: '/dashboard/notification',
+        element: <DashboardUser />,
+      },
+      {
         path: '/dashboard/category',
         element: <DashboardCategory />,
       },
