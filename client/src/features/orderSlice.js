@@ -5,7 +5,6 @@ const BASE_URL = process.env.BASEURL;
 export const createNewOrder = createAsyncThunk(
   'order/createNewOrder',
   async ({ data, userId }, { rejectWithValue }) => {
-    console.log({ data });
     try {
       const response = await axios.post(`${BASE_URL}/order/${userId}`, data, {
         headers: { 'Content-Type': 'application/json' },
@@ -23,7 +22,6 @@ export const createNewOrder = createAsyncThunk(
 export const getOrders = createAsyncThunk(
   'order/getOrders',
   async ({ userId }, { rejectWithValue }) => {
-    console.log(userId);
     try {
       const response = await axios.get(
         `${BASE_URL}/order/${userId}`,
@@ -149,7 +147,6 @@ export const orderSlice = createSlice({
     builder.addCase(getOrders.fulfilled, (state, action) => {
       state.loading = true;
       state.error = null;
-      console.log(action.payload);
       state.order = action.payload.data.orderInfo;
     });
     builder.addCase(getOrders.rejected, (state, action) => {

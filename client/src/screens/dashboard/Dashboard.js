@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import DashCard from '../../components/Dashboard/Dashboard/DashCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProducts } from '../../features/dashboardSlice';
+import { getItemsCount, getProducts } from '../../features/dashboardSlice';
+import { FaSpinner } from 'react-icons/fa';
 
 function Dashboard() {
   const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.dashboard);
+  const { itemCounts, isLoading } = useSelector((state) => state.dashboard);
 
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(getItemsCount());
   }, [dispatch]);
 
-  console.log(products);
   return (
     <>
       <div className="h-screen w-full">
@@ -24,11 +24,19 @@ function Dashboard() {
           </p>
         </div>
         <div className="grid grid-cols-4 gap-3 p-3">
-          <DashCard
-            name="PRODUCTS"
-            value={products ? products.length : '0'}
-            link="./product"
-          />
+          {isLoading ? (
+            <FaSpinner className="animate-spin" size={20} />
+          ) : (
+            itemCounts &&
+            itemCounts.map((e, index) => (
+              <DashCard
+                name={e[0]}
+                key={index}
+                value={e[1]}
+                link={`./${e[0]}`}
+              />
+            ))
+          )}
         </div>
       </div>
     </>

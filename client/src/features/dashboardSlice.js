@@ -3,6 +3,22 @@ import axios from 'axios';
 
 const BASE_URL = process.env.BASEURL;
 
+export const getItemsCount = createAsyncThunk(
+  'dashboard/getItemsCount',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/dashboard/count-items`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
 export const getProducts = createAsyncThunk(
   'dashboard/getProducts',
   async (_, { rejectWithValue }) => {
@@ -41,7 +57,7 @@ export const addProduct = createAsyncThunk(
     console.log(productData);
     try {
       const response = await axios.post(`${BASE_URL}/product`, productData, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true,
       });
       return response.data;
@@ -128,6 +144,7 @@ export const getColors = createAsyncThunk(
 const initialState = {
   isLoading: false,
   error: null,
+  itemCounts: [],
   products: [],
   colors: [],
   singleProduct: [],
@@ -140,6 +157,19 @@ export const dashboardSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
+      .addCase(getItemsCount.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getItemsCount.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.itemCounts = Object.entries(action.payload.data);
+      })
+      .addCase(getItemsCount.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
       .addCase(getProducts.pending, (state) => {
         state.isLoading = true;
         state.error = null;
