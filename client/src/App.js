@@ -39,36 +39,29 @@ import DashboardCategory from './screens/dashboard/Category.js';
 import DashboardColor from './screens/dashboard/Color.js';
 import DashboardNotification from './screens/dashboard/Notification.js';
 import DashboardSetting from './screens/dashboard/Setting.js';
+import PrivateRoute from './components/Routes/PrivateRoute.js';
 
 const Applayout = () => {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <div className="app">
-          <Header />
-          <Outlet />
-          <Footer />
-        </div>
-      </PersistGate>
-    </Provider>
+    <div className="app">
+      <Header />
+      <Outlet />
+      <Footer />
+    </div>
   );
 };
 
 const DashboardLayout = () => {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <div className="fixed h-full w-full">
-          <DashboardHeader />
-          <div className="flex">
-            <DashboardSidebar />
-            <div className="custom-h-sidebar flex-grow overflow-auto px-5 py-5">
-              <Outlet />
-            </div>
-          </div>
+    <div className="fixed h-full w-full">
+      <DashboardHeader />
+      <div className="flex">
+        <DashboardSidebar />
+        <div className=" flex-grow overflow-auto px-5 py-5">
+          <Outlet />
         </div>
-      </PersistGate>
-    </Provider>
+      </div>
+    </div>
   );
 };
 
@@ -172,11 +165,7 @@ const appRouter = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: (
-      <>
-        <DashboardLayout />
-      </>
-    ),
+    element: <DashboardLayout />,
     children: [
       {
         path: '/dashboard',
@@ -223,4 +212,10 @@ const appRouter = createBrowserRouter([
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<RouterProvider router={appRouter} />);
+root.render(
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <RouterProvider router={appRouter} />
+    </PersistGate>
+  </Provider>
+);
