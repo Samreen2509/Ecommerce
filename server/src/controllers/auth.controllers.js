@@ -280,6 +280,21 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
     );
 });
 
+export const getAllUser = asyncHandler(async (req, res) => {
+  const user = await req.user;
+  if (user.role !== availableUserRoles.ADMIN) {
+    throw new ApiError(401, "you don't have access");
+  }
+
+  const users = await User.find({});
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { userInfo: users }, 'user fetched successfully')
+    );
+});
+
 export const getUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const user = req.user;
@@ -300,7 +315,7 @@ export const getUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, { userinfo: req.user }, 'user fetched successfully')
+      new ApiResponse(200, { userInfo: req.user }, 'user fetched successfully')
     );
 });
 
@@ -309,20 +324,18 @@ export const deleteUser = asyncHandler(async (req, res) => {
   const user = await req.user;
 
   let deleteUser = user;
-  if (id != user._id && user.role == availableUserRoles.ADMIN) {
-    const findUser = await User.findById(id);
+  const findUser = await User.findById(id);
 
-    if (!findUser) {
-      throw new ApiError(404, 'user not found');
-    }
-    deleteUser = findUser;
+  if (!findUser) {
+    throw new ApiError(404, 'user not found');
   }
+  deleteUser = findUser;
 
   if (id == user._id) {
     deleteUser = user;
   }
 
-  if (id != user._id && user.role != availableUserRoles.USER) {
+  if (id != user._id && user.role != availableUserRoles.ADMIN) {
     throw new ApiError(500, "you don't have access");
   }
 
@@ -355,13 +368,15 @@ export const updateUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "you don't have access");
   }
 
-  if (!password) {
+  if (user.role != availableUserRoles.ADMIN && !password) {
     throw new ApiError(404, 'please provid password');
   }
 
-  const isPasswordCorrect = await findUser.isPasswordCorrect(password);
-  if (!isPasswordCorrect) {
-    throw new ApiError(401, 'worng password');
+  if (password) {
+    const isPasswordCorrect = await findUser.isPasswordCorrect(password);
+    if (!isPasswordCorrect) {
+      throw new ApiError(401, 'worng password');
+    }
   }
 
   const updateData = {};
@@ -551,15 +566,13 @@ export const uploadAvatar = asyncHandler(async (req, res) => {
   const uploadedFile = await req.file;
   const { id } = req.params;
   const user = await req.user;
-  let changeAvatarUser = user;
+  let changeAvatarUser;
 
-  if (id != user._id && user.role == availableUserRoles.ADMIN) {
-    const findUser = await User.findById(id);
-    if (!findUser) {
-      throw new ApiError(404, 'user not found');
-    }
-    changeAvatarUser = findUser;
+  const findUser = await User.findById(id);
+  if (!findUser) {
+    throw new ApiError(404, 'user not found');
   }
+  changeAvatarUser = findUser;
 
   if (id != user._id && user.role != availableUserRoles.ADMIN) {
     throw new ApiError(500, "you don't have access");

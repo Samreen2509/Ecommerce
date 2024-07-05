@@ -111,5 +111,7 @@ export const getOneColor = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(200, { colorInfo: color }, 'color found successfully');
+    .json(
+      new ApiResponse(200, { colorInfo: color }, 'color found successfully')
+    );
 });
