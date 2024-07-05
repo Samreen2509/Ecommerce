@@ -18,7 +18,7 @@ function DropDown({ handleLeave }) {
   return (
     <div
       onMouseLeave={handleLeave}
-      className="absolute right-0 top-[11%] z-10 max-h-full w-[200px] content-center overflow-hidden bg-gray-200"
+      className="absolute right-0 top-[11%] z-50 max-h-full w-[200px] content-center overflow-hidden bg-gray-200"
     >
       {isUserLogin ? (
         <div className="flex flex-col gap-y-1 border-b p-2">

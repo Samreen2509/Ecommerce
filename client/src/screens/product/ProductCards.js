@@ -1,52 +1,43 @@
 import { Link } from 'react-router-dom';
-import AddToCart from '../BAG/AddToCart';
-import { SiGooglelens } from 'react-icons/si';
-import AddToWishlistBtn from '../BAG/AddToWishlistBtn';
+import WishlistBtn from '../BAG/WishlistBtn';
+import { useState } from 'react';
 
 const ProductCard = (props) => {
   const { sdata } = props;
-  const { mainImage, description, price, _id } = sdata;
-
-  const quantity = 1;
+  const { mainImage, name, description, price, _id } = sdata;
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="group m-5 mb-24 flex h-96 w-72 flex-wrap justify-center  rounded-md lg:h-96 lg:w-72 ">
-      <div className="items-center duration-700 hover:scale-110">
-        <div className=" relative flex flex-col ">
-          {/* Wishlist Btn */}
-          <AddToWishlistBtn id={_id} />
-
-          <Link
-            to={`/singleProduct/${_id}`}
-            className="relative right-11 top-28 float-left ml-3 flex h-11 w-11  flex-col items-center justify-center rounded-full opacity-0 transition-all duration-500 hover:bg-black group-hover:right-0  group-hover:opacity-100"
-          >
-            <SiGooglelens className="absolute z-50 h-6 w-9 text-black transition-all duration-300 hover:text-white" />
-          </Link>
-        </div>
-        <Link to={`/singleProduct/${_id}`} className="link">
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="flex justify-center rounded-md border border-opacity-40 bg-white px-2 py-2 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black"
+    >
+      <Link to={`/singleProduct/${_id}`} className="link flex flex-col">
+        <div className="relative">
           <img
-            className="h-96 w-72 object-contain hover:border-2 hover:border-solid hover:border-gray-600"
+            className="h-72 rounded-md"
             alt="cardImg"
             loading="true"
             src={mainImage.url}
           />
-        </Link>
-
-        <AddToCart
-          id={_id}
-          quantity={quantity}
-          title="Add To Bag"
-          className="relative bottom-0 right-11 m-auto flex w-96 scale-50 items-center justify-center rounded-lg px-10 py-8 text-center  text-xl text-white opacity-0 transition-all duration-500 hover:bg-orange-600 group-hover:bottom-24 group-hover:opacity-100"
-        />
-      </div>
-
-      <div>
-        <div className="relative bottom-20 right-8 m-auto">
-          <h3 className="w-64">
-            {description} - {price}
-          </h3>
+          {!isHovered ? null : <WishlistBtn id={_id} />}
         </div>
-      </div>
+        <div className="mt-2 flex w-full flex-col items-center justify-center px-2">
+          <h1 className="w-full text-start text-base font-medium text-opacity-85">
+            {name}
+          </h1>
+          <p className="w-full text-start text-base font-normal text-opacity-80">
+            {description.substring(0, 30)}
+          </p>
+          <p className="flex w-full items-end justify-start text-start text-base font-semibold text-red-800">
+            Rs. {price}
+            <span className="ml-2 text-sm font-normal text-yellow-800 text-opacity-60 line-through">
+              Rs .{price + 278}
+            </span>
+          </p>
+        </div>
+      </Link>
     </div>
   );
 };
