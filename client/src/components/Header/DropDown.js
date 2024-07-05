@@ -45,6 +45,9 @@ function DropDown({ handleLeave }) {
         </div>
       )}
       <div className="flex flex-col gap-y-1 p-1 px-3 text-base">
+        <Link to={'/profile'} className="font-normal hover:text-orange-400">
+          Profile
+        </Link>
         <Link to={'/myorders'} className="font-normal hover:text-orange-400">
           Orders
         </Link>

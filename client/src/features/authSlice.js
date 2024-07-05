@@ -20,6 +20,22 @@ export const refreshToken = createAsyncThunk(
   }
 );
 
+export const User = createAsyncThunk(
+  'auth/User',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${process.env.BASEURL}/auth/user`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
 export const logout = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
@@ -89,6 +105,7 @@ export const Register = createAsyncThunk(
 const initialState = {
   isLoading: false,
   userInfo: null,
+  userData: null,
   error: null,
   isUserVerified: null,
   isUserLogin: false,
@@ -159,6 +176,19 @@ const authSlice = createSlice({
       })
       .addCase(refreshToken.rejected, (state, action) => {
         state.refreshToken = null;
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(User.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(User.fulfilled, (state, action) => {
+        state.userData = action.payload.data.userinfo;
+        state.error = null;
+        state.isLoading = false;
+      })
+      .addCase(User.rejected, (state, action) => {
         state.isLoading = false;
         state.error = null;
       });
