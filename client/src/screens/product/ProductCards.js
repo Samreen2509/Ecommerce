@@ -16,7 +16,7 @@ const ProductCard = (props) => {
       <Link to={`/singleProduct/${_id}`} className="link flex flex-col">
         <div className="relative">
           <img
-            className="h-72 rounded-md"
+            className="h-72 w-60 rounded-md"
             alt="cardImg"
             loading="true"
             src={mainImage.url}

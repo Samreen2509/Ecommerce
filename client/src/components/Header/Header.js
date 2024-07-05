@@ -40,6 +40,7 @@ function Header() {
     { text: 'Collections', link: '/collections' },
     { text: 'Products', link: '/products' },
     { text: 'Category', link: '/category' },
+    { text: 'Blog', link: '/blog' },
   ];
   const MobileNavtext = [
     { text: 'Home', link: '/' },
@@ -53,19 +54,17 @@ function Header() {
   return (
     <>
       {/* <Sidemenu /> */}
-      <div className="fixed z-40 flex h-20 w-full items-center justify-start gap-x-11 border-b bg-white px-10 text-black">
+      <div className="fixed z-40 flex h-20 w-full items-center justify-start gap-x-11 border-b bg-white px-10 text-black sm:px-2 md:px-5">
         <div className="flex gap-x-5 lg:hidden">
           {Sidemenu ? (
             <RxCross2 size={30} onClick={() => setSidemenu(!Sidemenu)} />
           ) : (
             <FiMenu size={30} onClick={() => setSidemenu(!Sidemenu)} />
           )}
-          <IoIosSearch onClick={handleSearchClick} size={30} />
-          {openSearch && <SearchPage handleSearchLeave={handleSearchLeave} />}
         </div>
         {Sidemenu && (
           <>
-            <div className="absolute left-0 top-[10%] z-20 flex h-[400px] w-full flex-col items-center gap-x-8 gap-y-8 bg-white p-4 font-semibold lg:hidden ">
+            <div className="absolute left-0 top-20 z-50 flex h-full w-full flex-col items-center gap-x-8 gap-y-8 bg-white p-4 font-semibold lg:hidden ">
               {MobileNavtext.map((item, index) => (
                 <div
                   key={index}
@@ -112,11 +111,14 @@ function Header() {
             </Link>
           </div>
         </div>
+        <IoIosSearch onClick={handleSearchClick} size={30} />
+        {openSearch && (
+          <SearchPage handleSearchLeave={handleSearchLeave} mobile="true" />
+        )}
 
         <div className="hidden flex-1 justify-end gap-x-8 font-semibold lg:flex">
           {/* Search part */}
-
-          {openSearch && <SearchPage handleSearchLeave={handleSearchLeave} />}
+          <SearchPage handleSearchLeave={handleSearchLeave} />
 
           {/* Wishlist part */}
           <Link

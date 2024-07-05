@@ -16,56 +16,72 @@ function DropDown({ handleLeave }) {
   };
 
   return (
-    <div
-      onMouseLeave={handleLeave}
-      className="absolute right-0 top-[11%] z-50 max-h-full w-[200px] content-center overflow-hidden bg-gray-200"
-    >
-      {isUserLogin ? (
-        <div className="flex flex-col gap-y-1 border-b p-2">
-          <h3>Welcome, {userInfo.name && `Aditya`}</h3>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-y-1 border-b p-2">
-          <h3>Welcome</h3>
-          <p className="text-xs text-gray-600">
-            To access account and manage orders
-          </p>
-          <Link
-            to={'/login'}
-            className="mt-2 border border-orange-400 p-2 text-center text-red-400 hover:bg-orange-400 hover:text-white"
-          >
-            LOGIN
-          </Link>
-          <Link
-            to={'/register'}
-            className="mt-2 border border-orange-400 p-2 text-center text-red-400 hover:bg-orange-400 hover:text-white"
-          >
-            SIGNUP
-          </Link>
-        </div>
-      )}
-      <div className="flex flex-col gap-y-1 p-1 px-3 text-base">
-        <Link to={'/profile'} className="font-normal hover:text-orange-400">
-          Profile
-        </Link>
-        <Link to={'/myorders'} className="font-normal hover:text-orange-400">
-          Orders
-        </Link>
-        <Link to={'/wishlist'} className="font-normal hover:text-orange-400">
-          Wishlist
-        </Link>
+    <>
+      <div
+        onMouseLeave={handleLeave}
+        className="absolute right-2 top-[88px] w-44 rounded-md bg-white p-2 px-3 shadow-lg"
+      >
         {isUserLogin ? (
-          <button
-            className="text-start font-normal hover:text-orange-400"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
+          <ul className="flex w-full flex-col items-center justify-center">
+            <li className="flex h-10 w-full items-center justify-center border-b">
+              <Link
+                className="flex h-full w-full items-center justify-start font-medium"
+                to="./profile"
+              >
+                Profile
+              </Link>
+            </li>
+            <li className="flex h-10 w-full items-center justify-center border-b">
+              <Link
+                className="flex h-full w-full items-center justify-start font-medium"
+                to="./myorders"
+              >
+                Orders
+              </Link>
+            </li>
+
+            {userInfo?.role == 'ADMIN' && (
+              <li className="flex h-10 w-full items-center justify-center border-b">
+                <Link
+                  className="flex h-full w-full items-center justify-start font-medium"
+                  to="./dashboard"
+                >
+                  Dashboard
+                </Link>
+              </li>
+            )}
+            <li className="flex h-10 w-full items-center justify-center border-b">
+              <div
+                className="flex h-full w-full items-center justify-start font-medium"
+                onClick={handleLogout}
+              >
+                Logout
+              </div>
+            </li>
+          </ul>
         ) : (
-          ''
+          <ul>
+            <li className="flex h-10 w-full items-center justify-center border-b">
+              <Link
+                className="flex h-full w-full items-center justify-start font-medium"
+                to="./Login"
+              >
+                Login
+              </Link>
+            </li>
+
+            <li className="flex h-10 w-full items-center justify-center border-b">
+              <Link
+                className="flex h-full w-full items-center justify-start font-medium"
+                to="./register"
+              >
+                Register
+              </Link>
+            </li>
+          </ul>
         )}
       </div>
-    </div>
+    </>
   );
 }
 

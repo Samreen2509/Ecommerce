@@ -145,7 +145,7 @@ export default function SingleProduct() {
               />
             </div>
           </div>
-          <div className="z-50 mt-6 flex h-96 w-3/4 flex-wrap items-center justify-center">
+          <div className="mt-6 flex h-96 w-3/4 flex-wrap items-center justify-center">
             {oneProduct &&
               oneProduct.data.productInfo.otherImages.map((img) => (
                 <div
