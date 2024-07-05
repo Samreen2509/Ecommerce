@@ -126,7 +126,7 @@ function ProductPage() {
                     +
                   </h3>
                 </div>
-                {products.data?.productInfo.map((product) => (
+                {products.data?.productInfo?.map((product) => (
                   <div
                     className="flex items-center gap-2"
                     style={{ display: isPriceInlargeDiv ? 'block' : 'none' }}
@@ -151,17 +151,11 @@ function ProductPage() {
           <h1 className="m-auto ml-10 text-2xl font-bold md:text-3xl lg:text-5xl">
             All Products
           </h1>
-          <div className="mb-32 flex flex-wrap justify-center">
+          <div className="mb-32 mt-10 flex flex-wrap justify-center gap-x-10 gap-y-10">
             {!IsCallFilterData ? (
               products.data?.productInfo.length ? (
                 products.data?.productInfo.map((product) => (
-                  <Link
-                    to={`/singleProduct/${product._id}`}
-                    className="link"
-                    key={product._id}
-                  >
-                    <ProductCard sdata={product} />
-                  </Link>
+                  <ProductCard sdata={product} />
                 ))
               ) : (
                 <div className="mr-24 mt-20">
@@ -169,15 +163,7 @@ function ProductPage() {
                 </div>
               )
             ) : filteredProduct.length ? (
-              filteredProduct.map((product) => (
-                <Link
-                  to={`/singleProduct/${product._id}`}
-                  className="link"
-                  key={product._id}
-                >
-                  <ProductCard sdata={product} />
-                </Link>
-              ))
+              filteredProduct.map((product) => <ProductCard sdata={product} />)
             ) : (
               <div className="mr-24 mt-20">
                 <h1 className="text-3xl">Product is not available</h1>
