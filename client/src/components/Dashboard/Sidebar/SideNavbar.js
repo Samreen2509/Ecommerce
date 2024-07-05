@@ -6,8 +6,9 @@ function SideNavbar() {
     { text: 'Orders', link: './order' },
     { text: 'Products', link: './product' },
     { text: 'Category', link: './category' },
+    { text: 'Colors', link: './color' },
     { text: 'Users', link: './user' },
-    { text: 'Profile', link: './profile' },
+    { text: 'Profile', link: '../profile' },
     { text: 'Notification', link: './notification' },
     { text: 'Settings', link: './setting' },
   ];

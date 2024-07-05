@@ -36,6 +36,8 @@ import DashboardOrder from './screens/dashboard/Order.js';
 import DashboardProduct from './screens/dashboard/Product.js';
 import DashboardUser from './screens/dashboard/User.js';
 import DashboardCategory from './screens/dashboard/Category.js';
+import DashboardColor from './screens/dashboard/Color.js';
+import DashboardNotification from './screens/dashboard/Notification.js';
 import DashboardSetting from './screens/dashboard/Setting.js';
 
 const Applayout = () => {
@@ -203,6 +205,14 @@ const appRouter = createBrowserRouter([
       {
         path: '/dashboard/category',
         element: <DashboardCategory />,
+      },
+      {
+        path: '/dashboard/color',
+        element: <DashboardColor />,
+      },
+      {
+        path: '/dashboard/notification',
+        element: <DashboardNotification />,
       },
       {
         path: '/dashboard/setting',
