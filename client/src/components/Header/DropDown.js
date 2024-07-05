@@ -3,17 +3,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../../features/authSlice';
 import { toast } from 'react-toastify';
+import { debounce } from '../debounce';
 
 function DropDown({ handleLeave }) {
   const dispatch = useDispatch();
   const { isUserLogin, userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = debounce(() => {
     navigate('/');
     dispatch(logout());
     toast.success('User logged out');
-  };
+  }, 300);
 
   return (
     <div
@@ -21,8 +22,8 @@ function DropDown({ handleLeave }) {
       className="absolute right-0 top-[11%] z-10 max-h-full w-[200px] content-center overflow-hidden bg-gray-200"
     >
       {isUserLogin ? (
-        <div className="flex flex-col gap-y-1 border-b p-2">
-          <h3>Welcome, {userInfo.name && `Aditya`}</h3>
+        <div className="flex flex-col gap-y-1 border-b p-2 text-black">
+          <h3>Welcome, {userInfo.name}</h3>
         </div>
       ) : (
         <div className="flex flex-col gap-y-1 border-b p-2">
