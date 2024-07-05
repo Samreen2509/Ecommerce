@@ -10,7 +10,7 @@ export const createProduct = asyncHandler(async (req, res) => {
   let { size } = await req.body;
   const uploadedFile = await req.file;
   const user = await req.user;
-  size = size.split(',');
+  const sizeArray = size.split(',').map((s) => s.trim());
 
   if (
     !name ||
@@ -44,7 +44,7 @@ export const createProduct = asyncHandler(async (req, res) => {
   const productData = {
     name,
     description,
-    size,
+    size: sizeArray,
     price,
     stock,
     category,

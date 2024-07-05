@@ -54,7 +54,13 @@ export const getAllCategory = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, category, 'Category retrieved successfully'));
+    .json(
+      new ApiResponse(
+        200,
+        { categoryInfo: category },
+        'Category retrieved successfully'
+      )
+    );
 });
 
 export const getOneCategory = asyncHandler(async (req, res) => {
@@ -68,7 +74,13 @@ export const getOneCategory = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, category, 'Category retrieved successfully'));
+    .json(
+      new ApiResponse(
+        200,
+        { categoryInfo: category },
+        'Category retrieved successfully'
+      )
+    );
 });
 
 export const updateCategory = asyncHandler(async (req, res) => {
