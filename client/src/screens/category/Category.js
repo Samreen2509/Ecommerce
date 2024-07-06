@@ -19,16 +19,10 @@ function Category() {
       <h1 className=" m-auto text-2xl font-bold md:text-4xl lg:text-5xl">
         All Category
       </h1>
-      <div className="mb-20 flex flex-wrap justify-center">
+      <div className="mb-20 mt-10 flex flex-wrap justify-center gap-x-10 gap-y-10">
         {categories &&
-          categories?.data?.map((category) => (
-            <Link
-              to={`/category/${category._id}`}
-              key={category._id}
-              className="link"
-            >
-              <CategoryCard sdata={category} />
-            </Link>
+          categories?.data?.categoryInfo?.map((category) => (
+            <CategoryCard sdata={category} />
           ))}
       </div>
     </div>

@@ -56,7 +56,7 @@ function ProductList() {
           </div>
         </div>
         <div className="my-1 flex w-full flex-col items-center justify-center rounded-bl-md rounded-br-md border text-gray-800">
-          {products.map((item, index) => {
+          {products?.map((item, index) => {
             return (
               <ProductListItem
                 key={index}

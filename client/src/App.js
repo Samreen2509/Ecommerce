@@ -41,17 +41,17 @@ import DashboardNotification from './screens/dashboard/Notification.js';
 import DashboardSetting from './screens/dashboard/Setting.js';
 import PrivateRoute from './components/Routes/PrivateRoute.js';
 
-const AppLayout = () => (
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <div className="app">
-        <Header />
+const Applayout = () => {
+  return (
+    <div className="app">
+      <Header />
+      <div className="pt-20">
         <Outlet />
-        <Footer />
       </div>
-    </PersistGate>
-  </Provider>
-);
+      <Footer />
+    </div>
+  );
+};
 
 const DashboardLayout = () => {
   return (
@@ -59,7 +59,7 @@ const DashboardLayout = () => {
       <DashboardHeader />
       <div className="flex">
         <DashboardSidebar />
-        <div className="flex-grow overflow-auto px-5 py-5">
+        <div className="custom-h-sidebar flex-grow overflow-auto px-5 py-5">
           <Outlet />
         </div>
       </div>
@@ -67,126 +67,153 @@ const DashboardLayout = () => {
   );
 };
 
-const DashboardLayoutWrapper = () => (
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <DashboardLayout />
-    </PersistGate>
-  </Provider>
-);
-
 const appRouter = createBrowserRouter([
   {
     path: '/',
     element: (
       <>
         <Notification />
-        <AppLayout />
+        <Applayout />
       </>
     ),
     children: [
-      { path: '/', element: <Body /> },
-      { path: '/profile', element: <Profile /> },
-      { path: '/register', element: <RegistrationPage /> },
-      { path: '/login', element: <Login /> },
-      { path: '/forgotpassword', element: <Login /> },
-      { path: '/wishlist', element: <Wishlist /> },
-      { path: '/bag', element: <Bag /> },
-      { path: '/search/:query', element: <SearchProduct /> },
-      { path: '/category/:id', element: <ProductDetailsPage /> },
-      { path: '/blog', element: <CollectionPage /> },
-      { path: '/collections', element: <CollectionPage /> },
-      { path: '/about', element: <About /> },
-      { path: '/category', element: <Category /> },
-      { path: '/products', element: <ProductPage /> },
-      { path: '/singleProduct/:categoryId', element: <SingleProduct /> },
-      { path: '/myorders', element: <Myorders /> },
-      { path: '/placeOrder/payment', element: <PlaceOrderPage /> },
-      { path: '/success', element: <OrderSuccessPage /> },
-      { path: '/emailVerify', element: <VerifyEmail /> },
-      { path: '/resetPassword', element: <ResetPassword /> },
+      {
+        path: '/',
+        element: <Body />,
+      },
+      {
+        path: '/profile',
+        element: <Profile />,
+      },
+      {
+        path: '/register',
+        element: <RegistrationPage />,
+      },
+      {
+        path: '/login',
+        element: <Login />,
+      },
+      {
+        path: '/forgotpassword',
+        element: <Login />,
+      },
+      {
+        path: '/wishlist',
+        element: <Wishlist />,
+      },
+      {
+        path: '/bag',
+        element: <Bag />,
+      },
+      {
+        path: '/search/:query',
+        element: <SearchProduct />,
+      },
+      {
+        path: '/category/:id',
+        element: <ProductDetailsPage />,
+      },
+      {
+        path: '/blog',
+        element: <CollectionPage />,
+      },
+      {
+        path: '/collections',
+        element: <CollectionPage />,
+      },
+      {
+        path: '/about',
+        element: <About />,
+      },
+      {
+        path: '/category',
+        element: <Category />,
+      },
+      {
+        path: '/products',
+        element: <ProductPage />,
+      },
+      {
+        path: '/singleProduct/:categoryId',
+        element: <SingleProduct />,
+      },
+
+      {
+        path: '/myorders',
+        element: <Myorders />,
+      },
+      {
+        path: '/placeOrder/payment',
+        element: <PlaceOrderPage />,
+      },
+      {
+        path: '/success',
+        element: <OrderSuccessPage />,
+      },
+      {
+        path: '/emailVerify',
+        element: <VerifyEmail />,
+      },
+      {
+        path: '/resetPassword',
+        element: <ResetPassword />,
+      },
+      {
+        path: '/success',
+        element: <OrderSuccessPage />,
+      },
     ],
     errorElement: <ErrorPage />,
   },
   {
     path: '/dashboard',
-    element: <DashboardLayoutWrapper />,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
-        path: '',
-        element: (
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        ),
+        path: '/dashboard',
+        element: <Dashboard />,
       },
       {
-        path: 'order',
-        element: (
-          <PrivateRoute>
-            <DashboardOrder />
-          </PrivateRoute>
-        ),
+        path: '/dashboard/order',
+        element: <DashboardOrder />,
       },
       {
-        path: 'product',
-        element: (
-          <PrivateRoute>
-            <DashboardProduct />
-          </PrivateRoute>
-        ),
+        path: '/dashboard/product',
+        element: <DashboardProduct />,
       },
       {
-        path: 'user',
-        element: (
-          <PrivateRoute>
-            <DashboardUser />
-          </PrivateRoute>
-        ),
+        path: '/dashboard/user',
+        element: <DashboardUser />,
       },
       {
-        path: 'profile',
-        element: (
-          <PrivateRoute>
-            <DashboardUser />
-          </PrivateRoute>
-        ),
+        path: '/dashboard/category',
+        element: <DashboardCategory />,
       },
       {
-        path: 'notification',
-        element: (
-          <PrivateRoute>
-            <DashboardNotification />
-          </PrivateRoute>
-        ),
+        path: '/dashboard/color',
+        element: <DashboardColor />,
       },
       {
-        path: 'category',
-        element: (
-          <PrivateRoute>
-            <DashboardCategory />
-          </PrivateRoute>
-        ),
+        path: '/dashboard/notification',
+        element: <DashboardNotification />,
       },
       {
-        path: 'color',
-        element: (
-          <PrivateRoute>
-            <DashboardColor />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: 'setting',
-        element: (
-          <PrivateRoute>
-            <DashboardSetting />
-          </PrivateRoute>
-        ),
+        path: '/dashboard/setting',
+        element: <DashboardSetting />,
       },
     ],
   },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<RouterProvider router={appRouter} />);
+root.render(
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <RouterProvider router={appRouter} />
+    </PersistGate>
+  </Provider>
+);
