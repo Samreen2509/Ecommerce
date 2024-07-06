@@ -20,6 +20,8 @@ import { paymentRoutes, stripeWebhookRoutes } from './routes/payment.routes.js';
 import wishlistRoutes from './routes/wishlist.routes.js';
 import searchRoutes from './routes/search.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
+import notificationRoutes from './routes/notification.routes.js';
+import useragent from 'express-useragent';
 
 // constants
 const app = express();
@@ -50,7 +52,7 @@ app.get(`${BASEPATH}/healthcheck`, (_, res) => {
 });
 
 // Auth & User Routes
-app.use(`${BASEPATH}/auth`, authRouters);
+app.use(`${BASEPATH}/auth`, useragent.express(), authRouters);
 // Product Routes
 app.use(`${BASEPATH}/product`, productRoutes);
 // Address Routes
@@ -73,6 +75,8 @@ app.use(`${BASEPATH}/payment`, paymentRoutes);
 app.use(`${BASEPATH}/search`, searchRoutes);
 // Dashboard Routes
 app.use(`${BASEPATH}/dashboard`, dashboardRoutes);
+// Notification Routes
+app.use(`${BASEPATH}/notification`, notificationRoutes);
 
 // Error middleware
 app.use(errorHandler);

@@ -17,9 +17,12 @@ import {
   deleteFromCloudinary,
   uploadOnCloudinary,
 } from '../utils/cloudinary.js';
+import useragent from 'express-useragent';
+import moment from 'moment-timezone';
+import Notification from '../models/notification.model.js';
 
 const ignoreFields =
-  '-password -refreshToken -emailVerificationExpiry -emailVerificationToken -createdAt -updatedAt';
+  '-password -refreshToken -emailVerificationExpiry -emailVerificationToken -createdAt';
 
 const findUser = async (username, email) => {
   try {
@@ -113,6 +116,20 @@ export const registerUser = asyncHandler(async (req, res) => {
 export const loginUser = asyncHandler(async (req, res) => {
   const { username, email, password } = await req.body;
 
+  const userAgent = req.useragent;
+
+  const deviceInfo = {
+    isMobile: userAgent.isMobile,
+    isTablet: userAgent.isTablet,
+    isDesktop: userAgent.isDesktop,
+    isBot: userAgent.isBot,
+    browser: userAgent.browser,
+    version: userAgent.version,
+    os: userAgent.os,
+    platform: userAgent.platform,
+    source: userAgent.source,
+  };
+
   if (!email && !username) {
     throw new ApiError(400, 'missing required fields');
   }
@@ -183,6 +200,14 @@ export const loginUser = asyncHandler(async (req, res) => {
   if (!loggedInUserInfo) {
     throw new ApiError(500, 'something went worng');
   }
+
+  const formattedDate = moment(loggedInUserInfo.updatedAt)
+    .tz('Asia/Kolkata')
+    .format('MMMM D, YYYY [at] h:mm A');
+  await Notification.create({
+    user: loggedInUserInfo._id,
+    notification: `Your account logged in from ${deviceInfo.os} (${deviceInfo.browser}) on ${formattedDate}`,
+  });
 
   return res
     .status(200)

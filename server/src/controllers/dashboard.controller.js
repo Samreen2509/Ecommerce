@@ -8,24 +8,24 @@ import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 
 export const count = asyncHandler(async (req, res) => {
-  const productCount = await Product.countDocuments();
-  const userCount = await User.countDocuments();
-  const orderCount = await Order.countDocuments();
-  const categoryCount = await Category.countDocuments();
-  const colorCount = await Color.countDocuments();
-  const paymentCount = await Payment.countDocuments();
+  const product = await Product.countDocuments();
+  const user = await User.countDocuments();
+  const order = await Order.countDocuments();
+  const category = await Category.countDocuments();
+  const color = await Color.countDocuments();
+  const payment = await Payment.countDocuments();
   return res.status(200).json(
     new ApiResponse(
       200,
       {
-        productCount,
-        userCount,
-        orderCount,
-        categoryCount,
-        colorCount,
-        paymentCount,
+        product,
+        user,
+        order,
+        category,
+        color,
+        payment,
       },
-      'Counting done successfully'
+      'counting done successfully'
     )
   );
 });
