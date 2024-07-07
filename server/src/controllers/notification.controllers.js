@@ -15,7 +15,7 @@ export const getAllNotification = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { NotificationInfo: notifications },
+        { notificationInfo: notifications },
         'notification fetched successfully'
       )
     );
@@ -31,7 +31,7 @@ export const getNotification = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { NotificationInfo: notification },
+        { notificationInfo: notification },
         'notification fetched successfully'
       )
     );
@@ -61,7 +61,7 @@ export const updateAllNotification = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { NotificationInfo: notification },
+        { notificationInfo: notification },
         'notification fetched successfully'
       )
     );
@@ -85,7 +85,7 @@ export const updateNotification = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { NotificationInfo: notification },
+        { notificationInfo: notification },
         'notification fetched successfully'
       )
     );

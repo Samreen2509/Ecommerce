@@ -3,6 +3,7 @@ import {
   createCategory,
   getAllCategory,
   getOneCategory,
+  removeCategory,
   updateCategory,
 } from '../controllers/category.controller.js';
 import { upload } from '../middlewares/multer.middleware.js';
@@ -18,7 +19,7 @@ router
 router
   .route('/:categoryId')
   .get(getOneCategory)
-  .put(verifyJWT, upload.single('image'), updateCategory);
-// .delete(removeCategory);
+  .put(verifyJWT, upload.single('image'), updateCategory)
+  .delete(verifyJWT, removeCategory);
 
 export default router;
