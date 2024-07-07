@@ -301,7 +301,7 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, { userinfo: user }, 'user fetched successfully')
+      new ApiResponse(200, { userInfo: user }, 'user fetched successfully')
     );
 });
 

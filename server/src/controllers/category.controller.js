@@ -42,7 +42,13 @@ export const createCategory = asyncHandler(async (req, res) => {
 
   return res
     .status(201)
-    .json(new ApiResponse(201, category, 'Category created successfully'));
+    .json(
+      new ApiResponse(
+        201,
+        { categoryInfo: category },
+        'Category created successfully'
+      )
+    );
 });
 
 export const getAllCategory = asyncHandler(async (req, res) => {
@@ -152,18 +158,22 @@ export const updateCategory = asyncHandler(async (req, res) => {
     );
 });
 
-// export const removeCategory = asyncHandler(async (req, res) => {
-//   const { categoryId } = req.params;
+export const removeCategory = asyncHandler(async (req, res) => {
+  const { categoryId } = req.params;
+  const user = req.user;
 
-//   const category = await Category.findById(categoryId);
+  if (user.role != availableUserRoles.ADMIN) {
+    throw new ApiError(500, "you don't have access");
+  }
 
-//   if (!category) {
-//     throw new ApiError(404, `Category with id ${id} not found`);
-//   }
+  const category = await Category.findById(categoryId);
 
-//   await Category.findByIdAndDelete(categoryId);
+  if (!category) {
+    throw new ApiError(404, `Category with id ${id} not found`);
+  }
 
-//   return res
-//     .status(200)
-//     .json(new ApiResponse(200, {}, 'Category deleted successfully'));
-// });
+  await Category.findByIdAndDelete(categoryId);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, 'Category deleted successfully'));
+});
