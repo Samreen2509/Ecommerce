@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { orderStatusEnum } from '../constants';
+import { orderStatusEnum } from '../constants.js';
 
 const orderSchema = new Schema({
   orderPrice: {
@@ -20,6 +20,9 @@ const orderSchema = new Schema({
           min: [1, 'Quantity can not be less then 1.'],
           default: 1,
         },
+        size: {
+          type: String,
+        },
       },
     ],
     default: [],
@@ -33,11 +36,12 @@ const orderSchema = new Schema({
     ref: 'addresses',
   },
   status: {
-    type: string,
+    type: String,
     enum: orderStatusEnum,
   },
   paymentId: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: 'payments',
   },
   isPaymentDone: {
     type: Boolean,

@@ -7,7 +7,7 @@ export const availableUserRolesEnum = Object.values(availableUserRoles);
 
 // URI base path
 export const BASEPATH = '/api/v1';
-export const CLIENT_BASEPATH = 'http://localhost:3000';
+export const CLIENT_BASEPATH = 'http://localhost:1234';
 export const RESET_PASS_PAGE = '/resetPassword';
 export const EMAIL_VERIFY_PAGE = '/emailVerify';
 
@@ -29,7 +29,6 @@ export const orderStatus = {
   CANCELLED: 'CANCELLED',
   DELIVERED: 'DELIVERED',
 };
-export const orderStatusEnum = Object.values(orderStatus);
 
 // allowed image extensions
 export const allowedImgExtensions = {
@@ -39,4 +38,21 @@ export const allowedImgExtensions = {
   webp: '.webp',
 };
 export const allowedImgExtensionsEnum = Object.values(allowedImgExtensions);
-// export const orderStatusEnum = Object.values(orderStatus);
+export const orderStatusEnum = Object.values(orderStatus);
+
+export const availablePaymentMethod = {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+};
+
+export const availablePaymentStatus = {
+  PENDING: 'PENDING',
+  CANCELLED: 'CANCELLED',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED',
+  PROCESSING: 'PROCESSING',
+  DISPUTED: 'DISPUTED',
+  ON_HOLD: 'ON_HOLD',
+};
+export const availablePaymentStatusEnum = Object.values(availablePaymentStatus);

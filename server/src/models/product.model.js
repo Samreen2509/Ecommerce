@@ -11,14 +11,14 @@ const productSchema = new Schema(
       required: true,
     },
     size: {
-      default: []
+      type: Array,
+      default: [],
     },
     mainImage: {
       required: true,
       type: {
         url: String,
         public_id: String,
-        url: String,
         secure_url: String,
         width: Number,
         height: Number,
@@ -38,7 +38,6 @@ const productSchema = new Schema(
         {
           url: String,
           public_id: String,
-          url: String,
           secure_url: String,
           width: Number,
           height: Number,
@@ -53,7 +52,8 @@ const productSchema = new Schema(
       required: true,
     },
     color: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'colors',
       required: true,
     },
   },
