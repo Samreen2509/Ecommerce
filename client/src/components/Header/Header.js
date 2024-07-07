@@ -54,7 +54,7 @@ function Header() {
   return (
     <>
       {/* <Sidemenu /> */}
-      <div className="fixed z-40 flex h-20 w-full items-center justify-start gap-x-11 border-b bg-white px-10 text-black sm:px-2 md:px-5">
+      <div className="fixed z-50 flex h-20 w-full items-center gap-x-11 border-b bg-white px-10 text-black sm:justify-between sm:px-2 md:justify-between md:px-5 lg:justify-start">
         <div className="flex gap-x-5 lg:hidden">
           {Sidemenu ? (
             <RxCross2 size={30} onClick={() => setSidemenu(!Sidemenu)} />
@@ -63,23 +63,21 @@ function Header() {
           )}
         </div>
         {Sidemenu && (
-          <>
-            <div className="absolute left-0 top-20 z-50 flex h-full w-full flex-col items-center gap-x-8 gap-y-8 bg-white p-4 font-semibold lg:hidden ">
-              {MobileNavtext.map((item, index) => (
-                <div
-                  key={index}
-                  className="w-full text-center hover:bg-gray-300 hover:text-red-400"
-                >
-                  <Link to={item.link} className="capitalize">
-                    {item.text}
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </>
+          <div className="absolute left-0 top-20 z-40 flex h-[100vh] w-full flex-col items-start gap-x-10 gap-y-10 bg-white p-4 pt-10 font-semibold lg:hidden ">
+            {MobileNavtext.map((item, index) => (
+              <div
+                key={index}
+                className="h-10 w-full border-b text-start hover:bg-gray-300 hover:text-red-400"
+              >
+                <Link to={item.link} className="capitalize">
+                  {item.text}
+                </Link>
+              </div>
+            ))}
+          </div>
         )}
         <Link to="/">
-          <img src={logo} alt="logo" className="h-16" />
+          <img src={logo} alt="logo" className="h-16 object-contain" />
         </Link>
         <div className="hidden justify-evenly gap-x-8 font-semibold lg:flex">
           {navtext.map((item, index) => (
@@ -92,7 +90,7 @@ function Header() {
         </div>
 
         {/* Mobile Only Cart */}
-        <div className="flex justify-evenly gap-x-8 font-semibold lg:hidden">
+        <div className="flex justify-end gap-x-8 font-semibold lg:hidden">
           <div className="flex cursor-pointer items-center justify-between gap-x-4 hover:text-orange-400">
             <Link
               to={'/bag'}
@@ -110,11 +108,12 @@ function Header() {
               </div>
             </Link>
           </div>
+          <IoIosSearch
+            className="lg:hidden"
+            onClick={handleSearchClick}
+            size={30}
+          />
         </div>
-        <IoIosSearch onClick={handleSearchClick} size={30} />
-        {openSearch && (
-          <SearchPage handleSearchLeave={handleSearchLeave} mobile="true" />
-        )}
 
         <div className="hidden flex-1 justify-end gap-x-8 font-semibold lg:flex">
           {/* Search part */}
@@ -175,6 +174,9 @@ function Header() {
           </div>
         </div>
       </div>
+      {openSearch && (
+        <SearchPage handleSearchLeave={handleSearchLeave} mobile="true" />
+      )}
     </>
   );
 }

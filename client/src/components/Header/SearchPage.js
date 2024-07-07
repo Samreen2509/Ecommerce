@@ -13,25 +13,7 @@ function SearchPage({ handleSearchLeave, mobile }) {
   const navigate = useNavigate();
 
   const handleQuerySearch = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.BASEURL}/search/p/${limit}`,
-        {
-          params: { q: query },
-        }
-      );
-      setResult(response.data.data.searchInfo);
-      const productId = response.data.data.searchInfo[0]._id;
-      setResult([]);
-      navigate(`/singleProduct/${productId}`);
-      setError('');
-    } catch (error) {
-      setError(error.response?.data?.message || 'An error occurred');
-    }
-  };
-
-  useEffect(() => {
-    const handleSearch = async () => {
+    if (query.length >= 3) {
       try {
         const response = await axios.get(
           `${process.env.BASEURL}/search/p/${limit}`,
@@ -40,12 +22,34 @@ function SearchPage({ handleSearchLeave, mobile }) {
           }
         );
         setResult(response.data.data.searchInfo);
+        const productId = response.data.data.searchInfo[0]._id;
+        setResult([]);
+        navigate(`/singleProduct/${productId}`);
         setError('');
       } catch (error) {
         setError(error.response?.data?.message || 'An error occurred');
       }
-    };
-    handleSearch();
+    }
+  };
+
+  useEffect(() => {
+    if (query.length >= 3) {
+      const handleSearch = async () => {
+        try {
+          const response = await axios.get(
+            `${process.env.BASEURL}/search/p/${limit}`,
+            {
+              params: { q: query },
+            }
+          );
+          setResult(response.data.data.searchInfo);
+          setError('');
+        } catch (error) {
+          setError(error.response?.data?.message || 'An error occurred');
+        }
+      };
+      handleSearch();
+    }
   }, [query]);
 
   const handleClearSearch = () => {
