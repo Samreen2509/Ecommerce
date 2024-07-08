@@ -110,10 +110,14 @@ export const createProduct = createAsyncThunk(
 // getting all products
 export const getAllProducts = createAsyncThunk(
   'product/getProducts',
-  async (_, { rejectWithValue }) => {
+  async ({ page }, { rejectWithValue }) => {
     try {
       const response = await axios.get(BASE_URL_PRODUCT, {
         headers: { 'Content-Type': 'application/json' },
+        params: {
+          page,
+          limit: 12,
+        },
       });
       return response.data;
     } catch (error) {

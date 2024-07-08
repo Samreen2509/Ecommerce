@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addToWishlist,
@@ -8,17 +8,12 @@ import {
 import { FaRegHeart } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import { debounce } from '../../components/debounce';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
 
-function WishlistBtn({ id: _id }) {
+function WishlistBtn({ id }) {
   const dispatch = useDispatch();
-  const { totalWishProducts, totalWishProductsId, isLoading } = useSelector(
-    (state) => state.wishlist
-  );
+  const { totalWishProductsId } = useSelector((state) => state.wishlist);
   const { isUserLogin } = useSelector((state) => state.auth);
-  const productAlreadyInWishList = totalWishProductsId.includes(_id);
+  const [added, setAdded] = useState(false);
 
   useEffect(() => {
     if (isUserLogin) {
@@ -26,27 +21,34 @@ function WishlistBtn({ id: _id }) {
     }
   }, [dispatch]);
 
-  const handleaddCart = debounce(() => {
-    dispatch(addToWishlist({ productId: _id }));
-    if (totalWishProducts + 1) {
-      toast.success('Product added Wishlist successfully', {
-        autoClose: 500,
-      });
+  useState(() => {
+    if (totalWishProductsId && totalWishProductsId.includes(id)) {
+      setAdded(true);
+    } else {
+      setAdded(false);
     }
-    dispatch(getWishListProducts());
-  }, 500);
+  }, [totalWishProductsId]);
 
-  const handleRemove = debounce(() => {
-    dispatch(removeFromWishlist({ _id }));
-    if (totalWishProducts - 1) {
-      toast.success('Product removed from Wishlist successfully', {
-        autoClose: 500,
-      });
-    }
-    dispatch(getWishListProducts());
-  }, 500);
+  const handleAddWishLit = () => {
+    dispatch(addToWishlist({ id }));
+    toast.success('Added to Wishlist', {
+      autoClose: 500,
+    });
+    setAdded(true);
+  };
 
-  const handleOnClick = () => {};
+  const handleRemove = () => {
+    dispatch(removeFromWishlist({ id }));
+    toast.success('Removed from Wishlist', {
+      autoClose: 500,
+    });
+    setAdded(false);
+  };
+
+  const handleOnClick = (e) => {
+    e.preventDefault();
+    added ? handleRemove() : handleAddWishLit();
+  };
 
   return (
     <>
@@ -54,7 +56,7 @@ function WishlistBtn({ id: _id }) {
         onClick={handleOnClick}
         className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-full bg-black text-xl text-white shadow-md transition duration-1000 hover:bg-opacity-80"
       >
-        <FaRegHeart />
+        {added ? <FaHeart style={{ color: 'red' }} /> : <FaRegHeart />}
       </div>
     </>
   );

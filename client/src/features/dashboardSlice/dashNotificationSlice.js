@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { on } from 'process';
 
 const BASE_URL = process.env.BASEURL;
 

@@ -18,7 +18,7 @@ function Header() {
   const { productTotalQty, isLoading } = useSelector((state) => state.cart);
   const { totalWishProducts: wishlistitems, isLoading: loadingwishlistitems } =
     useSelector((state) => state.wishlist);
-  const userdata = useSelector((state) => state.auth);
+  const { isUserLogin, userInfo } = useSelector((state) => state.auth);
 
   const handleHover = () => {
     setIsDropdownOpen(true);
@@ -40,6 +40,7 @@ function Header() {
     { text: 'Collections', link: '/collections' },
     { text: 'Products', link: '/products' },
     { text: 'Category', link: '/category' },
+    { text: 'Blog', link: '/blog' },
   ];
   const MobileNavtext = [
     { text: 'Home', link: '/' },
@@ -53,34 +54,30 @@ function Header() {
   return (
     <>
       {/* <Sidemenu /> */}
-      <div className="fixed z-40 flex h-20 w-full items-center justify-start gap-x-11 border-b bg-white px-10 text-black">
+      <div className="fixed z-50 flex h-20 w-full items-center gap-x-11 border-b bg-white px-10 text-black sm:justify-between sm:px-2 md:justify-between md:px-5 lg:justify-start">
         <div className="flex gap-x-5 lg:hidden">
           {Sidemenu ? (
             <RxCross2 size={30} onClick={() => setSidemenu(!Sidemenu)} />
           ) : (
             <FiMenu size={30} onClick={() => setSidemenu(!Sidemenu)} />
           )}
-          <IoIosSearch onClick={handleSearchClick} size={30} />
-          {openSearch && <SearchPage handleSearchLeave={handleSearchLeave} />}
         </div>
         {Sidemenu && (
-          <>
-            <div className="absolute left-0 top-[10%] z-20 flex h-[400px] w-full flex-col items-center gap-x-8 gap-y-8 bg-white p-4 font-semibold lg:hidden ">
-              {MobileNavtext.map((item, index) => (
-                <div
-                  key={index}
-                  className="w-full text-center hover:bg-gray-300 hover:text-red-400"
-                >
-                  <Link to={item.link} className="capitalize">
-                    {item.text}
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </>
+          <div className="absolute left-0 top-20 z-40 flex h-[100vh] w-full flex-col items-start gap-x-10 gap-y-10 bg-white p-4 pt-10 font-semibold lg:hidden ">
+            {MobileNavtext.map((item, index) => (
+              <div
+                key={index}
+                className="h-10 w-full border-b text-start hover:bg-gray-300 hover:text-red-400"
+              >
+                <Link to={item.link} className="capitalize">
+                  {item.text}
+                </Link>
+              </div>
+            ))}
+          </div>
         )}
         <Link to="/">
-          <img src={logo} alt="logo" className="h-16" />
+          <img src={logo} alt="logo" className="h-16 object-contain" />
         </Link>
         <div className="hidden justify-evenly gap-x-8 font-semibold lg:flex">
           {navtext.map((item, index) => (
@@ -93,7 +90,7 @@ function Header() {
         </div>
 
         {/* Mobile Only Cart */}
-        <div className="flex justify-evenly gap-x-8 font-semibold lg:hidden">
+        <div className="flex justify-end gap-x-8 font-semibold lg:hidden">
           <div className="flex cursor-pointer items-center justify-between gap-x-4 hover:text-orange-400">
             <Link
               to={'/bag'}
@@ -111,12 +108,16 @@ function Header() {
               </div>
             </Link>
           </div>
+          <IoIosSearch
+            className="lg:hidden"
+            onClick={handleSearchClick}
+            size={30}
+          />
         </div>
 
         <div className="hidden flex-1 justify-end gap-x-8 font-semibold lg:flex">
           {/* Search part */}
-
-          {openSearch && <SearchPage handleSearchLeave={handleSearchLeave} />}
+          <SearchPage handleSearchLeave={handleSearchLeave} />
 
           {/* Wishlist part */}
           <Link
@@ -169,10 +170,19 @@ function Header() {
               <VscAccount size={22} />
               <p className="text-sm font-normal">Account</p>
             </div>
-            {isDropdownOpen && <DropDown handleLeave={handleLeave} />}
+            {isDropdownOpen && (
+              <DropDown
+                handleLeave={handleLeave}
+                userInfo={userInfo}
+                isUserLogin={isUserLogin}
+              />
+            )}
           </div>
         </div>
       </div>
+      {openSearch && (
+        <SearchPage handleSearchLeave={handleSearchLeave} mobile="true" />
+      )}
     </>
   );
 }

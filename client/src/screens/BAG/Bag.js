@@ -15,6 +15,7 @@ const Bag = () => {
     dispatch(getCartProducts());
   }, [dispatch, updateCart]);
   console.log('cartProducts', cartProducts);
+
   return (
     <section className="mt-3 flex h-full w-full flex-col items-center justify-center">
       <h2 className="text-sm font-bold lg:text-xl">YOUR SHOPPING BAG</h2>
@@ -68,7 +69,10 @@ const Bag = () => {
               to="/placeOrder/payment"
               className="flex w-full items-center justify-between"
             >
-              <button className="w-full bg-orange-400 px-5 py-2 text-xl font-semibold text-white hover:bg-green-500">
+              <button
+                disabled={cartProducts.length === 0}
+                className="w-full bg-orange-400 px-5 py-2 text-xl font-semibold text-white hover:bg-green-500"
+              >
                 Checkout
               </button>
             </Link>

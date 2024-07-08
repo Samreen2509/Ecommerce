@@ -4,7 +4,6 @@ import Carousel from './Carousel.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../../features/categorySlice.js';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import useCheckSession from '../../hook/useCheckSession.js';
 import { getCartProducts } from '../../features/cartSlice.js';
 import CategoryCard from '../../screens/category/CategoryCard.js';
@@ -62,6 +61,12 @@ const Body = () => {
     dispatch(getAllProducts());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (isUserLogin) {
+      useCheckSession;
+    }
+  }, [isUserLogin]);
+
   return categories.length === 0 ? (
     <Shimmer />
   ) : (
@@ -91,7 +96,9 @@ const Body = () => {
             {categories &&
               categories?.data?.categoryInfo
                 ?.slice(0, 4)
-                .map((category) => <CategoryCard sdata={category} />)}
+                .map((category, index) => (
+                  <CategoryCard key={index} sdata={category} />
+                ))}
           </div>
 
           <Button
@@ -106,11 +113,13 @@ const Body = () => {
         {/* Product Section */}
         <div className="mt-36 flex w-full flex-col items-center justify-evenly">
           <div className="text-4xl font-bold">New Arrival </div>
-          <div className="mt-14 flex w-full flex-wrap items-center justify-center gap-x-10">
+          <div className="mt-14 flex w-full flex-wrap items-center justify-center gap-x-10 gap-y-10">
             {products &&
               products.data?.productInfo
                 .slice(0, 4)
-                .map((product) => <ProductCard sdata={product} />)}
+                .map((product, index) => (
+                  <ProductCard key={index} sdata={product} />
+                ))}
           </div>
 
           <Button
@@ -154,19 +163,26 @@ const Body = () => {
             <span className="text-base">Trending Outfits Men</span>
           </div>
 
-          <div className="mt-24 flex h-auto w-full items-center justify-center gap-5 md:gap-10 lg:gap-10">
+          <div className="mt-24 flex h-auto w-full flex-wrap items-center justify-center gap-5 md:gap-10 lg:gap-10">
             <div className="h-auto w-auto rounded-md border border-opacity-40 p-2 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
               <img
                 src={img4}
                 alt="Cloth"
-                className="h-96 w-full rounded-md object-contain"
+                className="h-96 w-64 rounded-md object-fill"
               />
             </div>
             <div className="h-auto w-auto rounded-md border border-opacity-40 p-2 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
               <img
                 src={img5}
                 alt="Cloth"
-                className="h-96 w-full rounded-md object-contain"
+                className="h-96 w-64 rounded-md object-fill"
+              />
+            </div>
+            <div className="h-auto w-auto rounded-md border border-opacity-40 p-2 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
+              <img
+                src={img4}
+                alt="Cloth"
+                className="h-96 w-64 rounded-md object-fill"
               />
             </div>
           </div>
