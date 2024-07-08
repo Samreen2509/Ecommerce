@@ -8,6 +8,7 @@ import {
   getAllCategory,
   getOneCategory,
 } from '../../features/categorySlice.js';
+import Pagination from './Pagination.js';
 
 function ProductPage() {
   const { products, loading } = useSelector((state) => state.product);
@@ -19,11 +20,13 @@ function ProductPage() {
   const [filteredProduct, setFilteredProduct] = useState([]);
   const displayProductSize = ['XS', 'S', 'M', 'L', 'XL', 'XXL']; // All sizes to display
   const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
+  const totalPages = 3;
 
   useEffect(() => {
-    dispatch(getAllProducts());
+    dispatch(getAllProducts({ page }));
     dispatch(getAllCategory());
-  }, [dispatch]);
+  }, [dispatch, page]);
 
   const filterCategoryData = (id) => {
     setIsCallFilterData(true);
@@ -169,6 +172,11 @@ function ProductPage() {
                 <h1 className="text-3xl">Product is not available</h1>
               </div>
             )}
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
           </div>
         </div>
       </div>

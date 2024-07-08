@@ -133,7 +133,7 @@ export const orderSlice = createSlice({
     builder.addCase(getAddress.fulfilled, (state, action) => {
       state.loading = true;
       state.error = null;
-      // state.addressId = action.payload.data.addressInfo.map((e) => e._id);
+      console.log(action.payload);
       state.addresses = action.payload.data.addressInfo;
     });
     builder.addCase(getAddress.rejected, (state, action) => {
