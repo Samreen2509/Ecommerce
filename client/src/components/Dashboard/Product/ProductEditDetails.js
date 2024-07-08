@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ImagePreview from '../Utils/ImagePreview';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addProduct,
