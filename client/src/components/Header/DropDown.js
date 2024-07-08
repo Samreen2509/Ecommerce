@@ -1,19 +1,19 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../../features/authSlice';
 import { toast } from 'react-toastify';
+import { debounce } from '../debounce';
 
-function DropDown({ handleLeave }) {
+function DropDown({ handleLeave, userInfo, isUserLogin }) {
   const dispatch = useDispatch();
-  const { isUserLogin, userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = debounce(() => {
     navigate('/');
     dispatch(logout());
     toast.success('User logged out');
-  };
+  }, 300);
 
   return (
     <>

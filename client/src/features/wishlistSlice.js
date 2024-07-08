@@ -39,10 +39,14 @@ export const addToWishlist = createAsyncThunk(
   'wishlist/addToWishlist',
   async ({ id }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/wishlist/${id}`,{}, {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/wishlist/${id}`,
+        {},
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
 
       return response.data;
     } catch (error) {
@@ -56,13 +60,10 @@ export const removeFromWishlist = createAsyncThunk(
   'wishlist/removeFromWishlist',
   async ({ id }, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(
-        `${BASE_URL}/wishlist/${id}`,
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        }
-      );
+      const response = await axios.delete(`${BASE_URL}/wishlist/${id}`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;

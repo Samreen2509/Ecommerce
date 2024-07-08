@@ -22,6 +22,7 @@ function OrderAddressPage() {
   const { addresses } = useSelector((state) => state.order);
   const [limitAddress, setLimitAddress] = useState(false);
   const dispatch = useDispatch();
+  console.log(userData);
 
   useEffect(() => {
     if (userInfo) {
@@ -35,7 +36,7 @@ function OrderAddressPage() {
     } else {
       setLimitAddress(false);
     }
-  }, [addresses]);
+  }, [addresses, isNewAddress]);
 
   const handleUserDataChange = (e) => {
     const { name, value } = e.target;
@@ -69,7 +70,9 @@ function OrderAddressPage() {
   };
 
   const handleSelectChange = (e) => {
+    // e.preventDefault();
     const selectedAddressId = e.target.value;
+    console.log(selectedAddressId);
     if (selectedAddressId === 'new') {
       setIsNewAddress(true);
       setUserData({

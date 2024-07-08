@@ -2,8 +2,7 @@ import { Link } from 'react-router-dom';
 import WishlistBtn from '../BAG/WishlistBtn';
 import { useState } from 'react';
 
-const ProductCard = (props) => {
-  const { sdata } = props;
+const ProductCard = ({ sdata }) => {
   const { mainImage, name, description, price, _id } = sdata;
   const [isHovered, setIsHovered] = useState(false);
 

@@ -110,7 +110,7 @@ function ProductEditDetails({ id, edit }) {
     if (id == 'new' && edit == 'true') {
       dispatch(addProduct({ productData }));
       toast.success('Product added successfully');
-      // navigate('./');
+      navigate('./');
     }
   };
 
