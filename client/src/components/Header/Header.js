@@ -18,7 +18,7 @@ function Header() {
   const { productTotalQty, isLoading } = useSelector((state) => state.cart);
   const { totalWishProducts: wishlistitems, isLoading: loadingwishlistitems } =
     useSelector((state) => state.wishlist);
-  const userdata = useSelector((state) => state.auth);
+  const { isUserLogin, userInfo } = useSelector((state) => state.auth);
 
   const handleHover = () => {
     setIsDropdownOpen(true);
@@ -170,7 +170,13 @@ function Header() {
               <VscAccount size={22} />
               <p className="text-sm font-normal">Account</p>
             </div>
-            {isDropdownOpen && <DropDown handleLeave={handleLeave} />}
+            {isDropdownOpen && (
+              <DropDown
+                handleLeave={handleLeave}
+                userInfo={userInfo}
+                isUserLogin={isUserLogin}
+              />
+            )}
           </div>
         </div>
       </div>

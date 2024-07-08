@@ -21,12 +21,20 @@ function ProductPage() {
   const displayProductSize = ['XS', 'S', 'M', 'L', 'XL', 'XXL']; // All sizes to display
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
-  const totalPages = 3;
 
   useEffect(() => {
     dispatch(getAllProducts({ page }));
     dispatch(getAllCategory());
   }, [dispatch, page]);
+
+  useEffect(() => {
+    setFilteredProduct([]);
+    setPage(1);
+  }, [IsCallFilterData]);
+
+  const totalPages = IsCallFilterData
+    ? Math.ceil(filteredProduct.length / 4)
+    : Math.ceil((products?.data?.productInfo.length || 1) / 4);
 
   const filterCategoryData = (id) => {
     setIsCallFilterData(true);
@@ -34,23 +42,35 @@ function ProductPage() {
     const filteredData =
       products.data?.productInfo.filter((product) => product.category === id) ||
       [];
-
-    setFilteredProduct((prevProducts) => [...prevProducts, ...filteredData]);
+    setFilteredProduct(filteredData);
   };
 
   const filterSizeData = (productSize) => {
     setIsCallFilterData(true);
     const filteredData = products.data?.productInfo.filter(
-      (product) => product.size === productSize || []
+      (product) => product.size === productSize
     );
-    setFilteredProduct((prevProducts) => [...prevProducts, ...filteredData]);
+    setFilteredProduct(filteredData);
   };
-
-  console.log('filteredProduct:', filteredProduct);
 
   if (loading) {
     return <Shimmer />;
   }
+
+  const renderProducts = (productList) => (
+    <>
+      {productList.map((product) => (
+        <ProductCard sdata={product} key={product._id} />
+      ))}
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
+      )}
+    </>
+  );
 
   return (
     <div className="body m-auto">
@@ -150,33 +170,25 @@ function ProductPage() {
         </div>
         {/* Product section */}
         <div className="mt-5 h-auto w-full md:mt-32 lg:mt-32">
-          {/* <hr className="block hidden" /> */}
           <h1 className="m-auto ml-10 text-2xl font-bold md:text-3xl lg:text-5xl">
             All Products
           </h1>
           <div className="mb-32 mt-10 flex flex-wrap justify-center gap-x-10 gap-y-10">
             {!IsCallFilterData ? (
               products.data?.productInfo.length ? (
-                products.data?.productInfo.map((product) => (
-                  <ProductCard sdata={product} />
-                ))
+                renderProducts(products.data.productInfo)
               ) : (
                 <div className="mr-24 mt-20">
                   <h1 className="text-3xl">Product is not available</h1>
                 </div>
               )
             ) : filteredProduct.length ? (
-              filteredProduct.map((product) => <ProductCard sdata={product} />)
+              renderProducts(filteredProduct)
             ) : (
               <div className="mr-24 mt-20">
                 <h1 className="text-3xl">Product is not available</h1>
               </div>
             )}
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={setPage}
-            />
           </div>
         </div>
       </div>

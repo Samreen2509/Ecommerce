@@ -9,7 +9,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     }
   };
   console.log(currentPage, totalPages);
-
+  if (totalPages === 0) return null;
   return (
     <ol className="flex w-full justify-center space-x-1 p-2 text-xs font-medium">
       <li>

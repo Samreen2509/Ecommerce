@@ -4,7 +4,6 @@ import Carousel from './Carousel.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../../features/categorySlice.js';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import useCheckSession from '../../hook/useCheckSession.js';
 import { getCartProducts } from '../../features/cartSlice.js';
 import CategoryCard from '../../screens/category/CategoryCard.js';
@@ -61,6 +60,12 @@ const Body = () => {
     dispatch(getAllCategory());
     dispatch(getAllProducts());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (isUserLogin) {
+      useCheckSession;
+    }
+  }, [isUserLogin]);
 
   return categories.length === 0 ? (
     <Shimmer />

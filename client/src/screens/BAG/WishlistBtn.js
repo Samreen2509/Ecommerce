@@ -11,8 +11,7 @@ import { toast } from 'react-toastify';
 
 function WishlistBtn({ id }) {
   const dispatch = useDispatch();
-  const { totalWishProducts, totalWishProductsId, isLoading, error } =
-    useSelector((state) => state.wishlist);
+  const { totalWishProductsId } = useSelector((state) => state.wishlist);
   const { isUserLogin } = useSelector((state) => state.auth);
   const [added, setAdded] = useState(false);
 
