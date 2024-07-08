@@ -37,13 +37,13 @@ export const getProducts = createAsyncThunk(
 
 export const getSingleProducts = createAsyncThunk(
   'dashboard/getSingleProducts',
-  async (id, { rejectWithValue }) => {
+  async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${BASE_URL}/product/${id}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
-      return response.data.data.productInfo;
+      return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
       return rejectWithValue(message);
@@ -117,7 +117,7 @@ export const getCategory = createAsyncThunk(
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
-      return response.data.data;
+      return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
       return rejectWithValue(message);
@@ -133,7 +133,46 @@ export const getColors = createAsyncThunk(
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
-      return response.data.data;
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const addOtherImages = createAsyncThunk(
+  'dashboard/addOtherImages',
+  async ({ id, formData }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/product/otherImages/${id}`,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const deleteOtherImages = createAsyncThunk(
+  'dashboard/deleteOtherImages',
+  async ({ id, imageId }, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/product/otherImages/${id}/${imageId}`,
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
+      return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
       return rejectWithValue(message);
@@ -157,6 +196,32 @@ export const dashboardSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
+      .addCase(deleteOtherImages.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(deleteOtherImages.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(deleteOtherImages.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(addOtherImages.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(addOtherImages.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(addOtherImages.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
       .addCase(getItemsCount.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -190,7 +255,7 @@ export const dashboardSlice = createSlice({
       .addCase(getSingleProducts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.singleProduct = action.payload;
+        state.singleProduct = action.payload.data.productInfo;
       })
       .addCase(getSingleProducts.rejected, (state, action) => {
         state.isLoading = false;
@@ -217,8 +282,6 @@ export const dashboardSlice = createSlice({
       .addCase(addProduct.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        console.log(action.payload);
-        // state.products = action.payload.data.productInfo;
       })
       .addCase(addProduct.rejected, (state, action) => {
         state.isLoading = false;
@@ -231,7 +294,7 @@ export const dashboardSlice = createSlice({
       .addCase(getCategory.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.categories = action.payload;
+        state.categories = action.payload.data.categoryInfo;
       })
       .addCase(getCategory.rejected, (state, action) => {
         state.isLoading = false;
