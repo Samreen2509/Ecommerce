@@ -8,7 +8,7 @@ function SideNavbar() {
     { text: 'Category', link: './category' },
     { text: 'Colors', link: './color' },
     { text: 'Users', link: './user' },
-    { text: 'Profile', link: '../profile' },
+    { text: 'Payments', link: './payment' },
     { text: 'Notification', link: './notification' },
     { text: 'Settings', link: './setting' },
   ];

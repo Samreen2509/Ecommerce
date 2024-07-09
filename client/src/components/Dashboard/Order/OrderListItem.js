@@ -50,9 +50,7 @@ function OrderListItem({ id, index, status, payment }) {
         </div>
       </div>
 
-      {isSettingDialog && (
-        <OrderSettingDialog id={id} status={status} title={title} />
-      )}
+      {isSettingDialog && <OrderSettingDialog id={id} status={status} />}
     </>
   );
 }

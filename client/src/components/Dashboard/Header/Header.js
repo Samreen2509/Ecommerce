@@ -32,10 +32,7 @@ function Header() {
               );
             })}
           </nav>
-          <HeaderProfileBtn
-            username={userInfo.username}
-            isUserLogin={isUserLogin}
-          />
+          <HeaderProfileBtn username={userInfo.username} />
         </div>
       </div>
     </>
