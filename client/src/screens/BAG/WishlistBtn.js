@@ -8,21 +8,24 @@ import {
 import { FaRegHeart } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
-function WishlistBtn({ id }) {
+function WishlistBtn({ id, mode, isUserLogin }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { totalWishProductsId } = useSelector((state) => state.wishlist);
-  const { isUserLogin } = useSelector((state) => state.auth);
   const [added, setAdded] = useState(false);
 
   useEffect(() => {
     if (isUserLogin) {
       dispatch(getWishListProducts());
+    } else {
+      navigate('./login');
     }
-  }, [dispatch]);
+  }, [id, dispatch]);
 
-  useState(() => {
-    if (totalWishProductsId && totalWishProductsId.includes(id)) {
+  useEffect(() => {
+    if (totalWishProductsId.includes(id)) {
       setAdded(true);
     } else {
       setAdded(false);
@@ -50,11 +53,18 @@ function WishlistBtn({ id }) {
     added ? handleRemove() : handleAddWishLit();
   };
 
+  let style;
+  if (mode && mode == 'normal') {
+    style = '';
+  } else {
+    style = 'absolute right-2 top-2';
+  }
+
   return (
     <>
       <div
         onClick={handleOnClick}
-        className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-full bg-black text-xl text-white shadow-md transition duration-1000 hover:bg-opacity-80"
+        className={`${style} flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-black text-xl text-white shadow-md transition duration-1000 hover:bg-opacity-80`}
       >
         {added ? <FaHeart style={{ color: 'red' }} /> : <FaRegHeart />}
       </div>

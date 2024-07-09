@@ -92,6 +92,7 @@ export const wishlistSlice = createSlice({
       .addCase(addToWishlist.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
+        state.totalWishProducts = action.payload.data.wishlistInfo.items.length;
         state.totalWishProductsId = action.payload.data.wishlistInfo.items.map(
           (item) => item.productId
         );
@@ -126,6 +127,7 @@ export const wishlistSlice = createSlice({
       .addCase(removeFromWishlist.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
+        state.totalWishProducts = action.payload.data.wishlistInfo.items.length;
         state.totalWishProductsId = action.payload.data.wishlistInfo.items.map(
           (item) => item.productId
         );
