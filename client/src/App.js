@@ -39,6 +39,7 @@ import DashboardCategory from './screens/dashboard/Category.js';
 import DashboardColor from './screens/dashboard/Color.js';
 import DashboardNotification from './screens/dashboard/Notification.js';
 import DashboardSetting from './screens/dashboard/Setting.js';
+import DashboardPayment from './screens/dashboard/Payment.js';
 import PrivateRoute from './components/Routes/PrivateRoute.js';
 
 const Applayout = () => {
@@ -134,7 +135,7 @@ const appRouter = createBrowserRouter([
         element: <ProductPage />,
       },
       {
-        path: '/singleProduct/:categoryId',
+        path: '/singleProduct/:productId',
         element: <SingleProduct />,
       },
 
@@ -204,6 +205,10 @@ const appRouter = createBrowserRouter([
       {
         path: '/dashboard/setting',
         element: <DashboardSetting />,
+      },
+      {
+        path: '/dashboard/payment',
+        element: <DashboardPayment />,
       },
     ],
   },

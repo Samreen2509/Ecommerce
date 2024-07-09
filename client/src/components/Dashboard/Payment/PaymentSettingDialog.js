@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteUser } from '../../../features/dashboardSlice/dashUserSlice';
+import { addPayment } from '../../../features/dashboardSlice/dashPaymentSlice';
 
-function UserSettingDialog({ id, title, onClose }) {
-  const [isDeleteUser, setIsDeleteUser] = useState(false);
+function PaymentSettingDialog({ userId, paymentId, status, onClose }) {
+  const [isNewPayment, setIsNewPayment] = useState(false);
   const dispatch = useDispatch();
 
-  const handleDeleteClick = () => {
-    setIsDeleteUser(!isDeleteUser);
+  const handleNewPaymentClick = () => {
+    setIsNewPayment(!isNewPayment);
   };
 
   const handleSaveClick = () => {
-    if (isDeleteUser) {
-      dispatch(deleteUser({ id }));
+    if (isNewPayment) {
+      dispatch(addPayment({ userId, paymentId }));
     }
     onClose();
   };
@@ -22,19 +22,20 @@ function UserSettingDialog({ id, title, onClose }) {
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
         <div className="w-2/5 rounded-md border bg-white p-4">
           <h1 className="mb-2 text-base font-medium text-opacity-70">
-            {title}
+            {paymentId}
           </h1>
 
           <div className="flex w-full flex-col items-center justify-center">
             <div className="flex w-full items-center justify-between">
               <div className="text-base font-medium text-opacity-70">
-                Delete User
+                New Payment
               </div>
               <div
-                onClick={handleDeleteClick}
-                className={`flex h-10 items-center justify-center rounded-md border ${isDeleteUser ? 'border-red-800 bg-red-200' : 'border-gray-400'} cursor-pointer px-2 hover:bg-gray-200`}
+                onClick={handleNewPaymentClick}
+                disabled={status === 'FAILED'}
+                className={`flex h-10 items-center justify-center rounded-md border ${isNewPayment ? 'border-red-800 bg-red-200' : 'border-gray-400'} cursor-pointer px-2 hover:bg-gray-200`}
               >
-                Delete
+                Create
               </div>
             </div>
           </div>
@@ -59,4 +60,4 @@ function UserSettingDialog({ id, title, onClose }) {
   );
 }
 
-export default UserSettingDialog;
+export default PaymentSettingDialog;
