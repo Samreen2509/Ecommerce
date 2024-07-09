@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import CategoryCard from './CategoryCard.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../../features/categorySlice';
-// import Shimmer from '../../components/Loading/Shimmer.js';
-import { Link } from 'react-router-dom';
+import Shimmer from '../../components/Loading/Shimmer.js';
 
 function Category() {
   const { categories, loading } = useSelector((state) => state.category);
@@ -12,7 +11,9 @@ function Category() {
     dispatch(getAllCategory());
   }, [dispatch]);
 
-  console.log(categories);
+  if (loading) {
+    return <Shimmer />;
+  }
 
   return (
     <div className="items-cente mt-10 flex h-auto w-full flex-col">
@@ -21,9 +22,17 @@ function Category() {
       </h1>
       <div className="mb-20 mt-10 flex flex-wrap justify-center gap-x-10 gap-y-10">
         {categories &&
-          categories?.data?.categoryInfo?.map((category) => (
-            <CategoryCard sdata={category} />
-          ))}
+          categories?.data?.categoryInfo
+            ?.filter(
+              (category) =>
+                category.name === 'men' ||
+                category.name === 'women' ||
+                category.name === 'kids' ||
+                category.name === 'unisex'
+            )
+            .map((category, index) => (
+              <CategoryCard key={index} sdata={category} />
+            ))}
       </div>
     </div>
   );
