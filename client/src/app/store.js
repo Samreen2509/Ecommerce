@@ -21,6 +21,7 @@ import dashUserSlice from '../features/dashboardSlice/dashUserSlice';
 import dashColorSlice from '../features/dashboardSlice/dashColorSlice';
 import dashCategorySlice from '../features/dashboardSlice/dashCategorySlice';
 import dashNotificationSlice from '../features/dashboardSlice/dashNotificationSlice';
+import dashPaymentSlice from '../features/dashboardSlice/dashPaymentSlice';
 
 const authPersistConfig = {
   key: 'auth',
@@ -42,6 +43,7 @@ export const store = configureStore({
     dashColor: dashColorSlice,
     dashCategory: dashCategorySlice,
     dashNotification: dashNotificationSlice,
+    dashPayment: dashPaymentSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
