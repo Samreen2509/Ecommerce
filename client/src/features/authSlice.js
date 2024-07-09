@@ -128,13 +128,12 @@ const authSlice = createSlice({
         state.error = null;
         state.isLoading = false;
         state.isUserLogin = true;
-        token: action.payload.data.token;
+        // token: action.payload.data.token;
         state.isUserVerified = action.payload.data.userInfo.isEmailVerified;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload.message;
-        state.userInfo = action.payload.userInfo;
       })
       .addCase(Register.pending, (state) => {
         state.isLoading = true;
@@ -142,18 +141,19 @@ const authSlice = createSlice({
       })
       .addCase(Register.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isUserLogin = true;
         state.error = null;
-        state.userInfo = action.payload;
+        state.isUserVerified = false;
       })
       .addCase(Register.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload.message;
-        state.userInfo = action.payload.userInfo;
       })
       .addCase(logout.pending, (state) => {
         state.isLoading = true;
         state.error = null;
+        state.isUserLogin = false;
+        state.userInfo = null;
+        state.isUserVerified = null;
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.isLoading = false;

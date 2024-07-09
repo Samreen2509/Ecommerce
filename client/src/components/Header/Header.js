@@ -18,7 +18,11 @@ function Header() {
   const { productTotalQty, isLoading } = useSelector((state) => state.cart);
   const { totalWishProducts: wishlistitems, isLoading: loadingwishlistitems } =
     useSelector((state) => state.wishlist);
-  const { isUserLogin, userInfo } = useSelector((state) => state.auth);
+  const {
+    isUserLogin,
+    userInfo,
+    isLoading: isLoadingLogout,
+  } = useSelector((state) => state.auth);
 
   const handleHover = () => {
     setIsDropdownOpen(true);
@@ -175,6 +179,7 @@ function Header() {
                 handleLeave={handleLeave}
                 userInfo={userInfo}
                 isUserLogin={isUserLogin}
+                isLoadingLogout={isLoadingLogout}
               />
             )}
           </div>

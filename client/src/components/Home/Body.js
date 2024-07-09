@@ -65,7 +65,7 @@ const Body = () => {
     if (isUserLogin) {
       useCheckSession;
     }
-  }, [isUserLogin]);
+  }, []);
 
   return categories.length === 0 ? (
     <Shimmer />
