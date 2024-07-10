@@ -6,6 +6,8 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { makeStripe } from '../utils/Stripe.js';
 import Stripe from 'stripe';
 import { getItemsPipeline } from '../utils/pipelines/orderItemInfo.js';
+import { getPaymentInfoPipeline } from '../utils/pipelines/PaymentInfo.js';
+import { ObjectId } from 'mongodb';
 import Order from '../models/order.model.js';
 import Product from '../models/product.model.js';
 
@@ -58,7 +60,8 @@ export const getPayment = asyncHandler(async (req, res) => {
   }
 
   if (!userId && !paymentId && user.role == availableUserRoles.ADMIN) {
-    const paymentInfo = await Payment.find();
+    const paymentPipeline = [...getPaymentInfoPipeline];
+    const paymentInfo = await Payment.aggregate(paymentPipeline);
     if (!paymentInfo) {
       throw new ApiError(404, 'data not found');
     }
@@ -78,7 +81,14 @@ export const getPayment = asyncHandler(async (req, res) => {
     throw new ApiError(500, "you don't have access");
   }
 
-  const paymentInfo = await Payment.findOne({ _id: paymentId, user: userId });
+  const paymentPipeline = [...getPaymentInfoPipeline];
+  paymentPipeline.unshift({
+    $match: {
+      _id: new ObjectId(paymentId),
+      user: new ObjectId(userId),
+    },
+  });
+  const paymentInfo = await Payment.aggregate(paymentPipeline);
 
   if (!paymentInfo) {
     throw new ApiError(404, 'data not found');
