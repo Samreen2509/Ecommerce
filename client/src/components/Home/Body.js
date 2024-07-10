@@ -20,6 +20,7 @@ import img5 from '../../../images/clothBanner4.avif';
 import img6 from '../../../images/banner1.jpg';
 import img7 from '../../../images/banner2.jpg';
 import img8 from '../../../images/banner3.jpg';
+import { refreshToken } from '../../features/authSlice.js';
 
 const Body = () => {
   const { categories } = useSelector((state) => state.category);
@@ -63,7 +64,7 @@ const Body = () => {
 
   useEffect(() => {
     if (isUserLogin) {
-      useCheckSession;
+      dispatch(refreshToken());
     }
   }, [isUserLogin]);
 
