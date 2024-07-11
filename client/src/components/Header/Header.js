@@ -10,6 +10,7 @@ import { RxCross2 } from 'react-icons/rx';
 import DropDown from './DropDown';
 import SearchPage from './SearchPage';
 import { useSelector } from 'react-redux';
+import { MdOutlineAccountCircle } from 'react-icons/md';
 
 function Header() {
   const [Sidemenu, setSidemenu] = useState(false);
@@ -115,19 +116,19 @@ function Header() {
           />
         </div>
 
-        <div className="hidden flex-1 justify-end gap-x-8 font-semibold lg:flex">
+        <div className="hidden h-11 flex-1 justify-end gap-x-8 font-semibold lg:flex">
           {/* Search part */}
           <SearchPage handleSearchLeave={handleSearchLeave} />
 
           {/* Wishlist part */}
           <Link
             to={'/wishlist'}
-            className="flex cursor-pointer flex-col items-center justify-between gap-x-4 hover:text-orange-400"
+            className="flex h-full cursor-pointer flex-col items-center justify-between hover:text-orange-400"
           >
-            <div className="relative flex w-10 items-center justify-center ">
+            <div className="relative flex w-10 items-center justify-center">
               <div>
                 <FaRegHeart size={22} />
-                <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-black text-center text-white">
+                <div className="absolute right-[-1] top-[-5] h-4 w-4 rounded-full bg-black text-center text-white">
                   {loadingwishlistitems ? (
                     <p className="animate-spin text-[12px] font-semibold">0</p>
                   ) : (
@@ -142,12 +143,12 @@ function Header() {
           {/* Bag part */}
           <Link
             to={'/bag'}
-            className="flex cursor-pointer flex-col items-center justify-between gap-x-4 hover:text-orange-400"
+            className="flex h-full cursor-pointer flex-col items-center justify-between hover:text-orange-400"
           >
             <div className="relative flex w-10 items-center justify-center ">
               <div>
                 <FiShoppingBag size={22} />
-                <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-black text-center text-white">
+                <div className="absolute right-[4] top-[-5] h-4 w-4 rounded-full bg-black text-center text-white">
                   {isLoading ? (
                     <p className="animate-spin text-[12px] font-semibold">0</p>
                   ) : (
@@ -162,9 +163,9 @@ function Header() {
           </Link>
 
           {/* Account part */}
-          <div className="flex cursor-pointer items-center justify-between gap-x-4">
+          <div className="flex h-full cursor-pointer items-center justify-center">
             <div
-              className={`flex cursor-pointer flex-col items-center justify-between gap-x-4 hover:text-orange-400 ${isDropdownOpen && 'text-orange-400'}`}
+              className={`flex h-full cursor-pointer flex-col items-center justify-between hover:text-orange-400 ${isDropdownOpen && 'text-orange-400'}`}
               onMouseEnter={handleHover}
             >
               <VscAccount size={22} />

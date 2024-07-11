@@ -15,7 +15,7 @@ function ProductEditOtherImages({ id, edit, otherImages }) {
   const [showInput, setShowInput] = useState(true);
   const [imagePreview, setImagePreview] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-  const { singleProduct } = useSelector((state) => state.dashboard);
+  const { singleProduct, isLoading } = useSelector((state) => state.dashboard);
 
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -79,7 +79,10 @@ function ProductEditOtherImages({ id, edit, otherImages }) {
       deleteImage.map((imageId) => {
         dispatch(deleteOtherImages({ id, imageId }));
       });
-    navigate('./');
+
+    if (!isLoading) {
+      navigate('./');
+    }
   };
 
   const handleClearImage = (index) => {
