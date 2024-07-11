@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const BASE_URL = process.env.BASEURL;
 const BASE_URL_PRODUCT = `${process.env.BASEURL}/product`;
 const BASE_URL_CATEGORY = `${process.env.BASEURL}/category`;
 
@@ -182,12 +183,13 @@ export const updateProduct = createAsyncThunk(
 // deleting a product
 export const removeProduct = createAsyncThunk(
   'product/removeProduct',
-  async (id, { rejectWithValue }) => {
+  async ({ id }, { rejectWithValue }) => {
     try {
-      await axios.delete(`${BASE_URL_PRODUCT}/${id}`, {
+      const response = await axios.delete(`${BASE_URL}/product/${id}`, {
         headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
       });
-      return id; // Return the id of the deleted product
+      return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
       return rejectWithValue(message);
@@ -201,6 +203,7 @@ const initialState = {
   singleProduct: null,
   loading: false,
   error: null,
+  SuccessMsg: null,
 };
 
 // Create the product slice
@@ -295,6 +298,7 @@ export const productSlice = createSlice({
       .addCase(removeProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+        state.SuccessMsg = action.payload.data;
         state.products = state.products.filter(
           (product) => product.id !== action.payload
         ); // Remove the product from the list

@@ -6,22 +6,13 @@ import { getAllProducts } from '../../../features/productSlice';
 import Pagination from '../../../screens/product/Pagination';
 
 function ProductList() {
-<<<<<<< Updated upstream
-  const discpatch = useDispatch();
-  const { products, SuccessMsg } = useSelector((state) => state.dashboard);
-
-  useEffect(() => {
-    discpatch(getProducts());
-  }, [SuccessMsg]);
-=======
   const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.product);
+  const { products, SuccessMsg } = useSelector((state) => state.product);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
     dispatch(getAllProducts({ page }));
-  }, [dispatch, page]);
->>>>>>> Stashed changes
+  }, [dispatch, page, SuccessMsg]);
 
   return (
     <>

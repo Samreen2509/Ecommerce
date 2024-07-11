@@ -36,7 +36,6 @@ function ProductEditDetails({ id, edit }) {
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log(productData);
 
   useEffect(() => {
     if (id !== 'new') {
@@ -44,11 +43,7 @@ function ProductEditDetails({ id, edit }) {
       dispatch(getCategory());
       dispatch(getSingleProducts({ id }));
     }
-<<<<<<< Updated upstream
   }, [id, dispatch]);
-=======
-  }, [id]);
->>>>>>> Stashed changes
 
   useEffect(() => {
     if (id !== 'new' && edit == 'true') {
@@ -59,17 +54,12 @@ function ProductEditDetails({ id, edit }) {
           size: singleProduct.size,
           price: singleProduct.price,
           stock: singleProduct.stock,
-<<<<<<< Updated upstream
-          stock: singleProduct.stock,
-=======
->>>>>>> Stashed changes
           mainImage: singleProduct.mainImage,
           mainImageName: singleProduct.mainImage?.public_id,
           category: singleProduct.category,
           color: singleProduct.color,
         });
-<<<<<<< Updated upstream
-=======
+
         try {
           const contentState = convertFromRaw(
             JSON.parse(singleProduct.description)
@@ -80,14 +70,12 @@ function ProductEditDetails({ id, edit }) {
           console.error('Error parsing description JSON:', error);
           setEditorState(() => EditorState.createEmpty());
         }
->>>>>>> Stashed changes
       }
     }
   }, [singleProduct]);
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
-    console.log(productData);
 
     if (name === 'mainImage' && files && files.length > 0) {
       const file = files[0];
@@ -113,8 +101,6 @@ function ProductEditDetails({ id, edit }) {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-
-    console.log(productData);
 
     if (id != 'new' && edit != 'true') {
       navigate(`./?id=${id}&edit=true`);

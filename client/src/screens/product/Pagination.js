@@ -8,7 +8,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, style }) => {
       onPageChange(newPage);
     }
   };
-  console.log(currentPage, totalPages);
+
   if (totalPages === 0) return null;
   return (
     <ol
@@ -29,7 +29,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange, style }) => {
           <button
             onClick={() => handlePageChange(index + 1)}
             className={`block h-10 w-10 rounded border border-gray-200 text-center leading-8 ${
-              currentPage === index + 1 ? `border-blue-600 ${style?.color ? style.color : 'bg-blue-600'} text-white` : ''
+              currentPage === index + 1
+                ? `border-blue-600 ${style?.color ? style.color : 'bg-blue-600'} text-white`
+                : ''
             }`}
           >
             {index + 1}
