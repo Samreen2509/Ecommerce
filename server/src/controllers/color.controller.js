@@ -104,7 +104,7 @@ export const deleteColor = asyncHandler(async (req, res) => {
 export const getOneColor = asyncHandler(async (req, res) => {
   const { colorId } = await req.params;
 
-  const color = await Color.findById(colorId);
+  const color = await Color.findById(colorId).sort({ createdAt: -1 });
   if (!color) {
     throw new ApiError(404, 'color not found');
   }
