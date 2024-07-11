@@ -14,7 +14,6 @@ const Bag = () => {
   useEffect(() => {
     dispatch(getCartProducts());
   }, [dispatch, updateCart]);
-  console.log('cartProducts', cartProducts);
 
   return (
     <section className="mt-3 flex h-full w-full flex-col items-center justify-center">
@@ -56,12 +55,11 @@ const Bag = () => {
               <p className="text-base font-semibold leading-4 text-gray-800">
                 Total
               </p>
-              <p className="text-base font-semibold leading-4 text-gray-600">
-                ₹
+              <p className="flex text-base font-semibold leading-4 text-gray-600">
                 {cartTotalPrice && isLoading ? (
                   <VscLoading className="animate-spin" />
                 ) : (
-                  cartTotalPrice.toFixed(0)
+                  `₹ ${cartTotalPrice.toFixed(0)}`
                 )}
               </p>
             </div>

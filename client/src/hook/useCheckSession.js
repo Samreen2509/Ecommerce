@@ -6,7 +6,7 @@ const useCheckSession = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(refreshToken());
+   
   }, [dispatch]);
 };
 

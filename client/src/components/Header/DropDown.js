@@ -4,16 +4,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../../features/authSlice';
 import { toast } from 'react-toastify';
 import { debounce } from '../debounce';
+import { FiLoader } from 'react-icons/fi';
 
-function DropDown({ handleLeave, userInfo, isUserLogin }) {
+function DropDown({ handleLeave, userInfo, isUserLogin, isLoadingLogout }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = debounce(() => {
-    navigate('/');
-    dispatch(logout());
-    toast.success('User logged out');
-  }, 300);
+    if (!isLoadingLogout) {
+      dispatch(logout());
+      toast.success('User logged out');
+      navigate('/login');
+    }
+  }, 500);
 
   return (
     <>
@@ -52,10 +55,17 @@ function DropDown({ handleLeave, userInfo, isUserLogin }) {
             )}
             <li className="flex h-10 w-full items-center justify-center border-b">
               <div
-                className="flex h-full w-full items-center justify-start font-medium"
+                className={`flex h-full w-full items-center justify-start font-medium ${isLoadingLogout ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
                 onClick={handleLogout}
               >
-                Logout
+                {isLoadingLogout ? (
+                  <div className="flex items-center justify-center">
+                    <FiLoader className="mr-2 h-5 w-5 animate-spin" />
+                    Logging out...
+                  </div>
+                ) : (
+                  'Logout'
+                )}
               </div>
             </li>
           </ul>

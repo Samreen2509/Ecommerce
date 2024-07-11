@@ -19,11 +19,12 @@ function OrderAddressPage() {
   });
   const [isNewAddress, setIsNewAddress] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);
-  const { addresses } = useSelector((state) => state.order);
+  const { addresses, selectaddress, loading } = useSelector(
+    (state) => state.order
+  );
   const [limitAddress, setLimitAddress] = useState(false);
   const dispatch = useDispatch();
-  console.log(userData);
-
+  console.log(selectaddress);
   useEffect(() => {
     if (userInfo) {
       dispatch(getAddress(userInfo._id));
@@ -63,6 +64,7 @@ function OrderAddressPage() {
       const selectedAddress = addresses.find(
         (address) => address._id === userData._id
       );
+      console.log(selectedAddress);
       if (selectedAddress) {
         dispatch(getSelectAddress(selectedAddress._id));
       }
@@ -70,9 +72,7 @@ function OrderAddressPage() {
   };
 
   const handleSelectChange = (e) => {
-    // e.preventDefault();
     const selectedAddressId = e.target.value;
-    console.log(selectedAddressId);
     if (selectedAddressId === 'new') {
       setIsNewAddress(true);
       setUserData({
@@ -89,11 +89,13 @@ function OrderAddressPage() {
       const selectedAddress = addresses.find(
         (address) => address._id === selectedAddressId
       );
+      console.log(selectedAddress);
       if (selectedAddress) {
-        setUserData({
-          ...userData,
-          ...selectedAddress,
-        });
+        // setUserData({
+        //   ...userInfo,
+        //   ...selectedAddress,
+        // });
+        dispatch(getSelectAddress({ ...userInfo, ...selectedAddress }));
         setIsNewAddress(false);
       }
     }
@@ -250,7 +252,7 @@ function OrderAddressPage() {
               disabled={isDisabled}
               type="submit"
             >
-              Create New Address
+              {loading ? 'Loading...' : 'Create New Address'}
             </button>
           )}
         </form>
