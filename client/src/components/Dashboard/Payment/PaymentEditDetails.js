@@ -7,7 +7,7 @@ import {
   addPayment,
   updatePayment,
   updateAvatar,
-} from '../../../features/dashboardSlice/dashPaymentSlice';
+} from '../../../features/paymentSlice';
 
 function PaymentEditDetails({ id, edit }) {
   const dispatch = useDispatch();

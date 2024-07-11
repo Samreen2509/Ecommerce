@@ -11,7 +11,6 @@ function AddToCart({ productId, quantity, className }) {
   const { isUserLogin } = useSelector((state) => state.auth);
 
   const handleAddCartClick = () => {
-    console.log(productId, quantity);
     if (isUserLogin) {
       dispatch(addToCart({ productId, quantity }));
       toast.success('Product added to Bag successfully');

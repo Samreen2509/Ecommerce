@@ -39,6 +39,46 @@ export const getOrders = createAsyncThunk(
   }
 );
 
+export const getAllOrders = createAsyncThunk(
+  'order/getAllOrders',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/order`,
+
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const updateOrder = createAsyncThunk(
+  'order/updateOrder',
+  async ({ orderData, userId, orderId }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/order/${userId}/${orderId}`,
+        { orderData },
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
 export const createAddressId = createAsyncThunk(
   'order/createAddressId',
   async ({ addressData, userId }, { rejectWithValue }) => {
@@ -87,6 +127,7 @@ const initialState = {
   paymentUrl: null,
   orderInfoAfterPayment: [],
   addresses: [],
+  allOrders: [],
   selectaddress: '',
 };
 
@@ -103,6 +144,7 @@ export const orderSlice = createSlice({
       state.loading = true;
       state.error = null;
     });
+    //create new order
     builder.addCase(createNewOrder.fulfilled, (state, action) => {
       state.loading = true;
       state.error = null;
@@ -113,6 +155,8 @@ export const orderSlice = createSlice({
       state.loading = true;
       state.error = action.payload;
     });
+
+    // create addresss
     builder.addCase(createAddressId.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -125,6 +169,8 @@ export const orderSlice = createSlice({
       state.loading = true;
       state.error = action.payload;
     });
+
+    // get address
     builder.addCase(getAddress.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -138,6 +184,8 @@ export const orderSlice = createSlice({
       state.loading = true;
       state.error = action.payload;
     });
+
+    // get user's all order
     builder.addCase(getOrders.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -148,6 +196,35 @@ export const orderSlice = createSlice({
       state.order = action.payload.data.orderInfo;
     });
     builder.addCase(getOrders.rejected, (state, action) => {
+      state.loading = true;
+      state.error = action.payload;
+    });
+
+    // get all order
+    builder.addCase(getAllOrders.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getAllOrders.fulfilled, (state, action) => {
+      state.loading = true;
+      state.error = null;
+      state.allOrders = action.payload.data.orderInfo;
+    });
+    builder.addCase(getAllOrders.rejected, (state, action) => {
+      state.loading = true;
+      state.error = action.payload;
+    });
+
+    // update Order
+    builder.addCase(updateOrder.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(updateOrder.fulfilled, (state, action) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(updateOrder.rejected, (state, action) => {
       state.loading = true;
       state.error = action.payload;
     });

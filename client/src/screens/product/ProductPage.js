@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Shimmer from '../../components/Loading/Shimmer.js';
 import ProductCard from './ProductCards.js';
 import { getAllProducts } from '../../features/productSlice.js';
 import {
   getAllCategory,
-  getOneCategory,
+  getSingleCategory,
 } from '../../features/categorySlice.js';
 import Pagination from './Pagination.js';
 
@@ -34,20 +33,19 @@ function ProductPage() {
 
   const totalPages = IsCallFilterData
     ? Math.ceil(filteredProduct.length / 4)
-    : Math.ceil((products?.data?.productInfo.length || 1) / 4);
+    : Math.ceil((products?.length || 1) / 4 - 1);
 
   const filterCategoryData = (id) => {
     setIsCallFilterData(true);
-    dispatch(getOneCategory(id));
+    dispatch(getSingleCategory(id));
     const filteredData =
-      products.data?.productInfo.filter((product) => product.category === id) ||
-      [];
+      products.filter((product) => product.category === id) || [];
     setFilteredProduct(filteredData);
   };
 
   const filterSizeData = (productSize) => {
     setIsCallFilterData(true);
-    const filteredData = products.data?.productInfo.filter(
+    const filteredData = products.filter(
       (product) => product.size === productSize
     );
     setFilteredProduct(filteredData);
@@ -149,7 +147,7 @@ function ProductPage() {
                     +
                   </h3>
                 </div>
-                {products.data?.productInfo?.map((product) => (
+                {products.map((product) => (
                   <div
                     className="flex items-center gap-2"
                     style={{ display: isPriceInlargeDiv ? 'block' : 'none' }}
@@ -175,8 +173,8 @@ function ProductPage() {
           </h1>
           <div className="mb-32 mt-10 flex flex-wrap justify-center gap-x-10 gap-y-10">
             {!IsCallFilterData ? (
-              products.data?.productInfo.length ? (
-                renderProducts(products.data.productInfo)
+              products.length ? (
+                renderProducts(products)
               ) : (
                 <div className="mr-24 mt-20">
                   <h1 className="text-3xl">Product is not available</h1>

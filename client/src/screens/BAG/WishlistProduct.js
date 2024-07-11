@@ -8,14 +8,12 @@ import {
 } from '../../features/wishlistSlice';
 import { useDispatch } from 'react-redux';
 
-function WishlistProduct({ data }) {
-  const { mainImage, price, name, _id, color } = data?.product;
+function WishlistProduct({ mainImage, price, name, _id, color }) {
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
 
   const handleRemove = () => {
-    console.log(_id);
-    dispatch(removeFromWishlist({ _id }));
+    dispatch(removeFromWishlist({ id: _id }));
     dispatch(getWishListProducts());
   };
 
@@ -23,8 +21,6 @@ function WishlistProduct({ data }) {
     e.preventDefault();
     setQuantity(Number(e.target.value));
   };
-
-  if (!data) return null;
 
   return (
     <div className="mt-4 flex w-full flex-col items-start justify-start md:mt-6 md:flex-row md:items-center md:space-x-6 xl:space-x-8">

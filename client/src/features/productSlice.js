@@ -232,7 +232,7 @@ export const productSlice = createSlice({
       .addCase(getAllProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.products = action.payload; // Set the products list
+        state.products = action.payload.data.productInfo; // Set the products list
       })
       .addCase(getAllProducts.rejected, (state, action) => {
         state.loading = false;

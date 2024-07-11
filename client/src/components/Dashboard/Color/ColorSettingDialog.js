@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteColor } from '../../../features/dashboardSlice/dashColorSlice';
+import { deleteColor } from '../../../features/colorSlice';
 
 function ColorSettingDialog({ id, title, onClose }) {
   const [isDeleteColor, setIsDeleteColor] = useState(false);

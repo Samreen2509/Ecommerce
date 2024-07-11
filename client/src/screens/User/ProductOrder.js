@@ -2,17 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function ProductOrder({ orderData }) {
-  console.log(orderData);
-
   const { address, city, pincode, state, country } = orderData.address;
 
   return (
     <div className="mt-4 flex w-full flex-col items-start justify-center md:mt-6 md:flex-row md:items-start md:space-x-6 xl:space-x-8">
       <div className="flex w-full flex-col">
         {orderData &&
-          orderData.items.map((item) => (
+          orderData.items.map((item, index) => (
             <div
-              key={item._id}
+              key={index}
               className="flex w-full gap-x-10    pb-4 md:w-full md:pb-8"
             >
               <Link

@@ -6,15 +6,22 @@ import { useDispatch } from 'react-redux';
 import { debounce } from '../../components/debounce';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
-function BagProduct({ data, isLoading }) {
-  const [quantity, setQuantity] = useState(data.quantity);
+function BagProduct({
+  mainImage,
+  price,
+  name,
+  _id,
+  color,
+  preQuantity,
+  isLoading,
+}) {
+  const [quantity, setQuantity] = useState(preQuantity);
 
   const dispatch = useDispatch();
-  const { mainImage, price, name, _id, color } = data.product;
 
   useEffect(() => {
-    setQuantity(data.quantity);
-  }, [data]);
+    setQuantity(preQuantity);
+  }, [preQuantity]);
 
   const updateCartQuantity = useCallback(
     debounce((productId, newQuantity) => {
