@@ -6,11 +6,11 @@ import AddButton from '../Utils/AddButton';
 
 function ProductList() {
   const discpatch = useDispatch();
-  const { products } = useSelector((state) => state.dashboard);
+  const { products, SuccessMsg } = useSelector((state) => state.dashboard);
 
   useEffect(() => {
     discpatch(getProducts());
-  }, []);
+  }, [SuccessMsg]);
 
   return (
     <>
@@ -53,6 +53,9 @@ function ProductList() {
           </div>
           <div className="flex h-full w-36 items-center justify-center px-3 text-base font-medium">
             Setting
+          </div>
+          <div className="flex h-full w-36 items-center justify-center px-3 text-base font-medium">
+            Delete
           </div>
         </div>
         <div className="my-1 flex w-full flex-col items-center justify-center rounded-bl-md rounded-br-md border text-gray-800">

@@ -62,6 +62,24 @@ export const addProduct = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const deleteProduct = createAsyncThunk(
+  'dashboard/deleteProduct',
+  async ({ id }, { rejectWithValue }) => {
+    console.log(id);
+    try {
+      const response = await axios.delete(`${BASE_URL}/product/${id}`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
       console.log(error);
       const message = error.response?.data?.message || error.message;
       return rejectWithValue(message);
@@ -99,7 +117,7 @@ export const updateProduct = createAsyncThunk(
           withCredentials: true,
         }
       );
-
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -133,6 +151,7 @@ export const getColors = createAsyncThunk(
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
+
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -287,6 +306,20 @@ export const dashboardSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
+      .addCase(deleteProduct.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.SuccessMsg = null;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.SuccessMsg = action.payload.data;
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
       .addCase(getCategory.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -307,7 +340,7 @@ export const dashboardSlice = createSlice({
       .addCase(getColors.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.colors = action.payload.colorInfo;
+        state.colors = action.payload.data.colorInfo;
       })
       .addCase(getColors.rejected, (state, action) => {
         state.isLoading = false;
