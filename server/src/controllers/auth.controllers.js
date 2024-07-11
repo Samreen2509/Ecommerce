@@ -17,7 +17,6 @@ import {
   deleteFromCloudinary,
   uploadOnCloudinary,
 } from '../utils/cloudinary.js';
-import useragent from 'express-useragent';
 import moment from 'moment-timezone';
 import Notification from '../models/notification.model.js';
 
@@ -311,7 +310,7 @@ export const getAllUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "you don't have access");
   }
 
-  const users = await User.find({});
+  const users = await User.find({}).sort({ createdAt: -1 });
 
   return res
     .status(200)

@@ -46,6 +46,11 @@ export const getOrderInfoPipeline = [
     },
   },
   {
+    $sort: {
+      createdAt: -1,
+    },
+  },
+  {
     $group: {
       _id: '$_id',
       orderPrice: {

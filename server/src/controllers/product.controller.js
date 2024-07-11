@@ -81,7 +81,7 @@ export const getProduct = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
-  const products = await Product.find({}).skip(skip).limit(limit);
+  const products = await Product.find({}).sort({ createdAt: -1 }).skip(skip).limit(limit);
 
   return res
     .status(200)

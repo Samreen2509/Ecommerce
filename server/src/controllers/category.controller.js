@@ -56,7 +56,10 @@ export const getAllCategory = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
-  const category = await Category.find({}).skip(skip).limit(limit);
+  const category = await Category.find({})
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
 
   return res
     .status(200)

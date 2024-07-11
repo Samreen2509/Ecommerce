@@ -16,6 +16,11 @@ export const getPaymentInfoPipeline = [
     },
   },
   {
+    $sort: {
+      createdAt: -1,
+    },
+  },
+  {
     $project: {
       userInfo: 0,
       __v: 0,

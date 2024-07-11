@@ -109,7 +109,7 @@ export const deleteCarousel = asyncHandler(async (req, res) => {
 });
 
 export const getCarousel = asyncHandler(async (_, res) => {
-  const carouselData = await Carousel.find();
+  const carouselData = await Carousel.find().sort({ createdAt: -1 });
   if (!carouselData) {
     throw new ApiError(404, 'not found any carousel');
   }
