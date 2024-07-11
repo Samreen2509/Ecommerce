@@ -2,21 +2,23 @@ import React from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination = ({ currentPage, totalPages, onPageChange, style }) => {
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       onPageChange(newPage);
     }
   };
-  console.log(currentPage, totalPages);
+
   if (totalPages === 0) return null;
   return (
-    <ol className="flex w-full justify-center space-x-1 p-2 text-xs font-medium">
+    <ol
+      className={`flex ${style?.position ? style.position : 'justify-center'} w-full space-x-1 p-2 text-xs font-medium`}
+    >
       <li>
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="inline-flex h-8 w-8 cursor-pointer  items-center justify-center rounded border border-gray-100"
+          className="inline-flex h-10 w-10 cursor-pointer  items-center justify-center rounded border border-gray-200"
         >
           <IoIosArrowBack className="h-3 w-3" />
         </button>
@@ -26,9 +28,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         <li key={index}>
           <button
             onClick={() => handlePageChange(index + 1)}
-            className={`block h-8 w-8 rounded border border-gray-100 text-center leading-8 ${
+            className={`block h-10 w-10 rounded border border-gray-200 text-center leading-8 ${
               currentPage === index + 1
-                ? 'border-blue-600 bg-blue-600 text-white'
+                ? `border-blue-600 ${style?.color ? style.color : 'bg-blue-600'} text-white`
                 : ''
             }`}
           >
@@ -41,7 +43,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-gray-100"
+          className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded border border-gray-200"
         >
           <IoIosArrowForward className="h-3 w-3" />
         </button>

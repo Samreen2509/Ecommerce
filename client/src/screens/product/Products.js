@@ -12,15 +12,12 @@ const Products = () => {
   const { isUserLogin } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  console.log('products:', products);
   useEffect(() => {
     dispatch(getAllProducts());
     if (isUserLogin) {
       dispatch(getWishListProducts());
     }
   }, [dispatch]);
-
-  console.log('products:', products);
 
   const singleCategoryProduct =
     products?.data?.productInfo?.filter((product) => product.category === id) ||

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { deleteNotification } from '../../../features/dashboardSlice/dashNotificationSlice';
+import { deleteNotification } from '../../../features/notificationSlice';
 import { useDispatch } from 'react-redux';
 
 function NotificationSettingDialog({ id, notification, onClose }) {

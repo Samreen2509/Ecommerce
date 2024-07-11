@@ -7,7 +7,7 @@ function Payment() {
       <div className="h-screen w-full ">
         <div className="mb-6">
           <h1 className="text-3xl font-semibold text-black text-opacity-80">
-            'Payment'
+            Payment
           </h1>
           <p className="mt-1 cursor-pointer text-sm font-medium text-black text-opacity-50 underline">
             {'> dashboard > payment'}

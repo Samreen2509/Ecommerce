@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductListItem from './ProductListItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProducts } from '../../../features/dashboardSlice';
 import AddButton from '../Utils/AddButton';
+import { getAllProducts } from '../../../features/productSlice';
+import Pagination from '../../../screens/product/Pagination';
 
 function ProductList() {
-  const discpatch = useDispatch();
-  const { products, SuccessMsg } = useSelector((state) => state.dashboard);
+  const dispatch = useDispatch();
+  const { products, SuccessMsg } = useSelector((state) => state.product);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    discpatch(getProducts());
-  }, [SuccessMsg]);
+    dispatch(getAllProducts({ page }));
+  }, [dispatch, page, SuccessMsg]);
 
   return (
     <>
@@ -71,6 +73,17 @@ function ProductList() {
               />
             );
           })}
+        </div>
+        <div className="my-5 flex w-full items-center px-5">
+          <Pagination
+            currentPage={page}
+            totalPages={Math.ceil((products?.length || 1) / 4) - 1}
+            onPageChange={setPage}
+            style={{
+              position: 'justify-end',
+              color: 'bg-gray-800',
+            }}
+          />
         </div>
       </div>
     </>

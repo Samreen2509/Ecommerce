@@ -4,7 +4,7 @@ import axios from 'axios';
 const BASE_URL = process.env.BASEURL;
 
 export const addColor = createAsyncThunk(
-  'dashColor/addColor',
+  'color/addColor',
   async ({ colorData }, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${BASE_URL}/color`, colorData, {
@@ -20,7 +20,7 @@ export const addColor = createAsyncThunk(
 );
 
 export const updateColor = createAsyncThunk(
-  'dashColor/updateColor',
+  'color/updateColor',
   async ({ id, colorData }, { rejectWithValue }) => {
     try {
       const response = await axios.put(`${BASE_URL}/color/${id}`, colorData, {
@@ -36,7 +36,7 @@ export const updateColor = createAsyncThunk(
 );
 
 export const deleteColor = createAsyncThunk(
-  'dashColor/deleteColor',
+  'color/deleteColor',
   async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`${BASE_URL}/color/${id}`, {
@@ -52,7 +52,7 @@ export const deleteColor = createAsyncThunk(
 );
 
 export const getSingleColor = createAsyncThunk(
-  'dashColor/getSingleColor',
+  'color/getSingleColor',
   async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${BASE_URL}/color/${id}`, {
@@ -68,7 +68,7 @@ export const getSingleColor = createAsyncThunk(
 );
 
 export const getAllColor = createAsyncThunk(
-  'dashColor/getAllColor',
+  'color/getAllColor',
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${BASE_URL}/color`, {
@@ -91,8 +91,8 @@ const initialState = {
   SuccessMsg: null,
 };
 
-export const dashColorSlice = createSlice({
-  name: 'dashColor',
+export const colorSlice = createSlice({
+  name: 'color',
   initialState,
   extraReducers: (builder) => {
     builder
@@ -171,4 +171,4 @@ export const dashColorSlice = createSlice({
   },
 });
 
-export default dashColorSlice.reducer;
+export default colorSlice.reducer;

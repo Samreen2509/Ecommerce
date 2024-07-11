@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import UserListItem from './UserListItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from '../../../features/dashboardSlice/dashUserSlice';
+import { getAllUsers } from '../../../features/userSlice';
 import AddButton from '../Utils/AddButton';
 
 function UserList() {
   const discpatch = useDispatch();
-  const { users } = useSelector((state) => state.dashUser);
+  const { users } = useSelector((state) => state.user);
 
   useEffect(() => {
     discpatch(getAllUsers());

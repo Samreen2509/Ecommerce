@@ -3,5 +3,9 @@ export const capitalize = (str) => {
 };
 
 export const capitalizeFirstLetter = (str) => {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  if (str) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  } else {
+    return '';
+  }
 };

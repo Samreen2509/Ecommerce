@@ -42,7 +42,7 @@ export const logout = createAsyncThunk(
     try {
       const response = await axios.post(
         `${process.env.BASEURL}/auth/logout`,
-        null,
+        {},
         {
           withCredentials: true,
         }
@@ -161,6 +161,7 @@ const authSlice = createSlice({
         state.isUserLogin = false;
         state.userInfo = null;
         state.isUserVerified = null;
+        state.userData = null;
       })
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import NotificationListItem from './NotificationListItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllNotification } from '../../../features/dashboardSlice/dashNotificationSlice';
+import { getAllNotification } from '../../../features/notificationSlice';
 
 function NotificationList() {
   const dispatch = useDispatch();
-  const { notification } = useSelector((state) => state.dashNotification);
+  const { notification } = useSelector((state) => state.notification);
 
   useEffect(() => {
     dispatch(getAllNotification());

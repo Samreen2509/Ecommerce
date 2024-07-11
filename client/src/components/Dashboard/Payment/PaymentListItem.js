@@ -5,7 +5,6 @@ import PaymentSettingDialog from './PaymentSettingDialog';
 import { MdContentCopy } from 'react-icons/md';
 import { FiExternalLink } from 'react-icons/fi';
 import { capitalizeFirstLetter } from '../Utils/Capitalize';
-import { toast } from 'react-toastify';
 
 function PaymentListItem({
   id,

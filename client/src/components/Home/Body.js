@@ -22,7 +22,7 @@ import img8 from '../../../images/banner3.jpg';
 import { refreshToken } from '../../features/authSlice.js';
 
 const Body = () => {
-  const { categories } = useSelector((state) => state.category);
+  const { category } = useSelector((state) => state.category);
   const { products } = useSelector((state) => state.product);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ const Body = () => {
       dispatch(getCartProducts());
     }
     dispatch(getAllCategory());
-    dispatch(getAllProducts());
+    dispatch(getAllProducts({ page: 1 }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const Body = () => {
     }
   }, [isUserLogin]);
 
-  return categories.length === 0 ? (
+  return category?.length === 0 ? (
     <Shimmer />
   ) : (
     <div className="body mb-20">
@@ -93,12 +93,9 @@ const Body = () => {
             <h1>Shop by category</h1>
           </div>
           <div className="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-10">
-            {categories &&
-              categories?.data?.categoryInfo
-                ?.slice(0, 4)
-                .map((category, index) => (
-                  <CategoryCard key={index} sdata={category} />
-                ))}
+            {category?.slice(0, 4).map((category, index) => (
+              <CategoryCard key={index} sdata={category} />
+            ))}
           </div>
 
           <Button
@@ -106,7 +103,7 @@ const Body = () => {
             bgColor="transparent"
             textColer="black"
             className="mt-10 h-12 w-48 border border-gray-300 text-base duration-500 ease-linear hover:bg-slate-950 hover:text-white"
-            onClick={() => navigate('/category')}
+            onClick={() => navigate('./category')}
           />
         </div>
 
@@ -114,12 +111,9 @@ const Body = () => {
         <div className="mt-36 flex w-full flex-col items-center justify-evenly">
           <div className="text-4xl font-bold">New Arrival </div>
           <div className="mt-14 flex w-full flex-wrap items-center justify-center gap-x-10 gap-y-10">
-            {products &&
-              products.data?.productInfo
-                .slice(0, 4)
-                .map((product, index) => (
-                  <ProductCard key={index} sdata={product} />
-                ))}
+            {products?.slice(0, 4).map((product, index) => (
+              <ProductCard key={index} sdata={product} />
+            ))}
           </div>
 
           <Button
@@ -127,7 +121,7 @@ const Body = () => {
             bgColor="tranparent"
             textColer="black"
             className="text-1xl mt-10 h-12 w-48 border border-gray-300 duration-500 ease-linear hover:bg-slate-950 hover:text-white"
-            onClick={() => navigate('/products')}
+            onClick={() => navigate('./products')}
           />
         </div>
 
