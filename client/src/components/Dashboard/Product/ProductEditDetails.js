@@ -30,34 +30,34 @@ function ProductEditDetails({ id, edit }) {
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  console.log(productData);
 
   useEffect(() => {
-    dispatch(getColors());
-    dispatch(getCategory());
     if (id !== 'new') {
-      dispatch(getSingleProducts(id));
-
-      const fetchData = async () => {
-        if (id !== 'new' && edit) {
-          if (singleProduct) {
-            setProductData({
-              name: singleProduct.name,
-              description: singleProduct.description,
-              size: singleProduct.size,
-              price: singleProduct.price,
-              stock: singleProduct.stock,
-              mainImage: singleProduct.mainImage,
-              mainImageName: singleProduct.mainImage?.public_id,
-              category: singleProduct.category,
-              color: singleProduct.color,
-            });
-          }
-        }
-      };
-
-      fetchData();
+      dispatch(getColors());
+      dispatch(getCategory());
+      dispatch(getSingleProducts({ id }));
     }
-  }, [id, edit, dispatch, singleProduct]);
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    if (id !== 'new' && edit == 'true') {
+      if (singleProduct) {
+        setProductData({
+          name: singleProduct.name,
+          description: singleProduct.description,
+          size: singleProduct.size,
+          price: singleProduct.price,
+          stock: singleProduct.stock,
+          stock: singleProduct.stock,
+          mainImage: singleProduct.mainImage,
+          mainImageName: singleProduct.mainImage?.public_id,
+          category: singleProduct.category,
+          color: singleProduct.color,
+        });
+      }
+    }
+  }, [singleProduct]);
 
   const handleInputChange = (e) => {
     e.preventDefault();
@@ -94,7 +94,7 @@ function ProductEditDetails({ id, edit }) {
     }
 
     if (id == 'new' && edit != 'true') {
-      // navigate('./');
+      navigate('./');
     }
 
     if (id != 'new' && edit == 'true') {

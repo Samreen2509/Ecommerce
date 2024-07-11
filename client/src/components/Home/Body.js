@@ -4,7 +4,6 @@ import Carousel from './Carousel.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../../features/categorySlice.js';
 import { useSelector } from 'react-redux';
-import useCheckSession from '../../hook/useCheckSession.js';
 import { getCartProducts } from '../../features/cartSlice.js';
 import CategoryCard from '../../screens/category/CategoryCard.js';
 import { getWishListProducts } from '../../features/wishlistSlice.js';
