@@ -106,7 +106,6 @@ export const orderSlice = createSlice({
     builder.addCase(createNewOrder.fulfilled, (state, action) => {
       state.loading = true;
       state.error = null;
-      console.log(action.payload);
       state.paymentUrl = action.payload.data.paymentInfo;
       state.orderInfoAfterPayment = action.payload.data.orderInfo;
     });
@@ -133,7 +132,6 @@ export const orderSlice = createSlice({
     builder.addCase(getAddress.fulfilled, (state, action) => {
       state.loading = true;
       state.error = null;
-      console.log(action.payload);
       state.addresses = action.payload.data.addressInfo;
     });
     builder.addCase(getAddress.rejected, (state, action) => {
