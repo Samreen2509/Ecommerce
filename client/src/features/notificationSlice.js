@@ -4,7 +4,7 @@ import axios from 'axios';
 const BASE_URL = process.env.BASEURL;
 
 export const getAllNotification = createAsyncThunk(
-  'dashNotification/getAllNotification',
+  'notification/getAllNotification',
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${BASE_URL}/notification`, {
@@ -20,7 +20,7 @@ export const getAllNotification = createAsyncThunk(
 );
 
 export const deleteNotification = createAsyncThunk(
-  'dashNotification/deleteNotification',
+  'notification/deleteNotification',
   async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`${BASE_URL}/notification/${id}`, {
@@ -42,8 +42,8 @@ const initialState = {
   SuccessMsg: null,
 };
 
-export const dashNotificationSlice = createSlice({
-  name: 'dashNotification',
+export const notificationSlice = createSlice({
+  name: 'notification',
   initialState,
   extraReducers: (builder) => {
     builder
@@ -78,4 +78,4 @@ export const dashNotificationSlice = createSlice({
   },
 });
 
-export default dashNotificationSlice.reducer;
+export default notificationSlice.reducer;

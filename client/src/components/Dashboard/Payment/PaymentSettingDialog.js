@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addPayment } from '../../../features/dashboardSlice/dashPaymentSlice';
+import { addPayment } from '../../../features/paymentSlice';
 
 function PaymentSettingDialog({ userId, paymentId, status, onClose }) {
   const [isNewPayment, setIsNewPayment] = useState(false);

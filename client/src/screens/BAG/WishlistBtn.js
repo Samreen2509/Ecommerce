@@ -19,8 +19,6 @@ function WishlistBtn({ id, mode, isUserLogin }) {
   useEffect(() => {
     if (isUserLogin) {
       dispatch(getWishListProducts());
-    } else {
-      navigate('./login');
     }
   }, [id, dispatch]);
 
@@ -49,8 +47,12 @@ function WishlistBtn({ id, mode, isUserLogin }) {
   };
 
   const handleOnClick = (e) => {
-    e.preventDefault();
-    added ? handleRemove() : handleAddWishLit();
+    if (isUserLogin) {
+      e.preventDefault();
+      added ? handleRemove() : handleAddWishLit();
+    } else {
+      navigate('./login');
+    }
   };
 
   let style;

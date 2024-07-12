@@ -9,10 +9,14 @@ const Bag = () => {
   const { cartProducts, cartTotalPrice, updateCart, isLoading } = useSelector(
     (state) => state.cart
   );
+
+  const { isUserLogin } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getCartProducts());
+    if (isUserLogin) {
+      dispatch(getCartProducts());
+    }
   }, [dispatch, updateCart]);
 
   return (
@@ -31,7 +35,16 @@ const Bag = () => {
 
               {cartProducts &&
                 cartProducts.map((data, index) => (
-                  <BagProduct data={data} key={index} isLoading={isLoading} />
+                  <BagProduct
+                    mainImage={data?.product?.mainImage}
+                    price={data?.product?.price}
+                    name={data?.product?.name}
+                    _id={data?.product?._id}
+                    color={data?.product?.color}
+                    preQuantity={data?.quantity}
+                    key={index}
+                    isLoading={isLoading}
+                  />
                 ))}
             </div>
           </div>

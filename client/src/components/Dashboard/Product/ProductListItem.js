@@ -6,12 +6,12 @@ import { MdModeEditOutline } from 'react-icons/md';
 import { PiCircleNotch } from 'react-icons/pi';
 import { AiFillDelete } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteProduct } from '../../../features/dashboardSlice';
 import { toast } from 'react-toastify';
+import { removeProduct } from '../../../features/productSlice';
 
 function ProductListItem({ id, index, name, stock, price }) {
   const [isSettingDialog, setIsSettingDialog] = useState(false);
-  const { loading, SuccessMsg } = useSelector((state) => state.dashboard);
+  const { loading, SuccessMsg } = useSelector((state) => state.product);
   const discpatch = useDispatch();
 
   const handleSettingClick = () => {
@@ -19,7 +19,7 @@ function ProductListItem({ id, index, name, stock, price }) {
   };
 
   const handleDelete = () => {
-    discpatch(deleteProduct({ id }));
+    discpatch(removeProduct({ id }));
     if (SuccessMsg) {
       toast.success(SuccessMsg);
     }

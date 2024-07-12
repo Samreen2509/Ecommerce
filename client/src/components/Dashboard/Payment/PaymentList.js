@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import PaymentListItem from './PaymentListItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllPayments } from '../../../features/dashboardSlice/dashPaymentSlice';
+import { getAllPayments } from '../../../features/paymentSlice';
 import AddButton from '../Utils/AddButton';
 import { IoSettingsSharp } from 'react-icons/io5';
 
 function PaymentList() {
   const discpatch = useDispatch();
-  const { payments } = useSelector((state) => state.dashPayment);
+  const { payments } = useSelector((state) => state.payment);
 
   useEffect(() => {
     discpatch(getAllPayments());

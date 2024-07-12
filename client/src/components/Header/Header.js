@@ -10,7 +10,6 @@ import { RxCross2 } from 'react-icons/rx';
 import DropDown from './DropDown';
 import SearchPage from './SearchPage';
 import { useSelector } from 'react-redux';
-import { MdOutlineAccountCircle } from 'react-icons/md';
 
 function Header() {
   const [Sidemenu, setSidemenu] = useState(false);

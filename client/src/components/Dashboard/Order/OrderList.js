@@ -1,18 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import OrderListItem from './OrderListItem';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllOrders } from '../../../features/orderSlice';
 
 function OrderList() {
-  const data = [
-    {
-      _id: '665aef6a063c039a8c19c5a4',
-      payment: {
-        price: 4553,
-        status: 'Pending',
-      },
-      status: 'Pending',
-    },
-  ];
+  const discpatch = useDispatch();
+  const { allOrders } = useSelector((state) => state.order);
 
+  useEffect(() => {
+    discpatch(getAllOrders());
+  }, []);
   return (
     <>
       <div className="w-full">
@@ -39,7 +36,7 @@ function OrderList() {
           <div className="flex h-full w-16 items-center justify-center border-r px-3 text-base font-medium">
             S.No
           </div>
-          <div className="flex h-full w-full cursor-pointer items-center justify-start border-r px-2 text-base font-medium hover:underline">
+          <div className="flex h-full flex-1 cursor-pointer items-center justify-start border-r px-2 text-base font-medium hover:underline">
             Order Id
           </div>
           <div className="flex h-full w-36 items-center justify-center border-r px-3 text-base font-medium">
@@ -56,14 +53,14 @@ function OrderList() {
           </div>
         </div>
         <div className="my-1 flex w-full flex-col items-center justify-center rounded-bl-md rounded-br-md border text-gray-800">
-          {data.map((item, index) => {
+          {allOrders.map((item, index) => {
             return (
               <OrderListItem
                 key={index}
                 id={item._id}
                 index={index + 1}
-                status={item.status}
-                payment={item.payment}
+                status={item?.status}
+                payment={item?.payment}
               />
             );
           })}

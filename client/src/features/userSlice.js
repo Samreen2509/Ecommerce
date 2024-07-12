@@ -4,7 +4,7 @@ import axios from 'axios';
 const BASE_URL = process.env.BASEURL;
 
 export const addUser = createAsyncThunk(
-  'dashUser/addUser',
+  'user/addUser',
   async ({ userData }, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${BASE_URL}/auth/register`, userData, {
@@ -20,7 +20,7 @@ export const addUser = createAsyncThunk(
 );
 
 export const updateUser = createAsyncThunk(
-  'dashUser/updateUser',
+  'user/updateUser',
   async ({ id, userData }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
@@ -40,7 +40,7 @@ export const updateUser = createAsyncThunk(
 );
 
 export const updateAvatar = createAsyncThunk(
-  'dashUser/updateAvatar',
+  'user/updateAvatar',
   async ({ id, avatarData }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
@@ -60,7 +60,7 @@ export const updateAvatar = createAsyncThunk(
 );
 
 export const getSingleUser = createAsyncThunk(
-  'dashUser/getSingleUser',
+  'user/getSingleUser',
   async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${BASE_URL}/auth/user/${id}`, {
@@ -76,7 +76,7 @@ export const getSingleUser = createAsyncThunk(
 );
 
 export const getAllUsers = createAsyncThunk(
-  'dashUser/getAllUsers',
+  'user/getAllUsers',
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${BASE_URL}/auth/users`, {
@@ -92,7 +92,7 @@ export const getAllUsers = createAsyncThunk(
 );
 
 export const deleteUser = createAsyncThunk(
-  'dashUser/deleteUser',
+  'user/deleteUser',
   async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`${BASE_URL}/auth/user/${id}`, {
@@ -116,8 +116,8 @@ const initialState = {
   SuccessMsg: null,
 };
 
-export const dashUserSlice = createSlice({
-  name: 'dashUser',
+export const UserSlice = createSlice({
+  name: 'User',
   initialState,
   extraReducers: (builder) => {
     builder
@@ -211,4 +211,4 @@ export const dashUserSlice = createSlice({
   },
 });
 
-export default dashUserSlice.reducer;
+export default UserSlice.reducer;

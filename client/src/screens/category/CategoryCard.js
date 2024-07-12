@@ -9,7 +9,7 @@ const CategoryCard = (props) => {
         <img
           className="h-64 w-56 rounded-md object-fill"
           alt="cardImg"
-          src="https://rukminim2.flixcart.com/image/612/612/xif0q/t-shirt/u/3/h/-original-imah23cgrfhhrcyj.jpeg?q=70"
+          src={image.url}
         />
         <h3 className="mt-2 w-full text-center text-lg font-bold">{name}</h3>
       </Link>

@@ -22,7 +22,6 @@ const Wishlist = () => {
         <h2 className="font-bold">YOUR SHOPPING WISHLIST</h2>
       </div>
       <div className="mt-5 h-full">
-        {' '}
         <div className="flex w-full flex-col items-start justify-start space-y-4 md:space-y-6 xl:space-y-8">
           <div className="flex w-full flex-col items-start justify-start bg-gray-100 px-4 py-4 md:p-6 md:py-6 xl:p-8 ">
             <p className="text-lg font-semibold leading-6 text-gray-800 md:text-xl xl:leading-5 ">
@@ -35,9 +34,15 @@ const Wishlist = () => {
                 Your Wishlist is Empty
               </p>
             ) : (
-              wishlistProducts &&
-              wishlistProducts.map((data, index) => (
-                <WishlistProduct data={data} key={index} />
+              wishlistProducts?.map((data, index) => (
+                <WishlistProduct
+                  mainImage={data?.product?.mainImage}
+                  price={data?.product?.price}
+                  name={data?.product?.name}
+                  _id={data?.product?._id}
+                  color={data?.product?.color}
+                  key={index}
+                />
               ))
             )}
           </div>
