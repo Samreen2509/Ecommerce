@@ -11,6 +11,8 @@ import {
 import Pagination from './Pagination.js';
 import { CiFilter } from 'react-icons/ci';
 // import { FilterCategory } from './filterProduct.js';
+import { FilterCategory } from './FilterProduct.js';
+// import { FilterCategory } from './filterProduct.js';
 
 function ProductPage() {
   const { products, loading } = useSelector((state) => state.product);

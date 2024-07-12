@@ -64,3 +64,5 @@ export const FilterCategory = ({ categories, products }) => {
 };
 
 export const FilterSize = ({ product }) => {};
+
+// export default FilterCategory;
