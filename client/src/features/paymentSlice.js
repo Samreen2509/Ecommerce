@@ -4,7 +4,7 @@ import axios from 'axios';
 const BASE_URL = process.env.BASEURL;
 
 export const addPayment = createAsyncThunk(
-  'dashPayment/addPayment',
+  'payment/addPayment',
   async ({ userId, paymentId }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
@@ -24,7 +24,7 @@ export const addPayment = createAsyncThunk(
 );
 
 export const getSinglePayment = createAsyncThunk(
-  'dashPayment/getSinglePayment',
+  'payment/getSinglePayment',
   async ({ userId, paymentId }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
@@ -43,7 +43,7 @@ export const getSinglePayment = createAsyncThunk(
 );
 
 export const getAllPayments = createAsyncThunk(
-  'dashPayment/getAllPayments',
+  'payment/getAllPayments',
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${BASE_URL}/payment`, {
@@ -66,8 +66,8 @@ const initialState = {
   SuccessMsg: null,
 };
 
-export const dashPaymentSlice = createSlice({
-  name: 'dashUser',
+export const paymentSlice = createSlice({
+  name: 'payment',
   initialState,
   extraReducers: (builder) => {
     builder
@@ -117,4 +117,4 @@ export const dashPaymentSlice = createSlice({
   },
 });
 
-export default dashPaymentSlice.reducer;
+export default paymentSlice.reducer;

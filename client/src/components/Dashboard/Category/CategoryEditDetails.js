@@ -6,7 +6,7 @@ import {
   addCategory,
   getSingleCategory,
   updateCategory,
-} from '../../../features/dashboardSlice/dashCategorySlice';
+} from '../../../features/categorySlice';
 
 function CategoryEditDetails({ id, edit }) {
   const dispatch = useDispatch();
@@ -17,7 +17,7 @@ function CategoryEditDetails({ id, edit }) {
   const [imagePreview, setImagePreview] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
 
-  const { singleCategory } = useSelector((state) => state.dashCategory);
+  const { singleCategory } = useSelector((state) => state.category);
   useEffect(() => {
     if (id == 'new' && edit == 'false') {
       navigate('./');

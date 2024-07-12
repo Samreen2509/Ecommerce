@@ -5,7 +5,7 @@ import { getAllCategory } from '../../features/categorySlice';
 import Shimmer from '../../components/Loading/Shimmer.js';
 
 function Category() {
-  const { categories, loading } = useSelector((state) => state.category);
+  const { category, loading } = useSelector((state) => state.category);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllCategory());

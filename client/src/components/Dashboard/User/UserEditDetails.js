@@ -7,7 +7,7 @@ import {
   addUser,
   updateUser,
   updateAvatar,
-} from '../../../features/dashboardSlice/dashUserSlice';
+} from '../../../features/userSlice';
 
 function UserEditDetails({ id, edit }) {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ function UserEditDetails({ id, edit }) {
   const [avatarData, setAvatarData] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-  const { singleUser, newUser } = useSelector((state) => state.dashUser);
+  const { singleUser, newUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (id !== 'new') {

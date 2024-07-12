@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { CiCircleRemove } from 'react-icons/ci';
 import { IoSearch } from 'react-icons/io5';
 import { IoMdClose } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';

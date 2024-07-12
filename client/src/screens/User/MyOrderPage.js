@@ -26,8 +26,8 @@ const Myorders = () => {
         {order.length === 0 ? (
           <div>No orders found</div>
         ) : (
-          order.map((order) => (
-            <ProductOrder key={order._id} orderData={order} />
+          order.map((order, index) => (
+            <ProductOrder key={index} orderData={order} />
           ))
         )}
       </div>

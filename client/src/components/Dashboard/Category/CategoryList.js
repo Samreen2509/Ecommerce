@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import ProductListItem from './CategoryListItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllCategory } from '../../../features/dashboardSlice/dashCategorySlice';
+import { getAllCategory } from '../../../features/categorySlice';
 import AddButton from '../Utils/AddButton';
 
 function CategoryList() {
   const dispatch = useDispatch();
-  const { category } = useSelector((state) => state.dashCategory);
+  const { category } = useSelector((state) => state.category);
 
   useEffect(() => {
     dispatch(getAllCategory());

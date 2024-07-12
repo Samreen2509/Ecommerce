@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import ColorListItem from './ColorListItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllColor } from '../../../features/dashboardSlice/dashColorSlice';
+import { getAllColor } from '../../../features/colorSlice';
 import AddButton from '../Utils/AddButton';
 
 function ColorList() {
   const dispatch = useDispatch();
-  const { colors } = useSelector((state) => state.dashColor);
+  const { colors } = useSelector((state) => state.color);
 
   useEffect(() => {
     dispatch(getAllColor());

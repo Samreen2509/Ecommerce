@@ -25,6 +25,7 @@ function VerifyEmail() {
           toast.error(error.response.data.message, {
             position: 'top-center',
           });
+          navigate('/login');
         }
       };
 

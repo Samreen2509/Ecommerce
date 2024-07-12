@@ -3,12 +3,26 @@ import { Link } from 'react-router-dom';
 import { IoSettingsSharp } from 'react-icons/io5';
 import ProductSettingDialog from './ProductSettingDialog';
 import { MdModeEditOutline } from 'react-icons/md';
+import { PiCircleNotch } from 'react-icons/pi';
+import { AiFillDelete } from 'react-icons/ai';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { removeProduct } from '../../../features/productSlice';
 
 function ProductListItem({ id, index, name, stock, price }) {
   const [isSettingDialog, setIsSettingDialog] = useState(false);
+  const { loading, SuccessMsg } = useSelector((state) => state.product);
+  const discpatch = useDispatch();
 
   const handleSettingClick = () => {
     setIsSettingDialog(!isSettingDialog);
+  };
+
+  const handleDelete = () => {
+    discpatch(removeProduct({ id }));
+    if (SuccessMsg) {
+      toast.success(SuccessMsg);
+    }
   };
 
   return (
@@ -51,6 +65,16 @@ function ProductListItem({ id, index, name, stock, price }) {
           className="flex h-full w-36 cursor-pointer items-center justify-center px-3 text-base"
         >
           <IoSettingsSharp />
+        </div>
+        <div
+          onClick={handleDelete}
+          className="flex h-full w-36 cursor-pointer items-center justify-center px-3 text-base"
+        >
+          {loading ? (
+            <PiCircleNotch size={23} className="animate-spin" />
+          ) : (
+            <AiFillDelete size={23} />
+          )}
         </div>
       </div>
 

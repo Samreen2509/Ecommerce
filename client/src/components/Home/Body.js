@@ -4,7 +4,6 @@ import Carousel from './Carousel.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../../features/categorySlice.js';
 import { useSelector } from 'react-redux';
-import useCheckSession from '../../hook/useCheckSession.js';
 import { getCartProducts } from '../../features/cartSlice.js';
 import CategoryCard from '../../screens/category/CategoryCard.js';
 import { getWishListProducts } from '../../features/wishlistSlice.js';
@@ -23,7 +22,7 @@ import img8 from '../../../images/banner3.jpg';
 import { refreshToken } from '../../features/authSlice.js';
 
 const Body = () => {
-  const { categories } = useSelector((state) => state.category);
+  const { category } = useSelector((state) => state.category);
   const { products } = useSelector((state) => state.product);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -59,7 +58,7 @@ const Body = () => {
       dispatch(getCartProducts());
     }
     dispatch(getAllCategory());
-    dispatch(getAllProducts());
+    dispatch(getAllProducts({ page: 1 }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -68,7 +67,7 @@ const Body = () => {
     }
   }, [isUserLogin]);
 
-  return categories.length === 0 ? (
+  return category?.length === 0 ? (
     <Shimmer />
   ) : (
     <div className="body mb-20">

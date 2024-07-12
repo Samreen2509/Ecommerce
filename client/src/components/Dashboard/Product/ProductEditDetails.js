@@ -11,6 +11,11 @@ import {
 } from '../../../features/dashboardSlice';
 import { toast } from 'react-toastify';
 
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import 'draft-js/dist/Draft.css';
+
 function ProductEditDetails({ id, edit }) {
   const [productData, setProductData] = useState({
     name: '',
@@ -23,6 +28,7 @@ function ProductEditDetails({ id, edit }) {
     category: '',
     color: '',
   });
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [imagePreview, setImagePreview] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
   const { categories, colors, SuccessMsg, error, singleProduct } = useSelector(
@@ -32,35 +38,43 @@ function ProductEditDetails({ id, edit }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getColors());
-    dispatch(getCategory());
     if (id !== 'new') {
-      dispatch(getSingleProducts(id));
-
-      const fetchData = async () => {
-        if (id !== 'new' && edit) {
-          if (singleProduct) {
-            setProductData({
-              name: singleProduct.name,
-              description: singleProduct.description,
-              size: singleProduct.size,
-              price: singleProduct.price,
-              stock: singleProduct.stock,
-              mainImage: singleProduct.mainImage,
-              mainImageName: singleProduct.mainImage?.public_id,
-              category: singleProduct.category,
-              color: singleProduct.color,
-            });
-          }
-        }
-      };
-
-      fetchData();
+      dispatch(getColors());
+      dispatch(getCategory());
+      dispatch(getSingleProducts({ id }));
     }
-  }, [id, edit, dispatch, singleProduct]);
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    if (id !== 'new' && edit == 'true') {
+      if (singleProduct) {
+        setProductData({
+          name: singleProduct.name,
+          description: singleProduct.description,
+          size: singleProduct.size,
+          price: singleProduct.price,
+          stock: singleProduct.stock,
+          mainImage: singleProduct.mainImage,
+          mainImageName: singleProduct.mainImage?.public_id,
+          category: singleProduct.category,
+          color: singleProduct.color,
+        });
+
+        try {
+          const contentState = convertFromRaw(
+            JSON.parse(singleProduct.description)
+          );
+          const editorState = EditorState.createWithContent(contentState);
+          setEditorState(editorState);
+        } catch (error) {
+          console.error('Error parsing description JSON:', error);
+          setEditorState(() => EditorState.createEmpty());
+        }
+      }
+    }
+  }, [singleProduct]);
 
   const handleInputChange = (e) => {
-    e.preventDefault();
     const { name, value, files } = e.target;
 
     if (name === 'mainImage' && files && files.length > 0) {
@@ -76,6 +90,7 @@ function ProductEditDetails({ id, edit }) {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
+      k;
     } else {
       setProductData((prevData) => ({
         ...prevData,
@@ -87,14 +102,12 @@ function ProductEditDetails({ id, edit }) {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    console.log(productData);
-
     if (id != 'new' && edit != 'true') {
       navigate(`./?id=${id}&edit=true`);
     }
 
     if (id == 'new' && edit != 'true') {
-      // navigate('./');
+      navigate('./');
     }
 
     if (id != 'new' && edit == 'true') {
@@ -144,7 +157,7 @@ function ProductEditDetails({ id, edit }) {
       id: 'size',
       name: 'size',
       type: 'text',
-      label: 'Size - ("S M L XL XXL" Not use Commas)',
+      label: 'Size - (S, M, XL)',
       placeholder: 'Product Size',
     },
     {
@@ -163,6 +176,16 @@ function ProductEditDetails({ id, edit }) {
     },
   ];
 
+  const handleEditorChange = (state) => {
+    setEditorState(state);
+    const contentState = state.getCurrentContent();
+    const rawContentState = convertToRaw(contentState);
+    setProductData((prevProductData) => ({
+      ...prevProductData,
+      description: JSON.stringify(rawContentState),
+    }));
+  };
+
   return (
     <>
       <div>
@@ -171,15 +194,28 @@ function ProductEditDetails({ id, edit }) {
             <div className="flex flex-col" key={field.id}>
               <label htmlFor={field.id}>{field.label}</label>
               {field.type === 'textarea' ? (
-                <textarea
-                  rows={10}
-                  id={field.id}
-                  name={field.name}
-                  placeholder={field.placeholder}
-                  className="rounded-md border border-gray-400 px-2 py-2 text-base"
-                  value={productData[field.name] || ''}
-                  onChange={handleInputChange}
-                />
+                <div className="min-h-52 rounded-md border border-gray-400 bg-transparent px-2 py-2">
+                  <Editor
+                    editorState={editorState}
+                    onEditorStateChange={handleEditorChange}
+                    toolbar={{
+                      options: [
+                        'inline',
+                        'blockType',
+                        'list',
+                        'textAlign',
+                        'link',
+                        'history',
+                      ],
+                      inline: {
+                        options: ['bold', 'italic', 'underline'],
+                      },
+                      blockType: {
+                        options: ['Normal', 'H1', 'H2', 'H3', 'Blockquote'],
+                      },
+                    }}
+                  />
+                </div>
               ) : (
                 <input
                   type={field.type}

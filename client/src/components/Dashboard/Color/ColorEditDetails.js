@@ -5,7 +5,7 @@ import {
   getSingleColor,
   updateColor,
   addColor,
-} from '../../../features/dashboardSlice/dashColorSlice';
+} from '../../../features/colorSlice';
 
 function ColorEditDetails({ id, edit }) {
   const dispatch = useDispatch();
@@ -13,7 +13,7 @@ function ColorEditDetails({ id, edit }) {
     name: '',
     hexCode: '',
   });
-  const { singleColor } = useSelector((state) => state.dashColor);
+  const { singleColor } = useSelector((state) => state.color);
 
   const navigate = useNavigate();
   useEffect(() => {

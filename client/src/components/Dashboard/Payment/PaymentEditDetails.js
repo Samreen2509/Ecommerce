@@ -7,7 +7,7 @@ import {
   addPayment,
   updatePayment,
   updateAvatar,
-} from '../../../features/dashboardSlice/dashPaymentSlice';
+} from '../../../features/paymentSlice';
 
 function PaymentEditDetails({ id, edit }) {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ function PaymentEditDetails({ id, edit }) {
   const [imagePreview, setImagePreview] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
   const { singlePayment, newPayment } = useSelector(
-    (state) => state.dashPayment
+    (state) => state.payment
   );
 
   useEffect(() => {

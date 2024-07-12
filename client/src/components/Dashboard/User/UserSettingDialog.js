@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteUser } from '../../../features/dashboardSlice/dashUserSlice';
+import { deleteUser } from '../../../features/userSlice';
 
 function UserSettingDialog({ id, title, onClose }) {
   const [isDeleteUser, setIsDeleteUser] = useState(false);

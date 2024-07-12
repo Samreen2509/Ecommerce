@@ -16,12 +16,11 @@ import cartSlice from '../features/cartSlice';
 import categorySlice from '../features/categorySlice';
 import wishlistSlice from '../features/wishlistSlice';
 import orderSlice from '../features/orderSlice';
+import colorSlice from '../features/colorSlice';
+import userSlice from '../features/userSlice';
+import notificationSlice from '../features/notificationSlice';
 import dashboardSlice from '../features/dashboardSlice';
-import dashUserSlice from '../features/dashboardSlice/dashUserSlice';
-import dashColorSlice from '../features/dashboardSlice/dashColorSlice';
-import dashCategorySlice from '../features/dashboardSlice/dashCategorySlice';
-import dashNotificationSlice from '../features/dashboardSlice/dashNotificationSlice';
-import dashPaymentSlice from '../features/dashboardSlice/dashPaymentSlice';
+import paymentSlice from '../features/paymentSlice';
 
 const authPersistConfig = {
   key: 'auth',
@@ -37,13 +36,12 @@ export const store = configureStore({
     cart: cartSlice,
     wishlist: wishlistSlice,
     order: orderSlice,
+    color: colorSlice,
     auth: persistedAuthReducer,
+    user: userSlice,
     dashboard: dashboardSlice,
-    dashUser: dashUserSlice,
-    dashColor: dashColorSlice,
-    dashCategory: dashCategorySlice,
-    dashNotification: dashNotificationSlice,
-    dashPayment: dashPaymentSlice,
+    notification: notificationSlice,
+    payment: paymentSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
