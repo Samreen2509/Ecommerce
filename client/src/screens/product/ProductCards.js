@@ -22,9 +22,16 @@ const ProductCard = ({ sdata }) => {
             loading="true"
             src={mainImage?.url}
           />
-          <div className={`${isHovered ? 'block' : 'hidden'}`}>
+          {window.innerWidth < 913 ? (
             <WishlistBtn id={_id} isUserLogin={isUserLogin} />
-          </div>
+          ) : (
+            <div className={`${isHovered ? 'block' : 'hidden'}`}>
+              <WishlistBtn id={_id} isUserLogin={isUserLogin} />
+            </div>
+          )}
+          {/* <div className={`${isHovered ? 'block' : 'hidden'}`}>
+            <WishlistBtn id={_id} isUserLogin={isUserLogin} />
+          </div> */}
         </div>
         <div className="mt-2 flex w-full flex-col items-center justify-center px-2">
           <h1 className="w-full text-start text-sm font-medium text-opacity-85 md:text-base lg:text-base">

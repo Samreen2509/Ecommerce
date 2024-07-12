@@ -83,36 +83,6 @@ function ProductPage() {
           <h3 className=" font-bold">FILTERS</h3>
           <div className="">
             {/* CATEGORIES */}
-            {/* <div className="w-56 border-2 border-gray-200 p-3">
-              <div>
-                <div className="flex justify-between">
-                  <h4 className="mb-2">CATEGORIES</h4>
-                  <h3
-                    onClick={() => setIsInLargeDiv(!isCategoyInLargeDiv)}
-                    className=" cursor-pointer"
-                  >
-                    {isPriceInlargeDiv ? '+' : '-'}
-                  </h3>
-                </div>
-                {categories?.data?.categoryInfo?.map((category) => (
-                  <div
-                    className="flex items-center gap-2"
-                    style={{ display: isCategoyInLargeDiv ? 'block' : 'none' }}
-                    key={category._id}
-                  >
-                    <input
-                      type="checkbox"
-                      id={category._id}
-                      className="m-1 text-black"
-                      onClick={() =>
-                        filterCategoryData(category._id, !checkboxState)
-                      }
-                    />
-                    <label htmlFor={category._id}>{category.name}</label>
-                  </div>
-                ))}
-              </div>
-            </div> */}
             {/* <div className="w-56 border-t-2 border-gray-200 p-3 md:w-60 md:p-4 lg:w-80 lg:p-5">
               <div>
                 <div className="flex justify-between">
@@ -154,34 +124,6 @@ function ProductPage() {
             <FilterCategory categories={categories} products={products} />
 
             {/* SIZE */}
-            {/* <div className="w-56 border-2 border-gray-200 p-3">
-              <div>
-                <div className="flex justify-between">
-                  <h4 className="mb-2">SIZE</h4>
-                  <h3
-                    onClick={() => setIsSizeInlargeDiv(!isSizeInlargeDiv)}
-                    className=" cursor-pointer"
-                  >
-                    {isPriceInlargeDiv ? '+' : '-'}
-                  </h3>
-                </div>
-                {displayProductSize.map((size, index) => (
-                  <div
-                    className="flex items-center gap-2"
-                    style={{ display: isSizeInlargeDiv ? 'block' : 'none' }}
-                    key={index}
-                  >
-                    <input
-                      type="checkbox"
-                      id={index}
-                      className="m-1 text-black"
-                      onClick={() => filterSizeData(size)}
-                    />
-                    <label htmlFor={index}>{size}</label>
-                  </div>
-                ))}
-              </div>
-            </div> */}
             <div className="w-56 border-t-2 border-gray-200 p-3 md:w-60 md:p-4 lg:w-80 lg:p-5">
               <div>
                 <div className="flex justify-between">
@@ -219,34 +161,6 @@ function ProductPage() {
             </div>
 
             {/* PRICE */}
-            {/* <div className="w-56 border-2 border-gray-200 p-3">
-              <div>
-                <div className="flex justify-between">
-                  <h4 className="mb-2">PRICE</h4>
-                  <h3
-                    onClick={() => setIsPriceInlargeDiv(!isPriceInlargeDiv)}
-                    className=" cursor-pointer"
-                  >
-                    {isPriceInlargeDiv ? '+' : '-'}
-                  </h3>
-                </div>
-                {products.data?.productInfo?.map((product) => (
-                  <div
-                    className="flex items-center gap-2"
-                    style={{ display: isPriceInlargeDiv ? 'block' : 'none' }}
-                    key={product._id}
-                  >
-                    <input
-                      type="checkbox"
-                      id={product._id}
-                      className="m-1 text-black"
-                      onClick={() => filterSizeData(product._id)}
-                    />
-                    <label htmlFor={product._id}>{product.price}</label>
-                  </div>
-                ))}
-              </div>
-            </div> */}
             <div className="w-56 border-t-2 border-gray-200 p-3 md:w-60 md:p-4 lg:w-80 lg:p-5">
               <div>
                 <div className="flex justify-between">

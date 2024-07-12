@@ -11,10 +11,10 @@ export const FilterCategory = ({ categories, products }) => {
 
   const filterCategoryData = (id, checkbox) => {
     setCheckboxState(checkbox);
-    if (checkboxState === false) {
-      const filteredData = filteredData.filter((product) => product.id !== id);
-      setFilteredProduct(filteredData);
-    }
+    // if (checkboxState === false) {
+    //   const filteredData = filteredData.filter((product) => product.id !== id);
+    //   setFilteredProduct(filteredData);
+    // }
     setIsCallFilterData(true);
     dispatch(getOneCategory(id));
     const filteredData =
@@ -62,3 +62,5 @@ export const FilterCategory = ({ categories, products }) => {
     </div>
   );
 };
+
+export const FilterSize = ({ product }) => {};
