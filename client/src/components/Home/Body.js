@@ -89,39 +89,47 @@ const Body = () => {
 
         {/* Category Section */}
         <div className="mt-20 flex min-h-min flex-col items-center justify-center">
-          <div className="text-4xl font-semibold">
+          <div className=" text-1xl font-semibold md:text-3xl lg:text-4xl">
             <h1>Shop by category</h1>
           </div>
-          <div className="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-10">
-            {category?.slice(0, 4).map((category, index) => (
-              <CategoryCard key={index} sdata={category} />
-            ))}
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-10 gap-y-10 lg:mt-14">
+            {categories &&
+              categories?.data?.categoryInfo
+                ?.slice(0, window.innerWidth < 913 ? 2 : 4)
+                .map((category, index) => (
+                  <CategoryCard key={index} sdata={category} />
+                ))}
           </div>
 
           <Button
             title="View All"
             bgColor="transparent"
             textColer="black"
-            className="mt-10 h-12 w-48 border border-gray-300 text-base duration-500 ease-linear hover:bg-slate-950 hover:text-white"
-            onClick={() => navigate('./category')}
+            className="tex-sm mt-5 h-11 w-32 border border-gray-300 duration-500 ease-linear hover:bg-orange-600 hover:text-white md:mt-10 md:w-48 md:text-base lg:mt-10 lg:w-48 lg:text-base"
+            onClick={() => navigate('/category')}
           />
         </div>
 
         {/* Product Section */}
-        <div className="mt-36 flex w-full flex-col items-center justify-evenly">
-          <div className="text-4xl font-bold">New Arrival </div>
-          <div className="mt-14 flex w-full flex-wrap items-center justify-center gap-x-10 gap-y-10">
-            {products?.slice(0, 4).map((product, index) => (
-              <ProductCard key={index} sdata={product} />
-            ))}
+        <div className="mt-20 flex w-full flex-col items-center justify-evenly md:mt-36 lg:mt-36">
+          <div className="text-1xl font-bold md:text-2xl lg:text-4xl">
+            New Arrival{' '}
+          </div>
+          <div className="mt-5 flex w-full flex-wrap items-center justify-center md:mt-14 md:gap-x-10 lg:mt-14 lg:gap-x-10">
+            {products &&
+              products.data?.productInfo
+                .slice(0, 4)
+                .map((product, index) => (
+                  <ProductCard key={index} sdata={product} />
+                ))}
           </div>
 
           <Button
             title="View All"
             bgColor="tranparent"
             textColer="black"
-            className="text-1xl mt-10 h-12 w-48 border border-gray-300 duration-500 ease-linear hover:bg-slate-950 hover:text-white"
-            onClick={() => navigate('./products')}
+            className="ml-2 mr-9 mt-5 h-11 w-32 border border-gray-300 text-sm duration-500 ease-linear hover:bg-orange-600 hover:text-white md:mt-10 md:w-48 md:text-base lg:mt-10 lg:w-48 lg:text-base"
+            onClick={() => navigate('/products')}
           />
         </div>
 
@@ -157,26 +165,19 @@ const Body = () => {
             <span className="text-base">Trending Outfits Men</span>
           </div>
 
-          <div className="mt-24 flex h-auto w-full flex-wrap items-center justify-center gap-5 md:gap-10 lg:gap-10">
+          <div className="mt-24 flex h-auto w-full items-center justify-center gap-5 md:gap-10 lg:gap-10">
             <div className="h-auto w-auto rounded-md border border-opacity-40 p-2 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
               <img
                 src={img4}
                 alt="Cloth"
-                className="h-96 w-64 rounded-md object-fill"
+                className="h-96 w-full rounded-md object-contain"
               />
             </div>
             <div className="h-auto w-auto rounded-md border border-opacity-40 p-2 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
               <img
                 src={img5}
                 alt="Cloth"
-                className="h-96 w-64 rounded-md object-fill"
-              />
-            </div>
-            <div className="h-auto w-auto rounded-md border border-opacity-40 p-2 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
-              <img
-                src={img4}
-                alt="Cloth"
-                className="h-96 w-64 rounded-md object-fill"
+                className="h-96 w-full rounded-md object-contain"
               />
             </div>
           </div>
@@ -185,6 +186,29 @@ const Body = () => {
         {/* TESTIMONIAL */}
         <div className="m-auto mb-40 mt-24 w-4/5 md:w-3/5 lg:w-3/5">
           <Carousel slides={slidesText} />
+        </div>
+
+        {/* Product Section */}
+        <div className="mt-20 flex w-full flex-col items-center justify-evenly md:mt-36 lg:mt-36">
+          <div className="text-1xl font-bold md:text-2xl lg:text-4xl">
+            New Arrival{' '}
+          </div>
+          <div className="mt-5 flex w-full flex-wrap items-center justify-center md:mt-14 md:gap-x-10 lg:mt-14 lg:gap-x-10">
+            {products &&
+              products.data?.productInfo
+                .slice(0, 4)
+                .map((product, index) => (
+                  <ProductCard key={index} sdata={product} />
+                ))}
+          </div>
+
+          <Button
+            title="View All"
+            bgColor="tranparent"
+            textColer="black"
+            className="ml-2 mr-9 mt-5 h-11 w-32 border border-gray-300 text-sm duration-500 ease-linear hover:bg-orange-600 hover:text-white md:mt-10 md:w-48 md:text-base lg:mt-10 lg:w-48 lg:text-base"
+            onClick={() => navigate('/products')}
+          />
         </div>
       </div>
     </div>

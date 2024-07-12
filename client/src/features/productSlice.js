@@ -131,9 +131,9 @@ export const getAllProducts = createAsyncThunk(
 // getting a single product
 export const getOneProduct = createAsyncThunk(
   'product/getOneProduct',
-  async ({ productId }, { rejectWithValue }) => {
+  async ({ id }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_URL_PRODUCT}/${productId}`, {
+      const response = await axios.get(`${BASE_URL_PRODUCT}/${id}`, {
         headers: { 'Content-Type': 'application/json' },
       });
       return response.data;
@@ -200,7 +200,7 @@ export const removeProduct = createAsyncThunk(
 // Initial state for the product slice
 const initialState = {
   products: [],
-  singleProduct: null,
+  product: null,
   loading: false,
   error: null,
   SuccessMsg: null,
@@ -249,7 +249,7 @@ export const productSlice = createSlice({
       .addCase(getOneProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.singleProduct = action.payload.data.productInfo; // Set the single product
+        state.product = action.payload; // Set the single product
       })
       .addCase(getOneProduct.rejected, (state, action) => {
         state.loading = false;
