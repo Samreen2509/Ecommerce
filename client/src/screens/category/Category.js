@@ -21,18 +21,17 @@ function Category() {
         All Category
       </h1>
       <div className="mb-20 mt-10 flex flex-wrap justify-center gap-x-10 gap-y-10">
-        {categories &&
-          categories?.data?.categoryInfo
-            ?.filter(
-              (category) =>
-                category.name === 'men' ||
-                category.name === 'women' ||
-                category.name === 'kids' ||
-                category.name === 'unisex'
-            )
-            .map((category, index) => (
-              <CategoryCard key={index} sdata={category} />
-            ))}
+        {category
+          ?.filter(
+            (category) =>
+              category.name === 'men' ||
+              category.name === 'women' ||
+              category.name === 'kids' ||
+              category.name === 'unisex'
+          )
+          .map((category, index) => (
+            <CategoryCard key={index} sdata={category} />
+          ))}
       </div>
     </div>
   );

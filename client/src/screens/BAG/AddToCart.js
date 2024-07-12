@@ -15,7 +15,7 @@ function AddToCart({ productId, quantity, className }) {
       dispatch(addToCart({ productId, quantity }));
       toast.success('Product added to Bag successfully');
     } else {
-      navigate('./login');
+      navigate('/login');
     }
   };
 
