@@ -6,51 +6,45 @@ import ProductSlider from './ProductSlider';
 import { FaRupeeSign } from 'react-icons/fa';
 import { FaStar } from 'react-icons/fa6';
 import AddToCart from '../BAG/AddToCart';
-import img1 from '../../../images/Nasa-t-shirt1.webp';
-import img2 from '../../../images/Nasa-t-shirt2.webp';
-import img3 from '../../../images/Nasa-t-shirt3.webp';
-import img4 from '../../../images/Nasa-t-shirt4.webp';
 import WishlistBtn from '../BAG/WishlistBtn';
+import ProductDescriptionRender from '../../utils/ProductDescriptionRender';
 
 function SingleProduct() {
-  const image = [img1, img2, img3, img4];
   const { productId } = useParams();
   const dispatch = useDispatch();
   const displayProductSize = ['XS', 'S', 'M', 'L', 'X', 'XL'];
   const [selectedSize, setSelectedSize] = useState(null);
+  const { singleProduct } = useSelector((state) => state.product);
+
   useEffect(() => {
-    dispatch(getOneProduct({ id: productId }));
-  }, []);
-  const oneProduct = useSelector((state) => state.product.product);
+    dispatch(getOneProduct({ productId }));
+  }, [productId]);
 
   const checkSize = (siz) => {
     setSelectedSize(siz);
   };
 
-  console.log(oneProduct);
   return (
     <div className=" mb-10 grid w-full items-start justify-center lg:flex">
       {/* image section */}
       <div className=" flex h-auto w-full flex-col-reverse justify-center gap-5  lg:w-1/2 lg:flex-row">
         {/* Others Image */}
         <div className="flex  items-center  lg:flex-col ">
-          {image &&
-            image.map((img) => (
-              <div className=" px-2 py-2">
-                <img className="h-28 w-28" src={img} alt="image" />
+          {singleProduct?.otherImages &&
+            singleProduct?.otherImages.map((img, index) => (
+              <div key={index} className=" px-2 py-2">
+                <img className="h-28 w-20" src={img?.url} alt="image" />
               </div>
             ))}
         </div>
         {/* Main Image */}
         <div className="h-1/2  pt-2">
-          {oneProduct && (
-            <div>
-              <img
-                className="h-full w-full"
-                src={oneProduct.data.productInfo.mainImage.url}
-                alt="image"
-              />
-            </div>
+          {singleProduct?.mainImage?.url && (
+            <img
+              className="h-full w-full"
+              src={singleProduct?.mainImage?.url}
+              alt="image"
+            />
           )}
         </div>
       </div>
@@ -59,10 +53,12 @@ function SingleProduct() {
         {/* name and description */}
         <div className="grid items-center justify-start gap-1">
           <h3 className="text-lg font-bold text-gray-700">
-            {oneProduct && oneProduct.data.productInfo.name}
+            {singleProduct?.name}
           </h3>
           <h4 className="text-lg text-gray-400">
-            {oneProduct && oneProduct.data.productInfo.description}
+            <ProductDescriptionRender
+              description={singleProduct?.description}
+            />
           </h4>
         </div>
 
@@ -77,9 +73,7 @@ function SingleProduct() {
           <div>
             <p className="flex items-center gap-1">
               <FaRupeeSign />
-              <span className=" mr-1 text-lg">
-                {oneProduct && oneProduct.data.productInfo.price}
-              </span>
+              <span className=" mr-1 text-lg">{singleProduct?.price}</span>
               <s className="text-gray-400">4000</s>
               <span className=" ml-1 text-lg text-green-400">50% OFF</span>
             </p>
@@ -122,12 +116,11 @@ function SingleProduct() {
                 </a>
               </div>
               <div className="flex items-center justify-center gap-4 text-black">
-                {displayProductSize.map((ele) => {
-                  const isAvailable =
-                    oneProduct?.data.productInfo.size.includes(ele);
+                {displayProductSize.map((ele, index) => {
+                  const isAvailable = singleProduct?.size.includes(ele);
                   return (
                     <span
-                      key={ele}
+                      key={index}
                       onClick={() => isAvailable && checkSize(ele)}
                       className={` cursor-pointer rounded-md border-2 border-solid px-5 py-3 text-center text-sm ${
                         isAvailable && selectedSize === ele
@@ -145,7 +138,11 @@ function SingleProduct() {
 
           {/* Add to Bag and Wishlist */}
           <div className="items-cente flex w-full bg-gray-100 px-4 py-2">
-            <AddToCart className="w-1/2  hover:bg-orange-600" />
+            <AddToCart
+              className="w-1/2 hover:bg-orange-600"
+              productId={productId}
+              quantity={1}
+            />
             {/* <WishlistBtn /> */}
           </div>
 
@@ -181,17 +178,6 @@ function SingleProduct() {
                   <span className=" font-bold">Machine wash as per tag</span>
                 </div>
               </div>
-
-              {/* <div className="flex items-start justify-start gap-56"> 
-                
-              </div>
-              <div className="flex items-start justify-start gap-56">
-                
-                
-              </div>
-              <div className="flex items-start justify-start gap-56">
-                
-              </div> */}
             </div>
           </div>
         </div>

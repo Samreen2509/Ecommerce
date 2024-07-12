@@ -5,13 +5,11 @@ import { getAllCategory } from '../../features/categorySlice';
 import Shimmer from '../../components/Loading/Shimmer.js';
 
 function CollectionPage() {
-  const { categories, loading } = useSelector((state) => state.category);
+  const { category, loading } = useSelector((state) => state.category);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllCategory());
   }, [dispatch]);
-
-  console.log(categories);
 
   if (loading) {
     return <Shimmer />;
@@ -23,10 +21,9 @@ function CollectionPage() {
         All Category
       </h1>
       <div className="mb-20 mt-10 flex flex-wrap justify-center gap-x-10 gap-y-10">
-        {categories &&
-          categories?.data?.categoryInfo?.map((category, index) => (
-            <CategoryCard key={index} sdata={category} />
-          ))}
+        {category?.map((category, index) => (
+          <CategoryCard key={index} sdata={category} />
+        ))}
       </div>
     </div>
   );

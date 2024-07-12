@@ -16,7 +16,11 @@ function ProductDescriptionRender({ description }) {
     }
   }, [description]);
 
-  return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+  return description ? (
+    <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+  ) : (
+    <div />
+  );
 }
 
 export default ProductDescriptionRender;

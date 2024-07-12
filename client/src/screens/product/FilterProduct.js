@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getOneCategory } from '../../features/categorySlice';
+import { getSingleCategory } from '../../features/categorySlice';
 
 export const FilterCategory = ({ categories, products }) => {
   const [isCategoyInLargeDiv, setIsCategoyInLargeDiv] = useState(false);
@@ -16,7 +16,7 @@ export const FilterCategory = ({ categories, products }) => {
     //   setFilteredProduct(filteredData);
     // }
     setIsCallFilterData(true);
-    dispatch(getOneCategory(id));
+    dispatch(getSingleCategory({id}));
     const filteredData =
       (products &&
         products.data?.productInfo.filter(
