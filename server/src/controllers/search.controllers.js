@@ -17,7 +17,9 @@ export const searchProduct = asyncHandler(async (req, res) => {
       { name: { $regex: q, $options: 'i' } },
       { description: { $regex: q, $options: 'i' } },
     ],
-  }).limit(item);
+  })
+    .sort({ createdAt: -1 })
+    .limit(item);
 
   return res
     .status(200)
@@ -34,7 +36,9 @@ export const searchCategory = asyncHandler(async (req, res) => {
 
   const searchResult = await Category.find({
     name: { $regex: q, $options: 'i' },
-  }).limit(item);
+  })
+    .sort({ createdAt: -1 })
+    .limit(item);
 
   return res
     .status(200)

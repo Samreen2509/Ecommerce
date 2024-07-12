@@ -48,7 +48,7 @@ export const getAllAddress = asyncHandler(async (req, res) => {
     throw new ApiError(500, "you don't have access");
   }
 
-  const address = await Address.find({});
+  const address = await Address.find({}).sort({ createdAt: -1 });
 
   return res
     .status(200)
@@ -71,7 +71,7 @@ export const getUserAddress = asyncHandler(async (req, res) => {
 
   const address = await Address.find({
     owner: userId,
-  });
+  }).sort({ createdAt: -1 });
 
   if (!address) {
     throw new ApiError(404, "user's address not found");
