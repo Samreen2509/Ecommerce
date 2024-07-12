@@ -17,7 +17,7 @@ const ProductCard = ({ sdata }) => {
       <Link to={`/singleProduct/${_id}`} className="link flex flex-col">
         <div className="relative">
           <img
-            className="h-72 w-60 rounded-md"
+            className="aspect-auto h-72 w-60 rounded-md"
             alt="cardImg"
             loading="true"
             src={mainImage?.url}
@@ -27,10 +27,10 @@ const ProductCard = ({ sdata }) => {
           </div>
         </div>
         <div className="mt-2 flex w-full flex-col items-center justify-center px-2">
-          <h1 className="w-full text-start text-base font-medium text-opacity-85">
+          <h1 className="w-60 text-start text-base font-medium tracking-tight text-opacity-85">
             {name}
           </h1>
-          <p className="w-full text-start text-base font-normal text-opacity-80">
+          <p className="w-full text-start text-base font-normal tracking-tight text-opacity-80">
             {description.substring(0, 30)}..
           </p>
           <p className="flex w-full items-end justify-start text-start text-base font-semibold text-red-800">

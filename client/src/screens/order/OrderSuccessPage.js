@@ -12,10 +12,6 @@ function OrderSuccessPage() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (count <= 0) {
-      return;
-    }
-
     const timer = setInterval(() => {
       setCount((prevCount) => prevCount - 1);
     }, 1000);
@@ -26,7 +22,6 @@ function OrderSuccessPage() {
   if (count === 0) {
     navigate('/myorders');
   }
-
   return (
     <div className="h-full bg-gray-100">
       <div className="bg-white p-6  md:mx-auto">

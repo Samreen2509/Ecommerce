@@ -5,6 +5,7 @@ const BASE_URL = process.env.BASEURL;
 export const createNewOrder = createAsyncThunk(
   'order/createNewOrder',
   async ({ data, userId }, { rejectWithValue }) => {
+    console.log(data);
     try {
       const response = await axios.post(`${BASE_URL}/order/${userId}`, data, {
         headers: { 'Content-Type': 'application/json' },

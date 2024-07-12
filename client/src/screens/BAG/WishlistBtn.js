@@ -47,11 +47,11 @@ function WishlistBtn({ id, mode, isUserLogin }) {
   };
 
   const handleOnClick = (e) => {
+    e.preventDefault();
     if (isUserLogin) {
-      e.preventDefault();
       added ? handleRemove() : handleAddWishLit();
     } else {
-      navigate('./login');
+      navigate('/login');
     }
   };
 
