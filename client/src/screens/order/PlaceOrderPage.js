@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { VscLoading } from 'react-icons/vsc';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCartProducts } from '../../features/cartSlice';
@@ -12,8 +12,6 @@ function PlaceOrderPage() {
   );
   const { paymentUrl, selectaddress } = useSelector((state) => state.order);
   const dispatch = useDispatch();
-
-  console.log(selectaddress);
 
   useEffect(() => {
     dispatch(getCartProducts());
@@ -33,7 +31,6 @@ function PlaceOrderPage() {
     }));
 
     const userId = userInfo._id;
-    console.log(selectaddress);
     try {
       if (selectaddress) {
         const data = {

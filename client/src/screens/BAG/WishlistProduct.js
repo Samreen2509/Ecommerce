@@ -14,6 +14,7 @@ function WishlistProduct({ data }) {
   const [quantity, setQuantity] = useState(1);
 
   const handleRemove = () => {
+    console.log(_id);
     dispatch(removeFromWishlist({ _id }));
     dispatch(getWishListProducts());
   };
@@ -67,7 +68,7 @@ function WishlistProduct({ data }) {
               {quantity}
             </p>
             <p className="text-base font-semibold leading-6 text-gray-800 xl:text-lg ">
-              ₹{price?.toFixed(0)}{' '}
+              ₹{price?.toFixed(0) * quantity}{' '}
             </p>
           </div>
           <div className="flex h-full w-full items-center justify-between space-x-8 ">
@@ -88,11 +89,12 @@ function WishlistProduct({ data }) {
                 <option value="4">4</option>
               </select>
             </div>
-            <div className="flex w-full items-start">
+            <div className="flex w-full items-center">
               <AddToCart
                 id={_id}
                 quantity={quantity}
-                className="flex rounded-md bg-green-400 px-2 py-1 text-white"
+                productId={_id}
+                className="flex rounded-md px-2 py-1 text-white"
               />
             </div>
 

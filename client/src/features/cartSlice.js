@@ -21,6 +21,7 @@ export const getCartProducts = createAsyncThunk(
 export const addToCart = createAsyncThunk(
   'cart/addToCart',
   async ({ productId, quantity }, { rejectWithValue }) => {
+    console.log(productId, quantity);
     try {
       const response = await axios.put(
         `${BASE_URL}/cart/addorupdatetocart`,

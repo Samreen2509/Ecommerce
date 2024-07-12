@@ -19,7 +19,7 @@ function BagProduct({ data, isLoading }) {
   const updateCartQuantity = useCallback(
     debounce((productId, newQuantity) => {
       dispatch(updateToCart({ productId, quantity: newQuantity }));
-    }, 2000),
+    }, 300),
     [dispatch]
   );
 

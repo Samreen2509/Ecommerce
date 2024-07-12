@@ -8,8 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const RegistrationPage = () => {
   const navigate = useNavigate();
-  // const [isError, setIsError] = useState(null);
-  // const [isLoading, setisLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     name: '',
@@ -18,11 +16,13 @@ const RegistrationPage = () => {
   });
 
   const discpatch = useDispatch();
-  const { isLoading, error, isUserLogin } = useSelector((state) => state.auth);
+  const { isLoading, error, isUserVerified, isUserLogin } = useSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
-    if (isUserLogin) {
-      navigate('/');
+    if (isUserVerified === false) {
+      navigate('/login');
       toast.success('User register successfully');
       toast.info(
         'Please Verify your account. A verification link already sent to your email address',
@@ -35,7 +35,7 @@ const RegistrationPage = () => {
         password: '',
       });
     }
-  }, [isUserLogin]);
+  }, [isUserVerified]);
 
   const handleChange = (e) => {
     e.preventDefault();
