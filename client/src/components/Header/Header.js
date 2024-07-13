@@ -101,7 +101,7 @@ function Header() {
               className="relative flex w-10 items-center justify-center "
             >
               <FiShoppingBag size={30} />
-              <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-black text-center text-white">
+              <div className="absolute right-[2] top-[-5] h-4 w-4 rounded-full bg-black text-center text-white">
                 {isLoading ? (
                   <p className="animate-spin text-[12px] font-semibold">0</p>
                 ) : (

@@ -72,11 +72,15 @@ function ProductPage() {
 
   return (
     <div className="body m-auto">
-      <div className="mt-5 flex flex-col justify-center md:flex-row lg:flex-row">
+      <h1 className="m-auto text-2xl font-bold md:mt-10 md:text-3xl lg:ml-20 lg:text-5xl">
+        All Products{' '}
+        <span className="font-medium">({products && products.length})</span>
+      </h1>
+      <div className="flex flex-col justify-center md:flex-row lg:flex-row">
         {/* Filter section */}
-        <div className="md:m-32 lg:m-32">
+        <div className="md:mx-28 lg:mx-20 lg:my-24">
           <h3>FILTERS</h3>
-          <div className="flex items-center md:flex-col lg:flex-col">
+          <div className="flex items-center px-2 md:flex-col lg:flex-col">
             {/* CATEGORIES */}
             <div className="w-56 border-2 border-gray-200 p-3">
               <div>
@@ -167,11 +171,8 @@ function ProductPage() {
           </div>
         </div>
         {/* Product section */}
-        <div className="mt-5 h-auto w-full md:mt-32 lg:mt-32">
-          <h1 className="m-auto ml-10 text-2xl font-bold md:text-3xl lg:text-5xl">
-            All Products
-          </h1>
-          <div className="mb-32 mt-10 flex flex-wrap justify-center gap-x-10 gap-y-10">
+        <div className="mt-8 h-auto w-full">
+          <div className="mb-32 mt-10 flex flex-wrap justify-center gap-x-10 gap-y-10 md:justify-start">
             {!IsCallFilterData ? (
               products.length ? (
                 renderProducts(products)
