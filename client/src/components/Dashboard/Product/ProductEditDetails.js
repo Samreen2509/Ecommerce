@@ -90,7 +90,6 @@ function ProductEditDetails({ id, edit }) {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
-      k;
     } else {
       setProductData((prevData) => ({
         ...prevData,

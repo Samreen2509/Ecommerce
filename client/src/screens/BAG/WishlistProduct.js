@@ -90,6 +90,7 @@ function WishlistProduct({ mainImage, price, name, _id, color }) {
                 id={_id}
                 quantity={quantity}
                 productId={_id}
+                wishlistBtn={true}
                 className="flex rounded-md px-2 py-1 text-white"
               />
             </div>

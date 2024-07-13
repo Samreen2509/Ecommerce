@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
 import ErrorPage from './components/Error/ErrorPage';
@@ -27,20 +27,26 @@ import ProductPage from './screens/product/ProductPage.js';
 import Category from './screens/category/Category.js';
 import OrderSuccessPage from './screens/order/OrderSuccessPage.js';
 import CollectionPage from './screens/collertion/CollectionPage.js';
-
-// dashboard imports
-import DashboardHeader from './components/Dashboard/Header/Header.js';
-import DashboardSidebar from './components/Dashboard/Sidebar/Sidebar.js';
-import Dashboard from './screens/dashboard/Dashboard.js';
-import DashboardOrder from './screens/dashboard/Order.js';
-import DashboardProduct from './screens/dashboard/Product.js';
-import DashboardUser from './screens/dashboard/User.js';
-import DashboardCategory from './screens/dashboard/Category.js';
-import DashboardColor from './screens/dashboard/Color.js';
-import DashboardNotification from './screens/dashboard/Notification.js';
-import DashboardSetting from './screens/dashboard/Setting.js';
-import DashboardPayment from './screens/dashboard/Payment.js';
 import PrivateRoute from './components/Routes/PrivateRoute.js';
+import Spinner from './components/Spinner.js';
+// dashboard imports
+const DashboardHeader = lazy(
+  () => import('./components/Dashboard/Header/Header')
+);
+const DashboardSidebar = lazy(
+  () => import('./components/Dashboard/Sidebar/Sidebar')
+);
+const Dashboard = lazy(() => import('./screens/dashboard/Dashboard'));
+const DashboardOrder = lazy(() => import('./screens/dashboard/Order'));
+const DashboardProduct = lazy(() => import('./screens/dashboard/Product'));
+const DashboardUser = lazy(() => import('./screens/dashboard/User'));
+const DashboardCategory = lazy(() => import('./screens/dashboard/Category'));
+const DashboardColor = lazy(() => import('./screens/dashboard/Color'));
+const DashboardNotification = lazy(
+  () => import('./screens/dashboard/Notification')
+);
+const DashboardSetting = lazy(() => import('./screens/dashboard/Setting'));
+const DashboardPayment = lazy(() => import('./screens/dashboard/Payment'));
 
 const Applayout = () => {
   return (
@@ -170,47 +176,86 @@ const appRouter = createBrowserRouter([
     path: '/dashboard',
     element: (
       <PrivateRoute>
-        <DashboardLayout />
+        <Suspense fallback={<Spinner />}>
+          <DashboardLayout />
+        </Suspense>
       </PrivateRoute>
     ),
     children: [
       {
         path: '/dashboard',
-        element: <Dashboard />,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <Dashboard />
+          </Suspense>
+        ),
       },
       {
         path: '/dashboard/order',
-        element: <DashboardOrder />,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <DashboardOrder />
+          </Suspense>
+        ),
       },
       {
         path: '/dashboard/product',
-        element: <DashboardProduct />,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <DashboardProduct />
+          </Suspense>
+        ),
       },
       {
         path: '/dashboard/user',
-        element: <DashboardUser />,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <DashboardUser />
+          </Suspense>
+        ),
       },
       {
         path: '/dashboard/category',
-        element: <DashboardCategory />,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <DashboardCategory />
+          </Suspense>
+        ),
       },
       {
         path: '/dashboard/color',
-        element: <DashboardColor />,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <DashboardColor />
+          </Suspense>
+        ),
       },
       {
         path: '/dashboard/notification',
-        element: <DashboardNotification />,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <DashboardNotification />
+          </Suspense>
+        ),
       },
       {
         path: '/dashboard/setting',
-        element: <DashboardSetting />,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <DashboardSetting />
+          </Suspense>
+        ),
       },
       {
         path: '/dashboard/payment',
-        element: <DashboardPayment />,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <DashboardPayment />
+          </Suspense>
+        ),
       },
     ],
+    errorElement: <ErrorPage />,
   },
 ]);
 

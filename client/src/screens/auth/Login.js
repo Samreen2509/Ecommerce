@@ -64,7 +64,7 @@ const Login = () => {
               <img src={png} alt="logo" />
             </Link>
           </div>
-          {!isUserVerified ? (
+          {isUserVerified === false ? (
             <p className="text-start text-sm capitalize text-red-400">
               Please Verify your account. A verification link already sent to
               your email address

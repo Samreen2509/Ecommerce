@@ -140,7 +140,6 @@ export const cartSlice = createSlice({
         state.error = null;
         state.cartProducts = action.payload?.items || [];
         state.productTotalQty = action.payload?.data?.items?.length || 0;
-        console.log(action.payload);
         state.updateCart += 1;
       })
       .addCase(addToCart.rejected, (state) => {

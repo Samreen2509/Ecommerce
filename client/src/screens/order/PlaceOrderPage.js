@@ -25,8 +25,8 @@ function PlaceOrderPage() {
 
   const handleSubmit = () => {
     const items = cartProducts.map((item) => ({
-      productId: item.product._id,
-      quantity: item.quantity,
+      productId: item?.product?._id,
+      quantity: item?.quantity,
       size: 'S',
     }));
 

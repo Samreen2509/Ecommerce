@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import DashCard from '../../components/Dashboard/Dashboard/DashCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { getItemsCount, getProducts } from '../../features/dashboardSlice';
+import { getItemsCount } from '../../features/dashboardSlice';
 import { FaSpinner } from 'react-icons/fa';
 
 function Dashboard() {
