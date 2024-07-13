@@ -121,10 +121,6 @@ const appRouter = createBrowserRouter([
         element: <ProductDetailsPage />,
       },
       {
-        path: '/blog',
-        element: <CollectionPage />,
-      },
-      {
         path: '/collections',
         element: <CollectionPage />,
       },

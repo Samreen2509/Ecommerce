@@ -4,11 +4,11 @@ import { IoSettingsSharp } from 'react-icons/io5';
 import OrderSettingDialog from './OrderSettingDialog';
 import { capitalizeFirstLetter } from '../Utils/Capitalize';
 
-function OrderListItem({ id, index, status, payment }) {
-  const [isSettingDialog, setIsSeetingDialog] = useState(false);
+function OrderListItem({ id, index, status, payment, user }) {
+  const [isSettingDialog, setIsSettingDialog] = useState(false);
 
   const handleSettingClick = () => {
-    setIsSeetingDialog(!isSettingDialog);
+    setIsSettingDialog(!isSettingDialog);
   };
 
   return (
@@ -51,7 +51,15 @@ function OrderListItem({ id, index, status, payment }) {
         </div>
       </div>
 
-      {isSettingDialog && <OrderSettingDialog id={id} status={status} />}
+      {isSettingDialog && (
+        <OrderSettingDialog
+          id={id}
+          status={status}
+          userId={user?._id}
+          orderId={id}
+          onClose={() => setIsSettingDialog(false)}
+        />
+      )}
     </>
   );
 }

@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ImagePreview from '../Utils/ImagePreview';
+import { useDispatch, useSelector } from 'react-redux';
+
 import {
   addOtherImages,
   deleteOtherImages,
-  getSingleProducts,
-} from '../../../features/dashboardSlice';
-import { useDispatch, useSelector } from 'react-redux';
+  getOneProduct,
+} from '../../../features/productSlice';
 
 function ProductEditOtherImages({ id, edit, otherImages }) {
   const [otherImage, setOtherImage] = useState([]);
@@ -15,7 +16,7 @@ function ProductEditOtherImages({ id, edit, otherImages }) {
   const [showInput, setShowInput] = useState(true);
   const [imagePreview, setImagePreview] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-  const { singleProduct, isLoading } = useSelector((state) => state.dashboard);
+  const { singleProduct, isLoading } = useSelector((state) => state.product);
 
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function ProductEditOtherImages({ id, edit, otherImages }) {
       navigate('./');
     }
 
-    dispatch(getSingleProducts({ id }));
+    dispatch(getOneProduct({ id }));
   }, [id]);
 
   useEffect(() => {

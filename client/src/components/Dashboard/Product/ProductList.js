@@ -66,7 +66,7 @@ function ProductList() {
               <ProductListItem
                 key={index}
                 id={item._id}
-                index={index + 1}
+                index={page == 1 ? index + 1 : (page - 1) * 12 + (index + 1)}
                 name={item.name}
                 stock={item.stock}
                 price={item.price}
@@ -77,7 +77,7 @@ function ProductList() {
         <div className="my-5 flex w-full items-center px-5">
           <Pagination
             currentPage={page}
-            totalPages={Math.ceil((products?.length || 1) / 4) - 1}
+            totalPages={Math.ceil(products?.length >= 12 ? page + 1 : page)}
             onPageChange={setPage}
             style={{
               position: 'justify-end',
