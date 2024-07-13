@@ -57,16 +57,16 @@ function WishlistBtn({ id, mode, isUserLogin }) {
 
   let style;
   if (mode && mode == 'normal') {
-    style = '';
+    style = 'rounded-md mx-2';
   } else {
-    style = 'absolute right-2 top-2';
+    style = 'absolute right-2 top-2 rounded-full';
   }
 
   return (
     <>
       <div
         onClick={handleOnClick}
-        className={`${style} flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-black text-xl text-white shadow-md transition duration-1000 hover:bg-opacity-80`}
+        className={`${style} flex h-11 w-11 cursor-pointer items-center justify-center bg-black text-xl text-white shadow-md transition duration-1000 hover:bg-opacity-80`}
       >
         {added ? <FaHeart style={{ color: 'red' }} /> : <FaRegHeart />}
       </div>

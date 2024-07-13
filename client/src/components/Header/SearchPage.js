@@ -78,7 +78,7 @@ function SearchPage({ handleSearchLeave, mobile }) {
             />
             <div
               onClick={handleQuerySearch}
-              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-br-md rounded-tr-md border-2 border-b-gray-300 hover:bg-gray-200"
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-br-md rounded-tr-md border-2 border-b-gray-300 hover:bg-primary-hover"
             >
               <IoSearch />
             </div>

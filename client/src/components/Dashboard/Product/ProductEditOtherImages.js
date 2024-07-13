@@ -27,7 +27,7 @@ function ProductEditOtherImages({ id, edit, otherImages }) {
       navigate('./');
     }
 
-    dispatch(getOneProduct({ id }));
+    dispatch(getOneProduct({ productId: id }));
   }, [id]);
 
   useEffect(() => {
@@ -68,6 +68,7 @@ function ProductEditOtherImages({ id, edit, otherImages }) {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    console.log(uploadFiles);
 
     const formData = new FormData();
     uploadFiles.length > 0 &&
@@ -75,14 +76,14 @@ function ProductEditOtherImages({ id, edit, otherImages }) {
         formData.append(`otherImage`, fileObj.otherImage);
       });
 
-    dispatch(addOtherImages({ id, formData }));
+    uploadFiles.length > 0 && dispatch(addOtherImages({ id, formData }));
     deleteImage.length > 0 &&
       deleteImage.map((imageId) => {
         dispatch(deleteOtherImages({ id, imageId }));
       });
 
     if (!isLoading) {
-      navigate('./');
+      // navigate('./');
     }
   };
 

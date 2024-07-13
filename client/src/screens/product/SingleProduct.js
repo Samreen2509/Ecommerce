@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getOneProduct } from '../../features/productSlice';
-import ProductSlider from './ProductSlider';
 import { FaRupeeSign } from 'react-icons/fa';
 import { FaStar } from 'react-icons/fa6';
 import AddToCart from '../BAG/AddToCart';
@@ -14,35 +13,72 @@ function SingleProduct() {
   const dispatch = useDispatch();
   const displayProductSize = ['XS', 'S', 'M', 'L', 'X', 'XL'];
   const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(-1);
   const { singleProduct } = useSelector((state) => state.product);
+  const { isUserLogin } = useSelector((state) => state.auth);
+  const [displayImage, setDisplayImage] = useState(null);
 
   useEffect(() => {
-    dispatch(getOneProduct({ productId }));
-  }, [productId]);
+    if (productId) {
+      dispatch(getOneProduct({ productId }));
+    }
+  }, [productId, dispatch]);
+
+  useEffect(() => {
+    if (singleProduct) {
+      setDisplayImage(singleProduct?.mainImage?.url);
+    }
+  }, [singleProduct]);
 
   const checkSize = (siz) => {
     setSelectedSize(siz);
   };
 
+  const handleSideImageClick = (index) => {
+    setSelectedImage(index);
+    if (index === -1) {
+      setDisplayImage(singleProduct?.mainImage?.url);
+    } else {
+      setDisplayImage(singleProduct?.otherImages[index]?.url);
+    }
+  };
+
   return (
-    <div className=" mb-10 grid w-full items-start justify-center lg:flex">
+    <div className="mb-10 mt-5 grid w-full items-start justify-between px-5 lg:flex lg:gap-x-10">
       {/* image section */}
-      <div className=" flex h-auto w-full flex-col-reverse justify-center gap-5  lg:w-1/2 lg:flex-row">
-        {/* Others Image */}
-        <div className="flex  items-center  lg:flex-col ">
+      <div className="flex h-auto w-full flex-col-reverse justify-center gap-5 lg:w-1/2 lg:flex-row">
+        <div className="flex items-center gap-x-5 gap-y-5 lg:mt-2 lg:flex-col ">
+          <div
+            onClick={() => handleSideImageClick(-1)}
+            className={`${selectedImage == -1 && 'border-blue-900'} cursor-pointer rounded-md border-2`}
+          >
+            <img
+              className="h-24 w-16 rounded-md"
+              src={singleProduct?.mainImage?.url}
+              alt="image"
+            />
+          </div>
           {singleProduct?.otherImages &&
             singleProduct?.otherImages.map((img, index) => (
-              <div key={index} className=" px-2 py-2">
-                <img className="h-28 w-20" src={img?.url} alt="image" />
+              <div
+                key={index}
+                onClick={() => handleSideImageClick(index)}
+                className={`${selectedImage == index && 'border-blue-900'} cursor-pointer rounded-md border-2`}
+              >
+                <img
+                  className="h-24 w-16 rounded-md "
+                  src={img?.url}
+                  alt="image"
+                />
               </div>
             ))}
         </div>
         {/* Main Image */}
-        <div className="h-1/2  pt-2">
-          {singleProduct?.mainImage?.url && (
+        <div className="mt-2 flex h-[85vh] cursor-pointer items-center justify-center rounded-md bg-gray-200">
+          {displayImage && (
             <img
-              className="h-full w-full"
-              src={singleProduct?.mainImage?.url}
+              className="h-full w-[35vw] rounded-md object-fill"
+              src={displayImage}
               alt="image"
             />
           )}
@@ -65,7 +101,7 @@ function SingleProduct() {
         <div className="grid items-center justify-start gap-2">
           {/* rating */}
           <p className="border-black-800 flex w-16 items-center justify-center gap-1 rounded-md border-solid border-black bg-slate-200">
-            <FaStar className=" text-orange-300" />
+            <FaStar className="text-orange-300" />
             <span className="pt-1">4.8</span>
           </p>
 
@@ -73,28 +109,28 @@ function SingleProduct() {
           <div>
             <p className="flex items-center gap-1">
               <FaRupeeSign />
-              <span className=" mr-1 text-lg">{singleProduct?.price}</span>
+              <span className="mr-1 text-lg">{singleProduct?.price}</span>
               <s className="text-gray-400">4000</s>
-              <span className=" ml-1 text-lg text-green-400">50% OFF</span>
+              <span className="ml-1 text-lg text-green-400">50% OFF</span>
             </p>
             <span className="text-xs text-gray-400">
               inclusive of all taxes
             </span>
           </div>
 
-          {/* cloth Deatials */}
+          {/* cloth Details */}
           <div className="flex items-center gap-5">
-            <span className=" rounded-md bg-gray-500 px-3 py-1 text-xs text-white">
+            <span className="rounded-md bg-gray-500 px-3 py-1 text-xs text-white">
               OVERSIZED FIT
             </span>
-            <span className="rounded-sm border-solid border-black bg-slate-300 px-3 py-1  text-sm font-bold">
+            <span className="rounded-sm border-solid border-black bg-slate-300 px-3 py-1 text-sm font-bold">
               100% COTTON
             </span>
           </div>
 
           {/* Member Discount */}
           <div>
-            <hr className=" w-11/12 bg-gray-100 pt-0.5" />
+            <hr className="w-11/12 bg-gray-100 pt-0.5" />
             <p className="mt-2 text-sm">
               members get an extra discount of ₹30 and FREE shipping.
               <span className="cursor-pointer text-sm font-medium text-indigo-600 hover:text-indigo-500">
@@ -108,12 +144,6 @@ function SingleProduct() {
             <div className="flex flex-col justify-start gap-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium text-gray-900">Size</h3>
-                <a
-                  href="#"
-                  className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                >
-                  Size guide
-                </a>
               </div>
               <div className="flex items-center justify-center gap-4 text-black">
                 {displayProductSize.map((ele, index) => {
@@ -121,12 +151,13 @@ function SingleProduct() {
                   return (
                     <span
                       key={index}
+                      title={!isAvailable ? 'Not Available' : ''}
                       onClick={() => isAvailable && checkSize(ele)}
-                      className={` cursor-pointer rounded-md border-2 border-solid px-5 py-3 text-center text-sm ${
+                      className={`cursor-pointer rounded-md border-2 border-solid px-5 py-3 text-center text-sm ${
                         isAvailable && selectedSize === ele
-                          ? ' bg-orange-600 text-white'
+                          ? 'bg-orange-600 text-white'
                           : ''
-                      } ${!isAvailable ? 'bg-gray-300' : ''}`}
+                      } ${!isAvailable ? 'bg-gray-200' : ''}`}
                     >
                       {ele}
                     </span>
@@ -137,13 +168,18 @@ function SingleProduct() {
           </div>
 
           {/* Add to Bag and Wishlist */}
-          <div className="items-cente flex w-full bg-gray-100 px-4 py-2">
+          <div className="items-cente mt-5 flex w-full py-2">
             <AddToCart
-              className="w-1/2 hover:bg-orange-600"
+              className={`flex-1  ${!selectedSize ? 'cursor-not-allowed bg-opacity-70' : 'hover:bg-blue-900'}`}
               productId={productId}
               quantity={1}
+              size={selectedSize}
             />
-            {/* <WishlistBtn /> */}
+            <WishlistBtn
+              id={productId}
+              mode="normal"
+              isUserLogin={isUserLogin}
+            />
           </div>
 
           {/* Key Highlights */}
@@ -153,29 +189,29 @@ function SingleProduct() {
               <div className="items-cente grid justify-start gap-7">
                 <div className="">
                   <h5 className="text-sm text-gray-400">Design</h5>
-                  <span className=" font-bold">Graphic Print</span>
+                  <span className="font-bold">Graphic Print</span>
                 </div>
                 <div className="grid items-start">
                   <h5 className="text-sm text-gray-400">Fit</h5>
-                  <span className=" font-bold">Oversized Fit</span>
+                  <span className="font-bold">Oversized Fit</span>
                 </div>
                 <div>
                   <h5 className="text-sm text-gray-400">Neck</h5>
-                  <span className=" font-bold">Round Neck</span>
+                  <span className="font-bold">Round Neck</span>
                 </div>
               </div>
               <div className="items-cente grid justify-start gap-7">
                 <div>
                   <h5 className="text-sm text-gray-400">Occasion</h5>
-                  <span className=" font-bold">Casual</span>
+                  <span className="font-bold">Casual</span>
                 </div>
                 <div>
                   <h5 className="text-sm text-gray-400">Sleeve Style</h5>
-                  <span className=" font-bold">Half Sleeve</span>
+                  <span className="font-bold">Half Sleeve</span>
                 </div>
                 <div>
                   <h5 className="text-sm text-gray-400">Wash Care</h5>
-                  <span className=" font-bold">Machine wash as per tag</span>
+                  <span className="font-bold">Machine wash as per tag</span>
                 </div>
               </div>
             </div>
