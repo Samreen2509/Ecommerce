@@ -91,14 +91,13 @@ export const removeCategory = createAsyncThunk(
 );
 
 // creating a product
-export const createProduct = createAsyncThunk(
-  'product/createProduct',
-  async (data, { rejectWithValue }) => {
+export const addProduct = createAsyncThunk(
+  'product/addProduct',
+  async ({ productData }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(BASE_URL_PRODUCT, data, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await axios.post(`${BASE_URL}/product`, productData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true,
       });
       return response.data;
     } catch (error) {
@@ -167,11 +166,16 @@ export const otherImages = createAsyncThunk(
 // updating a product
 export const updateProduct = createAsyncThunk(
   'product/updateProduct',
-  async ({ id, data }, { rejectWithValue }) => {
+  async ({ productData, id }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${BASE_URL_PRODUCT}/${id}`, data, {
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await axios.put(
+        `${BASE_URL}/product/${id}`,
+        productData,
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -197,11 +201,51 @@ export const removeProduct = createAsyncThunk(
   }
 );
 
+export const addOtherImages = createAsyncThunk(
+  'dashboard/addOtherImages',
+  async ({ id, formData }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/product/otherImages/${id}`,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const deleteOtherImages = createAsyncThunk(
+  'dashboard/deleteOtherImages',
+  async ({ id, imageId }, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/product/otherImages/${id}/${imageId}`,
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
 // Initial state for the product slice
 const initialState = {
   products: [],
   singleProduct: null,
   loading: false,
+  isLoading: false,
   error: null,
   SuccessMsg: null,
 };
@@ -213,20 +257,46 @@ export const productSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Create product
-      .addCase(createProduct.pending, (state) => {
-        state.loading = true;
-        state.error = null; // Clear previous errors
+      .addCase(deleteOtherImages.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
       })
-      .addCase(createProduct.fulfilled, (state, action) => {
+      .addCase(deleteOtherImages.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(deleteOtherImages.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(addOtherImages.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(addOtherImages.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(addOtherImages.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      // Create product
+      .addCase(addProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.products.push(action.payload); // Append the new product to the list
       })
-      .addCase(createProduct.rejected, (state, action) => {
+      .addCase(addProduct.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; // Set the error message
+        state.error = action.payload;
       })
+
       // Get all products
       .addCase(getAllProducts.pending, (state) => {
         state.loading = true;
@@ -282,6 +352,7 @@ export const productSlice = createSlice({
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+        state.SuccessMsg = action.payload.data;
         state.products = state.products.map((product) =>
           product.id === action.payload.id ? action.payload : product
         ); // Update the product in the list

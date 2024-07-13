@@ -21,6 +21,7 @@ import userSlice from '../features/userSlice';
 import notificationSlice from '../features/notificationSlice';
 import dashboardSlice from '../features/dashboardSlice';
 import paymentSlice from '../features/paymentSlice';
+import productSlice from '../features/productSlice';
 
 const authPersistConfig = {
   key: 'auth',

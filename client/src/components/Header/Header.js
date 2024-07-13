@@ -44,7 +44,6 @@ function Header() {
     { text: 'Collections', link: '/collections' },
     { text: 'Products', link: '/products' },
     { text: 'Category', link: '/category' },
-    { text: 'Blog', link: '/blog' },
   ];
   const MobileNavtext = [
     { text: 'Home', link: '/' },

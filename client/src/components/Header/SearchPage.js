@@ -20,10 +20,12 @@ function SearchPage({ handleSearchLeave, mobile }) {
             params: { q: query },
           }
         );
-        setResult(response.data.data.searchInfo);
-        const productId = response.data.data.searchInfo[0]._id;
-        setResult([]);
-        navigate(`/singleProduct/${productId}`);
+        const searchResult = response.data.data.searchInfo;
+        setResult(searchResult);
+        if (searchResult.length > 0) {
+          const productId = searchResult[0]._id;
+          navigate(`/singleProduct/${productId}`);
+        }
         setError('');
       } catch (error) {
         setError(error.response?.data?.message || 'An error occurred');
@@ -32,8 +34,8 @@ function SearchPage({ handleSearchLeave, mobile }) {
   };
 
   useEffect(() => {
-    if (query.length >= 3) {
-      const handleSearch = async () => {
+    const handleSearch = async () => {
+      if (query.length >= 3) {
         try {
           const response = await axios.get(
             `${process.env.BASEURL}/search/p/${limit}`,
@@ -46,14 +48,19 @@ function SearchPage({ handleSearchLeave, mobile }) {
         } catch (error) {
           setError(error.response?.data?.message || 'An error occurred');
         }
-      };
-      handleSearch();
-    }
+      }
+    };
+    handleSearch();
   }, [query]);
 
   const handleClearSearch = () => {
     setQuery('');
     setResult([]);
+  };
+
+  const handleResultClick = (productName, productId) => {
+    setQuery(productName);
+    navigate(`/singleProduct/${productId}`);
   };
 
   return (
@@ -79,16 +86,17 @@ function SearchPage({ handleSearchLeave, mobile }) {
           {result && result.length > 0 && query && (
             <div className="absolute top-[88px] z-50 flex w-[364px] rounded-md bg-white shadow-lg">
               <div className="flex w-full cursor-pointer flex-col py-2">
-                {result &&
-                  result.map((product) => (
-                    <span
-                      key={product._id}
-                      onClick={() => setQuery(product.name)}
-                      className="flex h-10 w-full items-center justify-start border-b px-3 py-1 text-start"
-                    >
-                      {product.name}
-                    </span>
-                  ))}
+                {result.map((product) => (
+                  <span
+                    key={product._id}
+                    onClick={() =>
+                      handleResultClick(product?.name, product._id)
+                    }
+                    className="flex h-10 w-full items-center justify-start border-b px-3 py-1 text-start"
+                  >
+                    {product.name}
+                  </span>
+                ))}
               </div>
             </div>
           )}
@@ -114,16 +122,15 @@ function SearchPage({ handleSearchLeave, mobile }) {
           {result && result.length > 0 && query && (
             <div className="z-50 flex w-[364px] rounded-md bg-white shadow-lg">
               <div className="flex w-full cursor-pointer flex-col py-2">
-                {result &&
-                  result.map((product) => (
-                    <span
-                      key={product._id}
-                      onClick={() => setQuery(product.name)}
-                      className="flex h-10 w-full items-center justify-start border-b px-3 py-1 text-start"
-                    >
-                      {product.name}
-                    </span>
-                  ))}
+                {result.map((product) => (
+                  <span
+                    key={product._id}
+                    onClick={() => handleResultClick(product.name, product._id)}
+                    className="flex h-10 w-full items-center justify-start border-b px-3 py-1 text-start"
+                  >
+                    {product.name}
+                  </span>
+                ))}
               </div>
             </div>
           )}
