@@ -117,7 +117,7 @@ const appRouter = createBrowserRouter([
         element: <SearchProduct />,
       },
       {
-        path: '/category/:id',
+        path: '/category/:categoryId',
         element: <ProductDetailsPage />,
       },
       {

@@ -1,7 +1,6 @@
 import img from '../../../images/favicon.png';
-import { FaSquareInstagram } from 'react-icons/fa6';
+import { FaSquareInstagram, FaSquareXTwitter } from 'react-icons/fa6';
 import { FaFacebookSquare } from 'react-icons/fa';
-import { FaSquareXTwitter } from 'react-icons/fa6';
 
 const Footer = () => {
   const firstCol = [
@@ -23,15 +22,13 @@ const Footer = () => {
 
   return (
     <footer>
-      <div className="grid h-full grid-cols-1 grid-rows-2 border-t-2 py-8 sm:h-[400px] sm:grid-cols-5 sm:grid-rows-1 sm:px-20 ">
-        <div className="col-span-2 flex flex-col items-start justify-start">
+      <div className="grid gap-8 border-t-2 px-4 py-8 sm:h-[400px] sm:grid-cols-5 sm:px-20">
+        <div className="flex flex-col items-start justify-start sm:col-span-2">
           <div className="flex items-center space-x-1 text-[#B91708]">
-            {/* <h2 className="text-2xl font-extrabold">LOGO</h2> */}
             <img src={img} className="h-24 object-cover" />
           </div>
           <p className="mt-2 text-xl">
-            Reach us Monday {'-'}
-            Friday from 9 am to 6 pm
+            Reach us Monday {'-'} Friday from 9 am to 6 pm
           </p>
           <p className="text-sm">+1 001 234 5678</p>
           <div className="mt-4 flex gap-x-4 sm:mt-6">
@@ -56,7 +53,7 @@ const Footer = () => {
         </div>
 
         <div className="">
-          <h2 className="font-bold">Help</h2>
+          <h2 className="font-bold">HELP</h2>
           <div className="mt-4 flex flex-col gap-y-3 sm:mt-12">
             {secondCol.map((service, index) => (
               <a
@@ -69,25 +66,24 @@ const Footer = () => {
             ))}
           </div>
         </div>
-        {/* Contact US */}
         <div>
-          <h2 className="font-bold">Newsletter</h2>
+          <h2 className="font-bold">NEWSLETTER</h2>
           <div className="mt-4 flex items-center justify-center sm:mt-12">
-            <div className="grid w-80 grid-rows-4 gap-4">
+            <div className="grid w-full max-w-xs gap-4">
               <input
                 type="text"
                 className="h-10 w-full rounded border bg-white p-2 text-sm"
                 placeholder="Enter your email"
               />
-              <button className="rounded bg-black text-gray-50 hover:bg-orange-600">
-                Subscribe to the newsletter
+              <button className="rounded bg-black py-2 text-gray-50 hover:bg-orange-600">
+                Subscribe
               </button>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex h-9 w-full items-center justify-center  bg-black text-white">
-        <h2>&copy; Copyright 2024 | Ecommerce Project</h2>
+      <div className="flex h-9 w-full items-center justify-center bg-black text-white">
+        <h2>&copy; Copyright 2024 | Ecommerce</h2>
       </div>
     </footer>
   );

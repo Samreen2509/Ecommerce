@@ -9,19 +9,20 @@ import {
   removeFromWishlist,
 } from '../../features/wishlistSlice';
 
-function AddToCart({ productId, quantity, className, wishlistBtn }) {
+function AddToCart({ productId, quantity, className, wishlistBtn, size }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isUserLogin } = useSelector((state) => state.auth);
 
   const handleAddCartClick = () => {
     if (isUserLogin) {
-      dispatch(addToCart({ productId, quantity }));
+      dispatch(addToCart({ productId, quantity, size }));
+      toast.success('Product added to Bag successfully');
       if (wishlistBtn) {
         dispatch(removeFromWishlist({ id: productId }));
         dispatch(getWishListProducts());
       }
-      toast.success('Product added to Bag successfully');
+      navigate('/bag');
     } else {
       navigate('/login');
     }
@@ -33,6 +34,7 @@ function AddToCart({ productId, quantity, className, wishlistBtn }) {
       onClick={handleAddCartClick}
       type="button"
       className={className}
+      disabled={!size}
     />
   );
 }

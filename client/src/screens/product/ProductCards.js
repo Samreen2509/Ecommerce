@@ -35,7 +35,7 @@ const ProductCard = ({ sdata }) => {
             {name.substring(0, 20)}..
           </h1>
           <p className="w-full text-start text-base font-normal text-opacity-80">
-            {description.substring(0, 20)}...
+            {description.substring(0, 20)}
           </p>
           <p className="flex w-full items-end justify-start text-start  text-sm font-semibold text-red-800 md:text-base lg:text-base">
             Rs. {price}
