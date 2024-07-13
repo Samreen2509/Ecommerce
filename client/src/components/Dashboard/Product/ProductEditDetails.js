@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ImagePreview from '../Utils/ImagePreview';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+
 import {
   addProduct,
-  getCategory,
-  getColors,
-  getSingleProducts,
+  getOneProduct,
   updateProduct,
-} from '../../../features/dashboardSlice';
-import { toast } from 'react-toastify';
+} from '../../../features/productSlice';
+import { getAllCategory } from '../../../features/categorySlice';
+import { getAllColor } from '../../../features/colorSlice';
 
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
@@ -31,17 +32,21 @@ function ProductEditDetails({ id, edit }) {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [imagePreview, setImagePreview] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-  const { categories, colors, SuccessMsg, error, singleProduct } = useSelector(
-    (state) => state.dashboard
+
+  const { singleProduct, SuccessMsg, error } = useSelector(
+    (state) => state.product
   );
+  const { category } = useSelector((state) => state.category);
+  const { colors } = useSelector((state) => state.color);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(getAllColor());
+    dispatch(getAllCategory());
     if (id !== 'new') {
-      dispatch(getColors());
-      dispatch(getCategory());
-      dispatch(getSingleProducts({ id }));
+      dispatch(getOneProduct({ productId: id }));
     }
   }, [id, dispatch]);
 
@@ -49,15 +54,15 @@ function ProductEditDetails({ id, edit }) {
     if (id !== 'new' && edit == 'true') {
       if (singleProduct) {
         setProductData({
-          name: singleProduct.name,
-          description: singleProduct.description,
-          size: singleProduct.size,
-          price: singleProduct.price,
-          stock: singleProduct.stock,
-          mainImage: singleProduct.mainImage,
+          name: singleProduct?.name,
+          description: singleProduct?.description,
+          size: singleProduct?.size.join(', '),
+          price: singleProduct?.price,
+          stock: singleProduct?.stock,
+          mainImage: singleProduct?.mainImage,
           mainImageName: singleProduct.mainImage?.public_id,
-          category: singleProduct.category,
-          color: singleProduct.color,
+          category: singleProduct?.category,
+          color: singleProduct?.color,
         });
 
         try {
@@ -67,7 +72,6 @@ function ProductEditDetails({ id, edit }) {
           const editorState = EditorState.createWithContent(contentState);
           setEditorState(editorState);
         } catch (error) {
-          console.error('Error parsing description JSON:', error);
           setEditorState(() => EditorState.createEmpty());
         }
       }
@@ -111,7 +115,6 @@ function ProductEditDetails({ id, edit }) {
 
     if (id != 'new' && edit == 'true') {
       dispatch(updateProduct({ productData, id }));
-      console.log(SuccessMsg);
       if (SuccessMsg !== null) {
         toast.success(SuccessMsg);
         navigate('./');
@@ -284,12 +287,11 @@ function ProductEditDetails({ id, edit }) {
                 <option value="" disabled>
                   Select
                 </option>
-                {categories &&
-                  categories.map((item, index) => (
-                    <option value={item._id} key={index}>
-                      {item.name}
-                    </option>
-                  ))}
+                {category?.map((item, index) => (
+                  <option value={item._id} key={index}>
+                    {item.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="flex w-1/2 flex-col">

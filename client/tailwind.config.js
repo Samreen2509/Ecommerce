@@ -3,10 +3,14 @@ module.exports = {
   content: ['./src/**/*.{html,js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      height: {
-        'custom-h-sidebar': 'calc(2000px - 500px)',
+      colors: {
+        primary: {
+          DEFAULT: '#1E40AF',
+          light: '#2563EB',
+          dark: '#1E3A8A',
+          hover: '#BEE3F8',
+        },
       },
     },
   },
-  plugins: [],
 };

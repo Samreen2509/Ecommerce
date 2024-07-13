@@ -117,12 +117,8 @@ const appRouter = createBrowserRouter([
         element: <SearchProduct />,
       },
       {
-        path: '/category/:id',
+        path: '/category/:categoryId',
         element: <ProductDetailsPage />,
-      },
-      {
-        path: '/blog',
-        element: <CollectionPage />,
       },
       {
         path: '/collections',

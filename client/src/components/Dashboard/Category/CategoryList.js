@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ProductListItem from './CategoryListItem';
+import CategoryListItem from './CategoryListItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../../../features/categorySlice';
 import AddButton from '../Utils/AddButton';
@@ -47,7 +47,7 @@ function CategoryList() {
         <div className="my-1 flex w-full flex-col items-center justify-center rounded-bl-md rounded-br-md border text-gray-800">
           {category?.map((item, index) => {
             return (
-              <ProductListItem
+              <CategoryListItem
                 key={index}
                 id={item._id}
                 index={index + 1}

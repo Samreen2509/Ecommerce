@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ImagePreview from '../Utils/ImagePreview';
+import { useDispatch, useSelector } from 'react-redux';
+
 import {
   addOtherImages,
   deleteOtherImages,
-  getSingleProducts,
-} from '../../../features/dashboardSlice';
-import { useDispatch, useSelector } from 'react-redux';
+  getOneProduct,
+} from '../../../features/productSlice';
 
 function ProductEditOtherImages({ id, edit, otherImages }) {
   const [otherImage, setOtherImage] = useState([]);
@@ -15,7 +16,7 @@ function ProductEditOtherImages({ id, edit, otherImages }) {
   const [showInput, setShowInput] = useState(true);
   const [imagePreview, setImagePreview] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-  const { singleProduct, isLoading } = useSelector((state) => state.dashboard);
+  const { singleProduct, isLoading } = useSelector((state) => state.product);
 
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function ProductEditOtherImages({ id, edit, otherImages }) {
       navigate('./');
     }
 
-    dispatch(getSingleProducts({ id }));
+    dispatch(getOneProduct({ productId: id }));
   }, [id]);
 
   useEffect(() => {
@@ -67,6 +68,7 @@ function ProductEditOtherImages({ id, edit, otherImages }) {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    console.log(uploadFiles);
 
     const formData = new FormData();
     uploadFiles.length > 0 &&
@@ -74,14 +76,14 @@ function ProductEditOtherImages({ id, edit, otherImages }) {
         formData.append(`otherImage`, fileObj.otherImage);
       });
 
-    dispatch(addOtherImages({ id, formData }));
+    uploadFiles.length > 0 && dispatch(addOtherImages({ id, formData }));
     deleteImage.length > 0 &&
       deleteImage.map((imageId) => {
         dispatch(deleteOtherImages({ id, imageId }));
       });
 
     if (!isLoading) {
-      navigate('./');
+      // navigate('./');
     }
   };
 

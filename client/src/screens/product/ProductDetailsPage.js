@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import {
@@ -8,7 +8,11 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from '@heroicons/react/20/solid';
-import Products from '../product/Products';
+
+import { filterProducts } from '../../features/productSlice.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import ProductCard from './ProductCards.js';
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -68,6 +72,18 @@ function classNames(...classes) {
 
 export default function ProductDetailsPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const { categoryId } = useParams();
+  const { products } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const filterData = {
+      page: 1,
+      limit: 12,
+      categoryId: categoryId,
+    };
+    dispatch(filterProducts({ filterData }));
+  }, [dispatch]);
 
   return (
     <div className="bg-white">
@@ -265,13 +281,13 @@ export default function ProductDetailsPage() {
             </div>
           </div>
 
-          <section aria-labelledby="products-heading" className="pb-24 pt-6">
+          <section aria-labelledby="products-heading" className="pb-16 pt-6">
             <h2 id="products-heading" className="sr-only">
               Products
             </h2>
-            <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+            <div className="flex gap-x-8 gap-y-10 lg:grid-cols-4">
               {/* Filters */}
-              <form className="hidden lg:block">
+              <form className="hidden lg:block w-72">
                 <h3 className="sr-only">Categories</h3>
                 <ul
                   role="list"
@@ -344,9 +360,10 @@ export default function ProductDetailsPage() {
               </form>
 
               {/* Product grid */}
-
-              <div className="lg:col-span-3">
-                <Products />
+              <div className="mt-14 flex w-full flex-wrap gap-x-10 gap-y-10">
+                {products?.slice(0, 4).map((product, index) => (
+                  <ProductCard key={index} sdata={product} />
+                ))}
               </div>
             </div>
           </section>

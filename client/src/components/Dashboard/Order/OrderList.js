@@ -1,15 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import OrderListItem from './OrderListItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllOrders } from '../../../features/orderSlice';
+import Pagination from '../../../screens/product/Pagination';
 
 function OrderList() {
-  const discpatch = useDispatch();
-  const { allOrders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+  const { allOrders, SuccessMsg } = useSelector((state) => state.order);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    discpatch(getAllOrders());
-  }, []);
+    dispatch(getAllOrders({ page }));
+  }, [dispatch, page, SuccessMsg]);
+
   return (
     <>
       <div className="w-full">
@@ -58,12 +61,24 @@ function OrderList() {
               <OrderListItem
                 key={index}
                 id={item._id}
-                index={index + 1}
+                index={page == 1 ? index + 1 : (page - 1) * 12 + (index + 1)}
                 status={item?.status}
                 payment={item?.payment}
+                user={item?.customer}
               />
             );
           })}
+        </div>
+        <div className="my-5 flex w-full items-center px-5">
+          <Pagination
+            currentPage={page}
+            totalPages={Math.ceil(allOrders?.length >= 12 ? page + 1 : page)}
+            onPageChange={setPage}
+            style={{
+              position: 'justify-end',
+              color: 'bg-gray-800',
+            }}
+          />
         </div>
       </div>
     </>
