@@ -48,6 +48,7 @@ export const getOrderInfoPipeline = [
   {
     $sort: {
       createdAt: -1,
+      _id: 1,
     },
   },
   {
