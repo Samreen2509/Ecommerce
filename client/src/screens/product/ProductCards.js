@@ -12,7 +12,7 @@ const ProductCard = ({ sdata }) => {
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="flex w-64 justify-center rounded-md border border-opacity-40 bg-white px-2 py-1 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black md:py-2 lg:py-2"
+      className="flex h-min w-64 justify-center rounded-md border border-opacity-40 bg-slate-100 p-1 px-2 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black md:py-2 lg:py-2"
     >
       <Link to={`/singleProduct/${_id}`} className="flex flex-col">
         <div className="relative">
