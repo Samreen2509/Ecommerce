@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addToWishlist,
-  getWishListProducts,
   removeFromWishlist,
 } from '../../features/wishlistSlice';
 import { FaRegHeart } from 'react-icons/fa';
@@ -15,12 +14,6 @@ function WishlistBtn({ id, mode, isUserLogin }) {
   const navigate = useNavigate();
   const { totalWishProductsId } = useSelector((state) => state.wishlist);
   const [added, setAdded] = useState(false);
-
-  useEffect(() => {
-    if (isUserLogin) {
-      dispatch(getWishListProducts());
-    }
-  }, [id, dispatch]);
 
   useEffect(() => {
     if (totalWishProductsId.includes(id)) {

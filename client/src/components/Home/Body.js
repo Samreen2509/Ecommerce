@@ -102,7 +102,7 @@ const Body = () => {
             title="View All"
             bgColor="transparent"
             textColer="black"
-            className="mt-10 h-12 w-48 border border-gray-300 text-base duration-500 ease-linear hover:bg-slate-950 hover:text-white"
+            className="mt-10 h-12 w-48 border border-gray-300 text-base duration-500 ease-linear hover:bg-primary hover:text-white"
             onClick={() => navigate('./category')}
           />
         </div>
@@ -120,7 +120,7 @@ const Body = () => {
             title="View All"
             bgColor="tranparent"
             textColer="black"
-            className="text-1xl mt-10 h-12 w-48 border border-gray-300 duration-500 ease-linear hover:bg-slate-950 hover:text-white"
+            className="text-1xl mt-10 h-12 w-48 border border-gray-300 duration-500 ease-linear hover:bg-primary hover:text-white"
             onClick={() => navigate('./products')}
           />
         </div>

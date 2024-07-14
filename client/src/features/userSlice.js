@@ -114,6 +114,7 @@ const initialState = {
   singleUser: [],
   newUser: [],
   SuccessMsg: null,
+  updatedUser: null,
 };
 
 export const UserSlice = createSlice({
@@ -144,7 +145,7 @@ export const UserSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.updateUser = action.payload.data.userInfo;
+        state.updatedUser = action.payload.data.userInfo;
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.isLoading = false;

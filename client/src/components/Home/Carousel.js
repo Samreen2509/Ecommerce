@@ -7,10 +7,6 @@ const Carousel = ({ slides }) => {
 
   const len = slides.length;
 
-  // const leftHandle = () => {
-  //   setCur(cur - 1 < 0 ? len - 1 : cur - 1);
-  // };
-
   const rightHandle = useCallback(() => {
     setCur(cur + 1 > len - 1 ? 0 : cur + 1);
   }, [cur, len]);
@@ -22,19 +18,11 @@ const Carousel = ({ slides }) => {
     return () => clearTimeout(interval);
   }, [rightHandle]);
 
-  // const handleMouseEnter = (index) => {
-  //   setCur(index);
-  // };
-
   return (
     <div className="relative min-h-full w-full">
       {slides.map((slide, index) => {
         return (
-          <div
-            key={index}
-            className="w-full"
-            // onMouseEnter={() => handleMouseEnter(index)}
-          >
+          <div key={index} className="w-full">
             {cur === index && (
               <>
                 {slide.textData ? (
@@ -73,7 +61,7 @@ const Carousel = ({ slides }) => {
                       <Button
                         textColer="text-black"
                         title="SHOP NOW"
-                        className="mt-4 rounded-sm bg-white px-4 py-2 font-semibold hover:bg-orange-600 hover:text-white md:px-6 md:py-2 lg:px-8 lg:py-3"
+                        className="mt-4 rounded-md bg-white px-4 py-2 font-semibold hover:bg-primary hover:text-white md:px-6 md:py-2 lg:px-8 lg:py-3"
                       />
                     </div>
 
