@@ -9,7 +9,9 @@ import { FiMenu } from 'react-icons/fi';
 import { RxCross2 } from 'react-icons/rx';
 import DropDown from './DropDown';
 import SearchPage from './SearchPage';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getWishListProducts } from '../../features/wishlistSlice';
+import { getCartProducts } from '../../features/cartSlice';
 
 function Header() {
   const [Sidemenu, setSidemenu] = useState(false);
@@ -27,6 +29,15 @@ function Header() {
     userInfo,
     isLoading: isLoadingLogout,
   } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isUserLogin) {
+      dispatch(getWishListProducts());
+      dispatch(getCartProducts());
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     setTotalWish(totalWishProducts);

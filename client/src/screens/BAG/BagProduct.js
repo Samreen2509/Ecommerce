@@ -57,7 +57,11 @@ function BagProduct({
           src={mainImage?.url}
           alt="product"
         />
-        <img className="w-full md:hidden" src={mainImage?.url} alt="product" />
+        <img
+          className="w-full rounded-md md:hidden"
+          src={mainImage?.url}
+          alt="product"
+        />
       </Link>
       <div className="flex w-full flex-col items-start justify-between space-y-4 border-b border-gray-200 pb-8 md:flex-row md:space-y-0">
         <Link

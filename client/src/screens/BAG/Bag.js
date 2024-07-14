@@ -21,16 +21,14 @@ const Bag = () => {
 
   return (
     <section className="mt-3 flex h-full w-full flex-col items-center justify-center">
-      <h2 className="text-sm font-bold lg:text-xl">YOUR SHOPPING BAG</h2>
+      <h2 className="m-auto text-2xl font-bold md:text-4xl lg:my-10 lg:text-5xl">
+        Your Bag
+      </h2>
       <div className="gird my-4 grid h-full w-full grid-cols-1 gap-4 px-5 lg:grid-cols-3">
         {/* Product section */}
         <div className="h-full lg:col-span-2">
-          {' '}
           <div className="flex w-full flex-col items-start justify-start space-y-4 md:space-y-6 xl:space-y-8">
-            <div className="flex w-full flex-col items-start justify-start bg-gray-100 px-4 py-4 md:p-6 md:py-6 xl:p-8 ">
-              <p className="text-lg font-semibold leading-6 text-gray-800 md:text-xl xl:leading-5 ">
-                Customer's Cart
-              </p>
+            <div className="flex w-full flex-col items-start justify-start rounded-md border-2 px-4 py-4 md:p-6 md:py-6 xl:p-8 ">
               {/* Product */}
 
               {cartProducts &&
@@ -51,8 +49,8 @@ const Bag = () => {
         </div>
 
         {/* Summary */}
-        <div className="h-full">
-          <div className="flex w-full flex-col space-y-6 bg-gray-100 px-4 py-6 md:p-6 xl:p-8">
+        <div className="sticky top-0 h-full">
+          <div className="flex w-full flex-col space-y-6 rounded-md border-2 bg-gray-100 px-4 py-6 md:p-6 xl:p-8">
             <h3 className="text-xl font-semibold leading-5 text-gray-800 ">
               Summary
             </h3>
@@ -82,7 +80,7 @@ const Bag = () => {
             >
               <button
                 disabled={cartProducts.length === 0}
-                className="w-full bg-orange-400 px-5 py-2 text-xl font-semibold text-white hover:bg-green-500"
+                className="w-full rounded-md bg-primary px-5 py-2 text-xl font-semibold text-white hover:bg-primary-light"
               >
                 Checkout
               </button>
