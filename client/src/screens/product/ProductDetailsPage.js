@@ -257,7 +257,7 @@ function ProductDetailsPage() {
             New Arrivals
           </h1>
 
-<<<<<<< Updated upstream
+
           <div className="flex items-center">
             <Menu as="div" className="relative inline-block text-left">
               <div>
@@ -268,13 +268,6 @@ function ProductDetailsPage() {
                     aria-hidden="true"
                   />
                 </Menu.Button>
-=======
-              {/* Product grid */}
-              <div className="mt-14 flex w-full flex-wrap gap-x-10 gap-y-10">
-                {products?.map((product, index) => (
-                  <ProductCard key={index} sdata={product} />
-                ))}
->>>>>>> Stashed changes
               </div>
 
               <Transition
