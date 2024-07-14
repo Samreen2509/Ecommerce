@@ -1,59 +1,116 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import Shimmer from '../../components/Loading/Shimmer.js';
-import ProductCard from './ProductCards.js';
-import { getAllProducts } from '../../features/productSlice.js';
-import {
-  getAllCategory,
-  getSingleCategory,
-} from '../../features/categorySlice.js';
-import Pagination from './Pagination.js';
+import { Fragment, useEffect, useState } from 'react';
+import { Menu, Transition } from '@headlessui/react';
+import { ChevronDownIcon, FunnelIcon } from '@heroicons/react/20/solid';
+import { useDispatch, useSelector } from 'react-redux';
+import { filterProducts, getAllProducts } from '../../features/productSlice';
+import { getAllCategory } from '../../features/categorySlice';
+import { getAllColor } from '../../features/colorSlice';
+import Shimmer from '../../components/Loading/Shimmer';
+import { MobileFiltersDialog, ProductFilters } from './ProductDetailsPage';
+import ProductCard from './ProductCards';
+import Pagination from './Pagination';
+import Spinner from '../../components/Spinner';
+
+const sortOptions = [
+  { name: 'Price: Low to High', value: 'low_to_high' },
+  { name: 'Price: High to Low', value: 'high_to_low' },
+];
 
 function ProductPage() {
-  const { products, loading } = useSelector((state) => state.product);
-  const { categories } = useSelector((state) => state.category);
-  const [isCategoyInLargeDiv, setIsInLargeDiv] = useState(false);
-  const [isSizeInlargeDiv, setIsSizeInlargeDiv] = useState(false);
-  const [isPriceInlargeDiv, setIsPriceInlargeDiv] = useState(false);
-  const [IsCallFilterData, setIsCallFilterData] = useState(false);
-  const [filteredProduct, setFilteredProduct] = useState([]);
-  const displayProductSize = ['XS', 'S', 'M', 'L', 'XL', 'XXL']; // All sizes to display
   const dispatch = useDispatch();
+  const { filterProduct, products, loading } = useSelector(
+    (state) => state.product
+  );
+  const { category } = useSelector((state) => state.category);
+  const { colors } = useSelector((state) => state.color);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [formState, setFormState] = useState([]);
+  const [selectedSort, setSelectedSort] = useState('low_to_high');
   const [page, setPage] = useState(1);
+  const [isCallFilterData, setIsCallFilterData] = useState(false);
+  const totalPages = 3;
+
+  console.log(filterProduct);
 
   useEffect(() => {
     dispatch(getAllProducts({ page }));
     dispatch(getAllCategory());
+    dispatch(getAllColor());
   }, [dispatch, page]);
 
   useEffect(() => {
-    setFilteredProduct([]);
-    setPage(1);
-  }, [IsCallFilterData]);
+    const updatedFilters = [];
 
-  const totalPages = IsCallFilterData
-    ? Math.ceil(filteredProduct.length / 4)
-    : Math.ceil((products?.length || 1) / 4 - 1);
+    if (colors) {
+      updatedFilters.push({
+        id: 'color',
+        name: 'Color',
+        options: colors.map((item) => ({
+          key: item._id,
+          value: item._id,
+          label: item.name,
+          checked: false,
+        })),
+      });
+    }
+    if (category) {
+      updatedFilters.push({
+        id: 'category',
+        name: 'Category',
+        options: category.map((item) => ({
+          key: item._id,
+          value: item._id,
+          label: item.name,
+          checked: false,
+        })),
+      });
+    }
 
-  const filterCategoryData = (id) => {
-    setIsCallFilterData(true);
-    dispatch(getSingleCategory(id));
-    const filteredData =
-      products.filter((product) => product.category === id) || [];
-    setFilteredProduct(filteredData);
+    updatedFilters.push({
+      id: 'size',
+      name: 'Size',
+      options: [
+        { value: 'X', label: 'X', checked: false },
+        { value: 'XL', label: 'XL', checked: false },
+        { value: 'S', label: 'S', checked: false },
+        { value: 'M', label: 'M', checked: false },
+        { value: 'L', label: 'L', checked: false },
+      ],
+    });
+
+    setFormState(updatedFilters);
+  }, [colors, category]);
+
+  const handleSortClick = (value) => {
+    setSelectedSort(value);
   };
 
-  const filterSizeData = (productSize) => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     setIsCallFilterData(true);
-    const filteredData = products.filter(
-      (product) => product.size === productSize
-    );
-    setFilteredProduct(filteredData);
-  };
 
-  if (loading) {
-    return <Shimmer />;
-  }
+    const formData = new FormData(event.target);
+    const selectedFilters = formState.reduce((acc, section) => {
+      acc[section.id] = formData.getAll(`${section.id}[]`);
+      return acc;
+    }, {});
+
+    const filterData = {
+      categoryId: selectedFilters.category,
+      colorId: selectedFilters.color?.join(','),
+      size: selectedFilters.size?.join(','),
+      sortBy: selectedSort,
+    };
+
+    // Clean up the filterData object by removing undefined keys
+    Object.keys(filterData).forEach((key) => {
+      if (!filterData[key]) {
+        delete filterData[key];
+      }
+    });
+
+    dispatch(filterProducts({ filterData }));
+  };
 
   const renderProducts = (productList) => (
     <>
@@ -70,127 +127,109 @@ function ProductPage() {
     </>
   );
 
+  if (loading) {
+    return <Shimmer />;
+  }
+
   return (
-    <div className="body m-auto">
-      <h1 className="m-auto text-2xl font-bold md:mt-10 md:text-3xl lg:ml-20 lg:text-5xl">
-        All Products{' '}
-        <span className="font-medium">({products && products.length})</span>
-      </h1>
-      <div className="flex flex-col justify-center md:flex-row lg:flex-row">
-        {/* Filter section */}
-        <div className="md:mx-28 lg:mx-20 lg:my-24">
-          <h3>FILTERS</h3>
-          <div className="flex items-center px-2 md:flex-col lg:flex-col">
-            {/* CATEGORIES */}
-            <div className="w-56 border-2 border-gray-200 p-3">
+    <div className="h-full bg-white">
+      <MobileFiltersDialog
+        mobileFiltersOpen={mobileFiltersOpen}
+        setMobileFiltersOpen={setMobileFiltersOpen}
+        formState={formState}
+        handleSubmit={handleSubmit}
+      />
+
+      <main className="mx-auto px-4 sm:px-6 md:max-w-7xl lg:max-w-full lg:px-20">
+        <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-6">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+            New Arrivals
+          </h1>
+          <div className="flex items-center">
+            <Menu as="div" className="relative inline-block text-left">
               <div>
-                <div className="flex justify-between">
-                  <h4 className="mb-2">CATEGORIES</h4>
-                  <h3
-                    onClick={() => setIsInLargeDiv(!isCategoyInLargeDiv)}
-                    className=" cursor-pointer"
-                  >
-                    +
-                  </h3>
-                </div>
-                {categories?.data?.categoryInfo?.map((category) => (
-                  <div
-                    className="flex items-center gap-2"
-                    style={{ display: isCategoyInLargeDiv ? 'block' : 'none' }}
-                    key={category._id}
-                  >
-                    <input
-                      type="radio"
-                      id={category._id}
-                      className="m-1 text-black"
-                      onClick={() => filterCategoryData(category._id)}
-                    />
-                    <label htmlFor={category._id}>{category.name}</label>
-                  </div>
-                ))}
+                <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                  Sort
+                  <ChevronDownIcon
+                    className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                    aria-hidden="true"
+                  />
+                </Menu.Button>
               </div>
-            </div>
-            {/* SIZE */}
-            <div className="w-56 border-2 border-gray-200 p-3">
-              <div>
-                <div className="flex justify-between">
-                  <h4 className="mb-2">SIZE</h4>
-                  <h3
-                    onClick={() => setIsSizeInlargeDiv(!isSizeInlargeDiv)}
-                    className=" cursor-pointer"
-                  >
-                    +
-                  </h3>
-                </div>
-                {displayProductSize.map((size, i) => (
-                  <div
-                    className="flex items-center gap-2"
-                    style={{ display: isSizeInlargeDiv ? 'block' : 'none' }}
-                    key={i}
-                  >
-                    <input
-                      type="radio"
-                      id={i}
-                      className="m-1 text-black"
-                      onClick={() => filterSizeData(size)}
-                    />
-                    <label htmlFor={i}>{size}</label>
+
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="py-1">
+                    {sortOptions.map((option) => (
+                      <Menu.Item key={option.name}>
+                        {({ active }) => (
+                          <a
+                            href="#"
+                            className={`${
+                              option.current
+                                ? 'font-medium text-gray-900'
+                                : 'text-gray-500'
+                            } ${active ? 'bg-gray-200' : ''} block px-4 py-2 text-sm`}
+                            onClick={() => handleSortClick(option.value)}
+                          >
+                            {option.name}
+                          </a>
+                        )}
+                      </Menu.Item>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-            {/* PRICE */}
-            <div className="w-56 border-2 border-gray-200 p-3">
-              <div>
-                <div className="flex justify-between">
-                  <h4 className="mb-2">PRICE</h4>
-                  <h3
-                    onClick={() => setIsPriceInlargeDiv(!isPriceInlargeDiv)}
-                    className=" cursor-pointer"
-                  >
-                    +
-                  </h3>
-                </div>
-                {products.map((product) => (
-                  <div
-                    className="flex items-center gap-2"
-                    style={{ display: isPriceInlargeDiv ? 'block' : 'none' }}
-                    key={product._id}
-                  >
-                    <input
-                      type="radio"
-                      id={product._id}
-                      className="m-1 text-black"
-                      onClick={() => filterDataCall(product._id)}
-                    />
-                    <label htmlFor={product._id}>{product.price}</label>
-                  </div>
-                ))}
-              </div>
-            </div>
+                </Menu.Items>
+              </Transition>
+            </Menu>
+
+            <button
+              type="button"
+              className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
+              onClick={() => setMobileFiltersOpen(true)}
+            >
+              <span className="sr-only">Filters</span>
+              <FunnelIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
           </div>
         </div>
-        {/* Product section */}
-        <div className="mt-8 h-auto w-full">
-          <div className="mb-32 mt-10 flex flex-wrap justify-center gap-x-10 gap-y-10 md:justify-start">
-            {!IsCallFilterData ? (
-              products.length ? (
-                renderProducts(products)
+
+        <section aria-labelledby="products-heading" className="pb-16 pt-6">
+          <h2 id="products-heading" className="sr-only">
+            Products
+          </h2>
+          <div className="flex gap-x-8 gap-y-10 lg:grid-cols-4">
+            {/* Filters */}
+            <ProductFilters formState={formState} handleSubmit={handleSubmit} />
+
+            {/* Product grid */}
+            <div className="mt-2 flex w-full flex-wrap gap-x-10 gap-y-10">
+              {!isCallFilterData ? (
+                products.length ? (
+                  renderProducts(products)
+                ) : (
+                  <div className="mr-24 mt-20">
+                    <h1 className="text-3xl">Product is not available</h1>
+                  </div>
+                )
+              ) : filterProduct.length ? (
+                renderProducts(filterProduct)
               ) : (
                 <div className="mr-24 mt-20">
                   <h1 className="text-3xl">Product is not available</h1>
                 </div>
-              )
-            ) : filteredProduct.length ? (
-              renderProducts(filteredProduct)
-            ) : (
-              <div className="mr-24 mt-20">
-                <h1 className="text-3xl">Product is not available</h1>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }

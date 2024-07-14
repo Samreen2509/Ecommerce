@@ -157,12 +157,14 @@ export const deleteOtherImages = createAsyncThunk(
 export const filterProducts = createAsyncThunk(
   'product/filterProducts',
   async ({ filterData }, { rejectWithValue }) => {
+    console.log(filterData);
     try {
       const response = await axios.get(`${BASE_URL}/product/filterproducts`, {
         headers: { 'Content-Type': 'application/json' },
         params: filterData,
         withCredentials: true,
       });
+
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -174,6 +176,7 @@ export const filterProducts = createAsyncThunk(
 // Initial state for the product slice
 const initialState = {
   products: [],
+  filterProduct: [],
   singleProduct: null,
   loading: false,
   isLoading: false,
@@ -196,7 +199,7 @@ export const productSlice = createSlice({
       .addCase(filterProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.products = action.payload.data.productInfo; // Set the products list
+        state.filterProduct = action.payload.data; // Set the products list
       })
       .addCase(filterProducts.rejected, (state, action) => {
         state.loading = false;
