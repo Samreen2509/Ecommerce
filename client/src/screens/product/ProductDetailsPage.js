@@ -257,6 +257,7 @@ function ProductDetailsPage() {
             New Arrivals
           </h1>
 
+
           <div className="flex items-center">
             <Menu as="div" className="relative inline-block text-left">
               <div>

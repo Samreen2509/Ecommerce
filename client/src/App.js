@@ -47,12 +47,13 @@ const DashboardNotification = lazy(
 );
 const DashboardSetting = lazy(() => import('./screens/dashboard/Setting'));
 const DashboardPayment = lazy(() => import('./screens/dashboard/Payment'));
+import ScrollToTop from './utils/ScrollTop';
 
 const Applayout = () => {
   return (
     <div className="app">
       <Header />
-      <div className="pt-20">
+      <div className="pt-20 min-h-[90vh]">
         <Outlet />
       </div>
       <Footer />
@@ -79,6 +80,7 @@ const appRouter = createBrowserRouter([
     path: '/',
     element: (
       <>
+        <ScrollToTop />
         <Notification />
         <Applayout />
       </>

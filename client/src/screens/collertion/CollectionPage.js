@@ -17,7 +17,7 @@ function CollectionPage() {
 
   return (
     <div className="items-cente mt-10 flex h-auto w-full flex-col">
-      <h1 className=" m-auto text-2xl font-bold md:text-4xl lg:text-5xl">
+      <h1 className="m-auto text-2xl font-bold md:text-4xl lg:text-5xl">
         All Category
       </h1>
       <div className="mb-20 mt-10 flex flex-wrap justify-center gap-x-10 gap-y-10">
