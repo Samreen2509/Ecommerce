@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { filterProducts, getAllProducts } from '../../features/productSlice';
 import { getAllCategory } from '../../features/categorySlice';
 import { getAllColor } from '../../features/colorSlice';
-import Shimmer from '../../components/Loading/Shimmer';
 import { MobileFiltersDialog, ProductFilters } from './ProductDetailsPage';
 import ProductCard from './ProductCards';
 import Pagination from './Pagination';
@@ -30,13 +29,14 @@ function ProductPage() {
   const [isCallFilterData, setIsCallFilterData] = useState(false);
   const totalPages = 3;
 
-  console.log(filterProduct);
+  useEffect(() => {
+    dispatch(getAllCategory());
+    dispatch(getAllColor());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getAllProducts({ page }));
-    dispatch(getAllCategory());
-    dispatch(getAllColor());
-  }, [dispatch, page]);
+  }, [dispatch, page, selectedSort]);
 
   useEffect(() => {
     const updatedFilters = [];
@@ -96,25 +96,33 @@ function ProductPage() {
     }, {});
 
     const filterData = {
+      page: page,
       categoryId: selectedFilters.category,
       colorId: selectedFilters.color?.join(','),
       size: selectedFilters.size?.join(','),
       sortBy: selectedSort,
     };
 
-    // Clean up the filterData object by removing undefined keys
-    Object.keys(filterData).forEach((key) => {
-      if (!filterData[key]) {
-        delete filterData[key];
-      }
-    });
+    console.log(filterData);
 
     dispatch(filterProducts({ filterData }));
   };
 
+  const sortProducts = (products) => {
+    return products.slice().sort((a, b) => {
+      if (selectedSort === 'low_to_high') {
+        return a.price - b.price;
+      } else if (selectedSort === 'high_to_low') {
+        return b.price - a.price;
+      } else {
+        return 0;
+      }
+    });
+  };
+
   const renderProducts = (productList) => (
     <>
-      {productList.map((product) => (
+      {sortProducts(productList).map((product) => (
         <ProductCard sdata={product} key={product._id} />
       ))}
       {totalPages > 1 && (
@@ -126,10 +134,6 @@ function ProductPage() {
       )}
     </>
   );
-
-  if (loading) {
-    return <Shimmer />;
-  }
 
   return (
     <div className="h-full bg-white">
@@ -171,8 +175,7 @@ function ProductPage() {
                     {sortOptions.map((option) => (
                       <Menu.Item key={option.name}>
                         {({ active }) => (
-                          <a
-                            href="#"
+                          <div
                             className={`${
                               option.current
                                 ? 'font-medium text-gray-900'
@@ -181,7 +184,7 @@ function ProductPage() {
                             onClick={() => handleSortClick(option.value)}
                           >
                             {option.name}
-                          </a>
+                          </div>
                         )}
                       </Menu.Item>
                     ))}
@@ -211,7 +214,9 @@ function ProductPage() {
 
             {/* Product grid */}
             <div className="mt-2 flex w-full flex-wrap gap-x-10 gap-y-10">
-              {!isCallFilterData ? (
+              {loading ? (
+                <Spinner />
+              ) : !isCallFilterData ? (
                 products.length ? (
                   renderProducts(products)
                 ) : (
@@ -220,7 +225,9 @@ function ProductPage() {
                   </div>
                 )
               ) : filterProduct.length ? (
-                renderProducts(filterProduct)
+                sortProducts(filterProduct).map((product) => (
+                  <ProductCard sdata={product} key={product._id} />
+                ))
               ) : (
                 <div className="mr-24 mt-20">
                   <h1 className="text-3xl">Product is not available</h1>
