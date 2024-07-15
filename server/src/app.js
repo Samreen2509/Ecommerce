@@ -1,4 +1,5 @@
 // package imports
+import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -25,7 +26,7 @@ import useragent from 'express-useragent';
 
 // constants
 const app = express();
-
+dotenv.config();
 // stripe checkout webhook
 app.use(`${BASEPATH}/payment`, stripeWebhookRoutes);
 
