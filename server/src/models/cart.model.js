@@ -19,6 +19,10 @@ const cartSchema = new Schema(
             min: [1, 'Quantity cannot be less than 1'],
             default: 1,
           },
+          size: {
+            type: String,
+            required: true,
+          },
         },
       ],
       default: [],
