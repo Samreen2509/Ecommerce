@@ -7,12 +7,14 @@ import {
   FunnelIcon,
   MinusIcon,
   PlusIcon,
-  Squares2X2Icon,
 } from '@heroicons/react/20/solid';
 
-function ProductFilters({ formState, handleSubmit }) {
+function ProductFilters({ formState, handleSubmit, isMobile }) {
   return (
-    <form className="hidden w-72 lg:block" onSubmit={handleSubmit}>
+    <form
+      className={`${isMobile ? 'mt-6 block' : 'hidden lg:block'}  w-full lg:w-72`}
+      onSubmit={handleSubmit}
+    >
       <h3 className="sr-only">Categories</h3>
       {formState.map((section) => (
         <Disclosure
@@ -22,7 +24,7 @@ function ProductFilters({ formState, handleSubmit }) {
         >
           {({ open }) => (
             <>
-              <h3 className="-my-3 flow-root">
+              <h3 className="-my-3 mx-2 flow-root">
                 <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
                   <span className="font-medium text-gray-900">
                     {section.name}
@@ -36,7 +38,7 @@ function ProductFilters({ formState, handleSubmit }) {
                   </span>
                 </Disclosure.Button>
               </h3>
-              <Disclosure.Panel className="pt-6">
+              <Disclosure.Panel className=" px-2 pt-6">
                 <div className="space-y-4">
                   {section.options.map((option, optionIdx) => (
                     <div key={option.value} className="flex items-center">
@@ -64,7 +66,7 @@ function ProductFilters({ formState, handleSubmit }) {
       ))}
       <button
         type="submit"
-        className="mt-4 rounded bg-blue-500 px-4 py-2 text-white"
+        className="m-3 mt-4 rounded bg-blue-500 px-4 py-2 text-white"
       >
         Apply Filters
       </button>
@@ -124,6 +126,7 @@ function MobileFiltersDialog({
               <ProductFilters
                 formState={formState}
                 handleSubmit={handleSubmit}
+                isMobile={true}
               />
             </Dialog.Panel>
           </Transition.Child>
@@ -184,13 +187,7 @@ const SortAndViewOptions = ({ handleSortClick, setMobileFiltersOpen }) => {
           </Menu.Items>
         </Transition>
       </Menu>
-      <button
-        type="button"
-        className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
-      >
-        <span className="sr-only">View grid</span>
-        <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
-      </button>
+
       <button
         type="button"
         className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"

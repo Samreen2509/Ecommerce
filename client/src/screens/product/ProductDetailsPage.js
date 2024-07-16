@@ -1,42 +1,60 @@
 import { useEffect, useState } from 'react';
 
-import { filterProducts } from '../../features/productSlice.js';
+import { filterProducts, getAllProducts } from '../../features/productSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import ProductCard from './ProductCards.js';
 import { getAllCategory } from '../../features/categorySlice.js';
 import { getAllColor } from '../../features/colorSlice.js';
-import Shimmer from '../../components/Loading/Shimmer.js';
 import {
   MobileFiltersDialog,
   ProductFilters,
   SortAndViewOptions,
 } from './ProductFilters.js';
+import Pagination from './Pagination.js';
+import Spinner from '../../components/Spinner.js';
 
 function ProductDetailsPage() {
   const dispatch = useDispatch();
-  const { filterProduct, products, loading } = useSelector(
-    (state) => state.product
-  );
+  const { filterProduct, loading } = useSelector((state) => state.product);
   const { category } = useSelector((state) => state.category);
   const { colors } = useSelector((state) => state.color);
-  const { categoryId } = useParams();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [formState, setFormState] = useState([]);
   const [selectedSort, setSelectedSort] = useState('low_to_high');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { categoryId } = useParams();
 
   useEffect(() => {
-    const filterData = {
-      page: 1,
-      limit: 12,
-      categoryId: categoryId,
-    };
-    dispatch(filterProducts({ filterData }));
     dispatch(getAllCategory());
     dispatch(getAllColor());
-  }, [dispatch, categoryId]);
+  }, [dispatch]);
 
   useEffect(() => {
+    const size = searchParams.get('size');
+    const colorId = searchParams.get('colorId');
+    const sortBy = searchParams.get('sortBy');
+
+    const filterData = {
+      categoryId: categoryId,
+      colorId: colorId ? colorId.split(',') : '',
+      size: size ? size.split(',') : '',
+      sortBy: sortBy || '',
+    };
+    if (colorId || size || sortBy) {
+      setIsCallFilterData(true);
+      dispatch(filterProducts({ filterData }));
+    } else {
+      dispatch(filterProducts({ filterData }));
+    }
+
+    console.log(filterData);
+  }, [dispatch, selectedSort, searchParams]);
+
+  useEffect(() => {
+    const size = searchParams.get('size');
+    const colorId = searchParams.get('colorId');
+
     const updatedFilters = [];
 
     if (colors) {
@@ -47,7 +65,7 @@ function ProductDetailsPage() {
           key: item._id,
           value: item._id,
           label: item.name,
-          checked: false,
+          checked: colorId ? colorId.split(',').includes(item._id) : false,
         })),
       });
     }
@@ -56,16 +74,36 @@ function ProductDetailsPage() {
       id: 'size',
       name: 'Size',
       options: [
-        { value: 'X', label: 'X', checked: false },
-        { value: 'XL', label: 'XL', checked: false },
-        { value: 'S', label: 'S', checked: false },
-        { value: 'M', label: 'M', checked: false },
-        { value: 'L', label: 'L', checked: false },
+        {
+          value: 'X',
+          label: 'X',
+          checked: size ? size.split(',').includes('X') : false,
+        },
+        {
+          value: 'XL',
+          label: 'XL',
+          checked: size ? size.split(',').includes('XL') : false,
+        },
+        {
+          value: 'S',
+          label: 'S',
+          checked: size ? size.split(',').includes('S') : false,
+        },
+        {
+          value: 'M',
+          label: 'M',
+          checked: size ? size.split(',').includes('M') : false,
+        },
+        {
+          value: 'L',
+          label: 'L',
+          checked: size ? size.split(',').includes('L') : false,
+        },
       ],
     });
 
     setFormState(updatedFilters);
-  }, [colors, category]);
+  }, [colors, category, searchParams]);
 
   const handleSortClick = (value) => {
     setSelectedSort(value);
@@ -73,6 +111,8 @@ function ProductDetailsPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setIsCallFilterData(true);
+
     const formData = new FormData(event.target);
     const selectedFilters = formState.reduce((acc, section) => {
       acc[section.id] = formData.getAll(`${section.id}[]`);
@@ -80,28 +120,35 @@ function ProductDetailsPage() {
     }, {});
 
     const filterData = {
-      page: 1,
-      limit: 12,
-      categoryId: categoryId,
-      colorId: selectedFilters.color?.join(','),
-      size: selectedFilters.size?.join(','),
+      ...(selectedFilters.color && {
+        colorId: selectedFilters.color.join(','),
+      }),
+      ...(selectedFilters.size && { size: selectedFilters.size.join(',') }),
       sortBy: selectedSort,
     };
-    console.log(selectedSort);
-    // Clean up the filterData object by removing undefined keys
-    Object.keys(filterData).forEach((key) => {
-      if (!filterData[key]) {
-        delete filterData[key];
-      }
-    });
 
+    setSearchParams({
+      ...(selectedFilters.color && {
+        colorId: selectedFilters.color.join(','),
+      }),
+      ...(selectedFilters.size && { size: selectedFilters.size.join(',') }),
+      sortBy: selectedSort,
+    });
     console.log(filterData);
     dispatch(filterProducts({ filterData }));
   };
 
-  if (loading) {
-    return <Shimmer />;
-  }
+  const sortProducts = (products) => {
+    return products.slice().sort((a, b) => {
+      if (selectedSort === 'low_to_high') {
+        return a.price - b.price;
+      } else if (selectedSort === 'high_to_low') {
+        return b.price - a.price;
+      } else {
+        return 0;
+      }
+    });
+  };
 
   return (
     <div className="h-full bg-white">
@@ -114,7 +161,7 @@ function ProductDetailsPage() {
 
       <main className="mx-auto px-4 sm:px-6 md:max-w-7xl lg:max-w-full lg:px-20">
         <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-6">
-          <h1 className="m-auto text-2xl font-bold md:mt-10 md:text-3xl lg:ml-20 lg:text-5xl">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
             New Arrivals
           </h1>
 
@@ -134,23 +181,19 @@ function ProductDetailsPage() {
 
             {/* Product grid */}
             <div className="mt-2 flex w-full flex-wrap gap-x-10 gap-y-10">
-              {
-                <>
-                  {filterProduct === null && products?.length === 0 ? (
-                    <p>No products found.</p>
-                  ) : (
-                    <>
-                      {filterProduct === null
-                        ? products?.map((product, index) => (
-                            <ProductCard key={index} sdata={product} />
-                          ))
-                        : filterProduct?.map((product, index) => (
-                            <ProductCard key={index} sdata={product} />
-                          ))}
-                    </>
-                  )}
-                </>
-              }
+              {loading ? (
+                <Spinner />
+              ) : filterProduct && filterProduct.length > 0 ? (
+                sortProducts(filterProduct).map((product) => (
+                  <ProductCard key={product._id} sdata={product} />
+                ))
+              ) : (
+                <div className="mr-24 mt-20">
+                  <h1 className="text-3xl">
+                    Filtered products are not available
+                  </h1>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -158,5 +201,4 @@ function ProductDetailsPage() {
     </div>
   );
 }
-
 export default ProductDetailsPage;

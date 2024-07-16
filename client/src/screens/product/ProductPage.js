@@ -1,6 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
-import { Menu, Transition } from '@headlessui/react';
-import { ChevronDownIcon, FunnelIcon } from '@heroicons/react/20/solid';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { filterProducts, getAllProducts } from '../../features/productSlice';
 import { getAllCategory } from '../../features/categorySlice';
@@ -14,11 +12,6 @@ import {
   ProductFilters,
   SortAndViewOptions,
 } from './ProductFilters';
-
-const sortOptions = [
-  { name: 'Price: Low to High', value: 'low_to_high' },
-  { name: 'Price: High to Low', value: 'high_to_low' },
-];
 
 function ProductPage() {
   const dispatch = useDispatch();
