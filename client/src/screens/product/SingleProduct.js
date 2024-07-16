@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getOneProduct } from '../../features/productSlice';
 import { FaRupeeSign } from 'react-icons/fa';
 import { FaStar } from 'react-icons/fa6';
-import AddToCart from '../BAG/AddToCart';
+import AddToBag from '../BAG/AddToBag';
 import WishlistBtn from '../BAG/WishlistBtn';
 import ProductDescriptionRender from '../../utils/ProductDescriptionRender';
 
@@ -169,7 +169,7 @@ function SingleProduct() {
 
           {/* Add to Bag and Wishlist */}
           <div className="items-cente mt-5 flex w-full py-2">
-            <AddToCart
+            <AddToBag
               className={`flex-1  ${!selectedSize ? 'cursor-not-allowed bg-opacity-70' : 'hover:bg-blue-900'}`}
               productId={productId}
               quantity={1}
