@@ -5,10 +5,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { filterProducts, getAllProducts } from '../../features/productSlice';
 import { getAllCategory } from '../../features/categorySlice';
 import { getAllColor } from '../../features/colorSlice';
-import { MobileFiltersDialog, ProductFilters } from './ProductDetailsPage';
 import ProductCard from './ProductCards';
 import Pagination from './Pagination';
 import Spinner from '../../components/Spinner';
+import { useSearchParams } from 'react-router-dom';
+import {
+  MobileFiltersDialog,
+  ProductFilters,
+  SortAndViewOptions,
+} from './ProductFilters';
 
 const sortOptions = [
   { name: 'Price: Low to High', value: 'low_to_high' },
@@ -27,6 +32,7 @@ function ProductPage() {
   const [selectedSort, setSelectedSort] = useState('low_to_high');
   const [page, setPage] = useState(1);
   const [isCallFilterData, setIsCallFilterData] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   const totalPages = 3;
 
   useEffect(() => {
@@ -35,10 +41,32 @@ function ProductPage() {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getAllProducts({ page }));
-  }, [dispatch, page, selectedSort]);
+    const size = searchParams.get('size');
+    const categoryId = searchParams.get('categoryId');
+    const colorId = searchParams.get('colorId');
+    const sortBy = searchParams.get('sortBy');
+
+    const filterData = {
+      categoryId: categoryId ? categoryId.split(',') : [],
+      colorId: colorId ? colorId.split(',') : '',
+      size: size ? size.split(',') : '',
+      sortBy: sortBy || '',
+    };
+    if (size || categoryId || size || sortBy) {
+      setIsCallFilterData(true);
+      dispatch(filterProducts({ filterData }));
+    } else {
+      dispatch(getAllProducts({ page }));
+    }
+
+    console.log(filterData);
+  }, [dispatch, page, selectedSort, searchParams]);
 
   useEffect(() => {
+    const size = searchParams.get('size');
+    const categoryId = searchParams.get('categoryId');
+    const colorId = searchParams.get('colorId');
+
     const updatedFilters = [];
 
     if (colors) {
@@ -49,7 +77,7 @@ function ProductPage() {
           key: item._id,
           value: item._id,
           label: item.name,
-          checked: false,
+          checked: colorId ? colorId.split(',').includes(item._id) : false,
         })),
       });
     }
@@ -61,7 +89,9 @@ function ProductPage() {
           key: item._id,
           value: item._id,
           label: item.name,
-          checked: false,
+          checked: categoryId
+            ? categoryId.split(',').includes(item._id)
+            : false,
         })),
       });
     }
@@ -70,16 +100,36 @@ function ProductPage() {
       id: 'size',
       name: 'Size',
       options: [
-        { value: 'X', label: 'X', checked: false },
-        { value: 'XL', label: 'XL', checked: false },
-        { value: 'S', label: 'S', checked: false },
-        { value: 'M', label: 'M', checked: false },
-        { value: 'L', label: 'L', checked: false },
+        {
+          value: 'X',
+          label: 'X',
+          checked: size ? size.split(',').includes('X') : false,
+        },
+        {
+          value: 'XL',
+          label: 'XL',
+          checked: size ? size.split(',').includes('XL') : false,
+        },
+        {
+          value: 'S',
+          label: 'S',
+          checked: size ? size.split(',').includes('S') : false,
+        },
+        {
+          value: 'M',
+          label: 'M',
+          checked: size ? size.split(',').includes('M') : false,
+        },
+        {
+          value: 'L',
+          label: 'L',
+          checked: size ? size.split(',').includes('L') : false,
+        },
       ],
     });
 
     setFormState(updatedFilters);
-  }, [colors, category]);
+  }, [colors, category, searchParams]);
 
   const handleSortClick = (value) => {
     setSelectedSort(value);
@@ -97,14 +147,26 @@ function ProductPage() {
 
     const filterData = {
       page: page,
-      categoryId: selectedFilters.category,
-      colorId: selectedFilters.color?.join(','),
-      size: selectedFilters.size?.join(','),
+      ...(selectedFilters.category && { categoryId: selectedFilters.category }),
+      ...(selectedFilters.color && {
+        colorId: selectedFilters.color.join(','),
+      }),
+      ...(selectedFilters.size && { size: selectedFilters.size.join(',') }),
       sortBy: selectedSort,
     };
 
+    setSearchParams({
+      page: page,
+      ...(selectedFilters.category && {
+        categoryId: selectedFilters.category.join(','),
+      }),
+      ...(selectedFilters.color && {
+        colorId: selectedFilters.color.join(','),
+      }),
+      ...(selectedFilters.size && { size: selectedFilters.size.join(',') }),
+      sortBy: selectedSort,
+    });
     console.log(filterData);
-
     dispatch(filterProducts({ filterData }));
   };
 
@@ -123,7 +185,7 @@ function ProductPage() {
   const renderProducts = (productList) => (
     <>
       {sortProducts(productList).map((product) => (
-        <ProductCard sdata={product} key={product._id} />
+        <ProductCard key={product._id} sdata={product} />
       ))}
       {totalPages > 1 && (
         <Pagination
@@ -149,59 +211,11 @@ function ProductPage() {
           <h1 className="text-4xl font-bold tracking-tight text-gray-900">
             New Arrivals
           </h1>
-          <div className="flex items-center">
-            <Menu as="div" className="relative inline-block text-left">
-              <div>
-                <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                  Sort
-                  <ChevronDownIcon
-                    className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
-                </Menu.Button>
-              </div>
 
-              <Transition
-                as={Fragment}
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="py-1">
-                    {sortOptions.map((option) => (
-                      <Menu.Item key={option.name}>
-                        {({ active }) => (
-                          <div
-                            className={`${
-                              option.current
-                                ? 'font-medium text-gray-900'
-                                : 'text-gray-500'
-                            } ${active ? 'bg-gray-200' : ''} block px-4 py-2 text-sm`}
-                            onClick={() => handleSortClick(option.value)}
-                          >
-                            {option.name}
-                          </div>
-                        )}
-                      </Menu.Item>
-                    ))}
-                  </div>
-                </Menu.Items>
-              </Transition>
-            </Menu>
-
-            <button
-              type="button"
-              className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
-              onClick={() => setMobileFiltersOpen(true)}
-            >
-              <span className="sr-only">Filters</span>
-              <FunnelIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </div>
+          <SortAndViewOptions
+            handleSortClick={handleSortClick}
+            setMobileFiltersOpen={setMobileFiltersOpen}
+          />
         </div>
 
         <section aria-labelledby="products-heading" className="pb-16 pt-6">
@@ -217,20 +231,22 @@ function ProductPage() {
               {loading ? (
                 <Spinner />
               ) : !isCallFilterData ? (
-                products.length ? (
+                products && products.length > 0 ? (
                   renderProducts(products)
                 ) : (
                   <div className="mr-24 mt-20">
-                    <h1 className="text-3xl">Product is not available</h1>
+                    <h1 className="text-3xl">Products are not available</h1>
                   </div>
                 )
-              ) : filterProduct.length ? (
+              ) : filterProduct && filterProduct.length > 0 ? (
                 sortProducts(filterProduct).map((product) => (
-                  <ProductCard sdata={product} key={product._id} />
+                  <ProductCard key={product._id} sdata={product} />
                 ))
               ) : (
                 <div className="mr-24 mt-20">
-                  <h1 className="text-3xl">Product is not available</h1>
+                  <h1 className="text-3xl">
+                    Filtered products are not available
+                  </h1>
                 </div>
               )}
             </div>

@@ -144,7 +144,7 @@ export const filterProducts = createAsyncThunk(
         params: filterData,
         withCredentials: true,
       });
-      console.log(response.data);
+      console.log(response.data.data.productInfo);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -180,7 +180,7 @@ export const productSlice = createSlice({
       .addCase(filterProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.filterProduct = action.payload.data; // Set the products list
+        state.filterProduct = action.payload.data.productInfo; // Set the products list
       })
       .addCase(filterProducts.rejected, (state, action) => {
         state.loading = false;
