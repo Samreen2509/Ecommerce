@@ -4,7 +4,7 @@ const CategoryCard = (props) => {
   const { sdata } = props;
   const { image, name, _id } = sdata;
   return (
-    <div className="flex justify-center rounded-md border border-opacity-40 bg-white px-2 py-2 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
+    <div className="flex justify-center rounded-md border border-opacity-40 bg-white px-2 py-2 shadow transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
       <Link to={`/category/${_id}`}>
         <img
           className="h-40 rounded-md object-contain md:h-80 lg:h-56"

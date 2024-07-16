@@ -4,20 +4,17 @@ import { FaFacebookSquare } from 'react-icons/fa';
 
 const Footer = () => {
   const firstCol = [
-    'About Us',
-    'Our Blog',
-    'Careers',
-    'Store Locations',
-    'Testimonial',
-    'Sitemap',
+    { name: 'Home', link: '/' },
+    { name: 'Collections', link: '/collections' },
+    { name: 'Products', link: '/products' },
+    { name: 'Category', link: '/category' },
   ];
   const secondCol = [
-    'Help Center',
-    'Shipping Info',
-    'Returns',
-    'How To Order',
-    'How To Track',
-    'Size Guide',
+    { name: 'Profile', link: '/profile' },
+    { name: 'Login', link: '/login' },
+    { name: 'Register', link: '/register' },
+    { name: 'Wishlist', link: '/wishlist' },
+    { name: 'Bag', link: '/bag' },
   ];
 
   return (
@@ -30,23 +27,23 @@ const Footer = () => {
           <p className="mt-2 text-xl">
             Reach us Monday {'-'} Friday from 9 am to 6 pm
           </p>
-          <p className="text-sm">+1 001 234 5678</p>
+          <p className="text-sm">+91 9412341234</p>
           <div className="mt-4 flex gap-x-4 sm:mt-6">
-            <FaSquareInstagram className="cursor-pointer text-4xl" />
-            <FaFacebookSquare className="cursor-pointer text-4xl" />
-            <FaSquareXTwitter className="cursor-pointer text-4xl" />
+            <FaSquareInstagram className="cursor-pointer text-4xl text-primary" />
+            <FaFacebookSquare className="cursor-pointer text-4xl text-primary" />
+            <FaSquareXTwitter className="cursor-pointer text-4xl text-primary" />
           </div>
         </div>
         <div>
-          <h2 className="font-bold">COMPANY</h2>
+          <h2 className="font-bold">LINKS</h2>
           <div className="mt-4 flex flex-col gap-y-3 sm:mt-12">
             {firstCol.map((item, index) => (
               <a
                 key={index}
-                className="transition duration-150 hover:font-bold hover:text-orange-600"
-                href={'#'}
+                className="transition duration-150 hover:font-bold hover:text-primary"
+                href={item.link}
               >
-                {item}
+                {item.name}
               </a>
             ))}
           </div>
@@ -55,13 +52,13 @@ const Footer = () => {
         <div className="">
           <h2 className="font-bold">HELP</h2>
           <div className="mt-4 flex flex-col gap-y-3 sm:mt-12">
-            {secondCol.map((service, index) => (
+            {secondCol.map((item, index) => (
               <a
-                className="transition duration-150 hover:font-bold hover:text-orange-600"
+                className="transition duration-150 hover:font-bold hover:text-primary"
                 key={index}
-                href={'#'}
+                href={item.link}
               >
-                {service}
+                {item.name}
               </a>
             ))}
           </div>
@@ -72,10 +69,10 @@ const Footer = () => {
             <div className="grid w-full max-w-xs gap-4">
               <input
                 type="text"
-                className="h-10 w-full rounded border bg-white p-2 text-sm"
+                className="h-10 w-full rounded-md border bg-white p-2 text-sm"
                 placeholder="Enter your email"
               />
-              <button className="rounded bg-black py-2 text-gray-50 hover:bg-orange-600">
+              <button className="rounded-md bg-primary py-2 text-gray-50 transition duration-300 ease-in-out hover:bg-primary-light">
                 Subscribe
               </button>
             </div>

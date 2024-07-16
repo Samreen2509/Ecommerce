@@ -20,12 +20,12 @@ export const getCartProducts = createAsyncThunk(
 
 export const addToCart = createAsyncThunk(
   'cart/addToCart',
-  async ({ productId, quantity }, { rejectWithValue }) => {
+  async ({ productId, quantity, size }, { rejectWithValue }) => {
     console.log(productId, quantity);
     try {
       const response = await axios.put(
         `${BASE_URL}/cart/addorupdatetocart`,
-        { productId, quantity },
+        { productId, quantity, size },
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
@@ -41,11 +41,11 @@ export const addToCart = createAsyncThunk(
 
 export const updateToCart = createAsyncThunk(
   'cart/updateToCart',
-  async ({ productId, quantity }, { rejectWithValue }) => {
+  async ({ productId, quantity, size }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
         `${BASE_URL}/cart/addorupdatetocart`,
-        { productId, quantity },
+        { productId, quantity, size },
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
