@@ -57,26 +57,6 @@ export const getOneProduct = createAsyncThunk(
   }
 );
 
-// add images in a product
-export const otherImages = createAsyncThunk(
-  'product/otherImages',
-  async ({ id, data }, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(
-        `${BASE_URL_PRODUCT}/${id}/images`,
-        data,
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-      return { id, otherImages: response.data }; // Return the id and the new images
-    } catch (error) {
-      const message = error.response?.data?.message || error.message;
-      return rejectWithValue(message);
-    }
-  }
-);
-
 // updating a product
 export const updateProduct = createAsyncThunk(
   'product/updateProduct',
@@ -274,25 +254,6 @@ export const productSlice = createSlice({
         state.singleProduct = action.payload.data.productInfo; // Set the single product
       })
       .addCase(getOneProduct.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload; // Set the error message
-      })
-      // Add images in a product
-      .addCase(otherImages.pending, (state) => {
-        state.loading = true;
-        state.error = null; // Clear previous errors
-      })
-      .addCase(otherImages.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.products = state.products.map((product) => {
-          if (product.id === action.payload.id) {
-            return { ...product, otherImages: action.payload.otherImages };
-          }
-          return product;
-        });
-      })
-      .addCase(otherImages.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload; // Set the error message
       })

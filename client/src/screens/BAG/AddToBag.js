@@ -9,7 +9,7 @@ import {
   removeFromWishlist,
 } from '../../features/wishlistSlice';
 
-function AddToCart({ productId, quantity, className, wishlistBtn, size }) {
+function AddToBag({ productId, quantity, className, wishlistBtn, size }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isUserLogin } = useSelector((state) => state.auth);
@@ -39,4 +39,4 @@ function AddToCart({ productId, quantity, className, wishlistBtn, size }) {
   );
 }
 
-export default AddToCart;
+export default AddToBag;

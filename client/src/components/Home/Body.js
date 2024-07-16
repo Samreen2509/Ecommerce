@@ -158,21 +158,21 @@ const Body = () => {
           </div>
 
           <div className="mt-24 flex h-auto w-full flex-wrap items-center justify-center gap-5 md:gap-10 lg:gap-10">
-            <div className="h-auto w-auto rounded-md border border-opacity-40 p-2 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
+            <div className="h-auto w-auto rounded-md border border-opacity-40 p-2 shadow transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
               <img
                 src={img4}
                 alt="Cloth"
                 className="h-96 w-64 rounded-md object-fill"
               />
             </div>
-            <div className="h-auto w-auto rounded-md border border-opacity-40 p-2 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
+            <div className="h-auto w-auto rounded-md border border-opacity-40 p-2 shadow transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
               <img
                 src={img5}
                 alt="Cloth"
                 className="h-96 w-64 rounded-md object-fill"
               />
             </div>
-            <div className="h-auto w-auto rounded-md border border-opacity-40 p-2 transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
+            <div className="h-auto w-auto rounded-md border border-opacity-40 p-2 shadow transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black">
               <img
                 src={img4}
                 alt="Cloth"

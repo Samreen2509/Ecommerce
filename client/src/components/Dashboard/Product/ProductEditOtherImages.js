@@ -68,19 +68,28 @@ function ProductEditOtherImages({ id, edit, otherImages }) {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    console.log(uploadFiles);
 
     const formData = new FormData();
-    uploadFiles.length > 0 &&
+    if (uploadFiles.length > 0) {
       uploadFiles.forEach((fileObj) => {
-        formData.append(`otherImage`, fileObj.otherImage);
+        formData.append('otherImage', fileObj.otherImage);
       });
+    }
 
-    uploadFiles.length > 0 && dispatch(addOtherImages({ id, formData }));
-    deleteImage.length > 0 &&
-      deleteImage.map((imageId) => {
+    console.log('FormData before dispatch:', ...formData.entries());
+
+    if (uploadFiles.length > 0) {
+      dispatch(addOtherImages({ id, formData }));
+    }
+
+    if (deleteImage.length > 0) {
+      deleteImage.forEach((imageId) => {
         dispatch(deleteOtherImages({ id, imageId }));
       });
+    }
+
+    console.log('Upload Files:', uploadFiles);
+    console.log('FormData after dispatch:', ...formData.entries());
 
     if (!isLoading) {
       // navigate('./');

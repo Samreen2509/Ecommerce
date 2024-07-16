@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
-import AddToCart from './AddToCart';
+import AddToBag from './AddToBag';
 import {
   getWishListProducts,
   removeFromWishlist,
@@ -86,7 +86,7 @@ function WishlistProduct({ mainImage, price, name, _id, color }) {
               </select>
             </div>
             <div className="flex w-full items-center">
-              <AddToCart
+              <AddToBag
                 id={_id}
                 quantity={quantity}
                 productId={_id}
