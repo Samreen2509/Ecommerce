@@ -163,7 +163,7 @@ const Profile = () => {
 
   return (
     <div className="px-80 pt-10">
-      <div className="relative mb-5 cursor-pointer">
+      <div className="relative mb-5 flex cursor-pointer justify-center">
         {profileData?.avatar?.url ? (
           <div className="relative h-20 w-20 rounded-full">
             <img

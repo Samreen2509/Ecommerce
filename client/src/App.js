@@ -11,7 +11,6 @@ import Login from './screens/auth/Login.js';
 import Wishlist from './screens/BAG/Wishlist.js';
 import Bag from './screens/BAG/Bag.js';
 import SearchProduct from './screens/product/SearchProduct.js';
-import { ProductDetailsPage } from './screens/product/ProductDetailsPage.js';
 import About from './screens/Footer/About.js';
 import SingleProduct from './screens/product/SingleProduct.js';
 import ErrorPage from './components/Error/ErrorPage';
@@ -48,12 +47,13 @@ const DashboardNotification = lazy(
 const DashboardSetting = lazy(() => import('./screens/dashboard/Setting'));
 const DashboardPayment = lazy(() => import('./screens/dashboard/Payment'));
 import ScrollToTop from './utils/ScrollTop';
+import ProductDetailsPage from './screens/product/ProductDetailsPage.js';
 
 const Applayout = () => {
   return (
     <div className="app">
       <Header />
-      <div className="pt-20 min-h-[90vh]">
+      <div className="min-h-[90vh] pt-20">
         <Outlet />
       </div>
       <Footer />
