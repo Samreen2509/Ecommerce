@@ -22,10 +22,6 @@ router
 router.route('/filterproducts').get(filterProducts);
 
 router
-  .route('/otherImages/:productId')
-  .post(upload.array('otherImages', 4), uploadOtherImages);
-
-router
   .route('/:id')
   .get(getOneProduct)
   .put(verifyJWT, upload.single('mainImage'), updateProduct)

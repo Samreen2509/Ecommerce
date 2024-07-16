@@ -213,6 +213,7 @@ export const removeProduct = asyncHandler(async (req, res) => {
 
 export const uploadOtherImages = asyncHandler(async (req, res) => {
   const uploadedFiles = req.files;
+  console.log(uploadedFiles);
   const { productId } = req.params;
   const user = await req.user;
   const imageDataArray = [];
