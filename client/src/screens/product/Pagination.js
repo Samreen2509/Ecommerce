@@ -9,7 +9,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange, style }) => {
     }
   };
 
-  if (totalPages === 0) return null;
   return (
     <ol
       className={`flex ${style?.position ? style.position : 'justify-center'} w-full space-x-1 p-2 text-xs font-medium`}

@@ -144,9 +144,10 @@ export const filterProducts = createAsyncThunk(
         params: filterData,
         withCredentials: true,
       });
-
+      console.log(response.data);
       return response.data;
     } catch (error) {
+      console.log(error);
       const message = error.response?.data?.message || error.message;
       return rejectWithValue(message);
     }
