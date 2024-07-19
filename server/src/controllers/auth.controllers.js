@@ -474,7 +474,7 @@ export const forgotPasswordLink = asyncHandler(async (req, res) => {
   const emailData = {
     email: user.email,
     template: 'ForgotPassword',
-    url: `${basePath}${RESET_PASS_PAGE}?token=${token.unHashedToken}`,
+    url: `${basePath}${RESET_PASS_PAGE}/${token.unHashedToken}`,
     subject: 'Reset Your Password',
   };
 
