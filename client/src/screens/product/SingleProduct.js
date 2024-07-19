@@ -44,13 +44,13 @@ function SingleProduct() {
   };
 
   return (
-    <div className="mb-10 mt-5 grid w-full items-start justify-between px-5 lg:flex lg:gap-x-10">
-      {/* image section */}
+    <div className="mb-10 mt-5 grid w-full items-start justify-between overflow-x-auto px-1 md:px-5 lg:flex lg:gap-x-10">
+      {/* Image section */}
       <div className="flex h-auto w-full flex-col-reverse justify-center gap-5 lg:w-1/2 lg:flex-row">
         <div className="flex items-center gap-x-5 gap-y-5 lg:mt-2 lg:flex-col ">
           <div
             onClick={() => handleSideImageClick(-1)}
-            className={`${selectedImage == -1 && 'border-blue-900'} cursor-pointer rounded-md border-2`}
+            className={`cursor-pointer rounded-md border-2 ${selectedImage === -1 ? 'border-blue-900' : ''}`}
           >
             <img
               className="h-24 w-16 rounded-md"
@@ -63,10 +63,10 @@ function SingleProduct() {
               <div
                 key={index}
                 onClick={() => handleSideImageClick(index)}
-                className={`${selectedImage == index && 'border-blue-900'} cursor-pointer rounded-md border-2`}
+                className={`cursor-pointer rounded-md border-2 ${selectedImage === index ? 'border-blue-900' : ''}`}
               >
                 <img
-                  className="h-24 w-16 rounded-md "
+                  className="h-24 w-16 rounded-md"
                   src={img?.url}
                   alt="image"
                 />
@@ -74,24 +74,25 @@ function SingleProduct() {
             ))}
         </div>
         {/* Main Image */}
-        <div className="mt-2 flex h-[85vh] cursor-pointer items-center justify-center rounded-md bg-gray-200">
+        <div className="mt-2 flex h-[80vh] cursor-pointer items-center justify-center rounded-md bg-gray-200 md:h-96 lg:h-[85vh]">
           {displayImage && (
             <img
-              className="h-full w-full rounded-md object-fill md:w-[35vw] "
+              className="h-full w-full rounded-md object-contain"
               src={displayImage}
               alt="image"
             />
           )}
         </div>
       </div>
-      {/* content section */}
-      <div className="mt-2 grid h-auto w-1/2 items-center justify-start gap-1">
-        {/* name and description */}
-        <div className="grid items-center justify-start gap-1">
+
+      {/* Content section */}
+      <div className="mt-2 grid h-auto w-full items-center justify-start gap-4 lg:w-1/2">
+        {/* Name and description */}
+        <div className="grid items-start justify-start gap-1">
           <h3 className="text-lg font-bold text-gray-700">
             {singleProduct?.name}
           </h3>
-          <h4 className="text-lg text-gray-400">
+          <h4 className="text-base text-gray-400">
             <ProductDescriptionRender
               description={singleProduct?.description}
             />
@@ -99,27 +100,25 @@ function SingleProduct() {
         </div>
 
         <div className="grid items-center justify-start gap-2">
-          {/* rating */}
-          <p className="border-black-800 flex w-16 items-center justify-center gap-1 rounded-md border-solid border-black bg-slate-200">
-            <FaStar className="text-orange-300" />
-            <span className="pt-1">4.8</span>
-          </p>
-
-          {/* Price */}
-          <div>
-            <p className="flex items-center gap-1">
-              <FaRupeeSign />
-              <span className="mr-1 text-lg">{singleProduct?.price}</span>
-              <s className="text-gray-400">4000</s>
-              <span className="ml-1 text-lg text-green-400">50% OFF</span>
-            </p>
-            <span className="text-xs text-gray-400">
-              inclusive of all taxes
+          {/* Rating */}
+          <div className="flex items-center justify-start gap-1">
+            <span className="border-black-800 flex items-center justify-center gap-1 rounded-md border-solid border-black bg-slate-200">
+              <FaStar className="text-orange-300" />
+              <span className="pt-1">4.8</span>
             </span>
           </div>
 
-          {/* cloth Details */}
-          <div className="flex items-center gap-5">
+          {/* Price */}
+          <div className="flex items-center gap-1">
+            <FaRupeeSign />
+            <span className="text-lg">{singleProduct?.price}</span>
+            <s className="text-gray-400">4000</s>
+            <span className="text-lg text-green-400">50% OFF</span>
+          </div>
+          <span className="text-xs text-gray-400">inclusive of all taxes</span>
+
+          {/* Cloth Details */}
+          <div className="flex items-center gap-3">
             <span className="rounded-md bg-gray-500 px-3 py-1 text-xs text-white">
               OVERSIZED FIT
             </span>
@@ -130,7 +129,7 @@ function SingleProduct() {
 
           {/* Member Discount */}
           <div>
-            <hr className="w-11/12 bg-gray-100 pt-0.5" />
+            <hr className="mt-2 w-11/12 bg-gray-100" />
             <p className="mt-2 text-sm">
               members get an extra discount of ₹30 and FREE shipping.
               <span className="cursor-pointer text-sm font-medium text-indigo-600 hover:text-indigo-500">
@@ -140,37 +139,29 @@ function SingleProduct() {
           </div>
 
           {/* Sizes */}
-          <div className="mt-10">
-            <div className="flex flex-col justify-start gap-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-gray-900">Size</h3>
-              </div>
-              <div className="flex items-center justify-center gap-4 text-black">
-                {displayProductSize.map((ele, index) => {
-                  const isAvailable = singleProduct?.size.includes(ele);
-                  return (
-                    <span
-                      key={index}
-                      title={!isAvailable ? 'Not Available' : ''}
-                      onClick={() => isAvailable && checkSize(ele)}
-                      className={`cursor-pointer rounded-md border-2 border-solid px-5 py-3 text-center text-sm ${
-                        isAvailable && selectedSize === ele
-                          ? 'bg-orange-600 text-white'
-                          : ''
-                      } ${!isAvailable ? 'bg-gray-200' : ''}`}
-                    >
-                      {ele}
-                    </span>
-                  );
-                })}
-              </div>
+          <div className="mt-4">
+            <h3 className="text-sm font-medium text-gray-900">Size</h3>
+            <div className="flex flex-wrap justify-start gap-2">
+              {displayProductSize.map((ele, index) => {
+                const isAvailable = singleProduct?.size.includes(ele);
+                return (
+                  <span
+                    key={index}
+                    title={!isAvailable ? 'Not Available' : ''}
+                    onClick={() => isAvailable && checkSize(ele)}
+                    className={`cursor-pointer rounded-md border-2 border-solid px-4 py-2 text-center text-sm ${isAvailable && selectedSize === ele ? 'bg-orange-600 text-white' : ''} ${!isAvailable ? 'bg-gray-200' : ''}`}
+                  >
+                    {ele}
+                  </span>
+                );
+              })}
             </div>
           </div>
 
           {/* Add to Bag and Wishlist */}
-          <div className="items-cente mt-5 flex w-full py-2">
+          <div className="mt-4 flex w-full items-center justify-between">
             <AddToBag
-              className={`flex-1  ${!selectedSize ? 'cursor-not-allowed bg-opacity-70' : 'hover:bg-blue-900'}`}
+              className={`flex-1 ${!selectedSize ? 'cursor-not-allowed bg-opacity-70' : 'hover:bg-blue-900'}`}
               productId={productId}
               quantity={1}
               size={selectedSize}
@@ -183,36 +174,32 @@ function SingleProduct() {
           </div>
 
           {/* Key Highlights */}
-          <div className="mt-8">
+          <div className="mt-6">
             <h3 className="mb-3 text-lg font-bold">Key Highlights</h3>
-            <div className="ml-3 flex items-center justify-between">
-              <div className="items-cente grid justify-start gap-7">
-                <div className="">
-                  <h5 className="text-sm text-gray-400">Design</h5>
-                  <span className="font-bold">Graphic Print</span>
-                </div>
-                <div className="grid items-start">
-                  <h5 className="text-sm text-gray-400">Fit</h5>
-                  <span className="font-bold">Oversized Fit</span>
-                </div>
-                <div>
-                  <h5 className="text-sm text-gray-400">Neck</h5>
-                  <span className="font-bold">Round Neck</span>
-                </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <h5 className="text-sm text-gray-400">Design</h5>
+                <span className="font-bold">Graphic Print</span>
               </div>
-              <div className="items-cente grid justify-start gap-7">
-                <div>
-                  <h5 className="text-sm text-gray-400">Occasion</h5>
-                  <span className="font-bold">Casual</span>
-                </div>
-                <div>
-                  <h5 className="text-sm text-gray-400">Sleeve Style</h5>
-                  <span className="font-bold">Half Sleeve</span>
-                </div>
-                <div>
-                  <h5 className="text-sm text-gray-400">Wash Care</h5>
-                  <span className="font-bold">Machine wash as per tag</span>
-                </div>
+              <div>
+                <h5 className="text-sm text-gray-400">Fit</h5>
+                <span className="font-bold">Oversized Fit</span>
+              </div>
+              <div>
+                <h5 className="text-sm text-gray-400">Neck</h5>
+                <span className="font-bold">Round Neck</span>
+              </div>
+              <div>
+                <h5 className="text-sm text-gray-400">Occasion</h5>
+                <span className="font-bold">Casual</span>
+              </div>
+              <div>
+                <h5 className="text-sm text-gray-400">Sleeve Style</h5>
+                <span className="font-bold">Half Sleeve</span>
+              </div>
+              <div>
+                <h5 className="text-sm text-gray-400">Wash Care</h5>
+                <span className="font-bold">Machine wash as per tag</span>
               </div>
             </div>
           </div>
