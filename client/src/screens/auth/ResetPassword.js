@@ -1,164 +1,133 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import png from '../../../images/favicon.png';
 import { Link, useNavigate } from 'react-router-dom';
-import GlobalApi from '../../utils/GlobalApi';
-import { IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { clearError, resetPassword } from '../../features/authSlice';
 import { toast } from 'react-toastify';
+import InputBox from '../../utils/InputBox';
+import { useParams } from 'react-router-dom';
 
-function ResetPassword() {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordsMatch, setPasswordsMatch] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setisLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get('token');
+const ResetPassword = () => {
+  const { token } = useParams();
+  const [formData, setFormData] = useState({
+    token: token,
+    password: '',
+    confirmPassword: '',
+  });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.auth);
+  let { isLoading, error, isUserLogin, success } = data;
+
+  useEffect(() => {
+    if (isUserLogin) {
+      navigate('/');
+      toast.success('User login successfully');
+
+      setFormData({
+        email: '',
+        password: '',
+      });
+    }
+  }, [isUserLogin]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearError());
+    }
+  }, [error, dispatch]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setisLoading(true);
-    setError(null);
 
-    if (!password || !token) {
-      setError('Password and token are required.');
-      setisLoading(false);
-      throw new Error('Password and token are required.');
+    if (formData.password != formData.confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
     }
 
     try {
-      const res = await GlobalApi.forgotPassword({ password, token });
-      console.log(res);
-      toast.success(res?.response?.data?.message);
-      navigate('/');
+      dispatch(resetPassword({ resetData: formData }));
+      if (success) {
+        navigate('/');
+      }
     } catch (error) {
-      console.log(error?.response?.data);
-      toast.error(
-        error?.response?.data?.statusCode === 404 && 'Already Use token',
-        {
-          position: 'top-center',
-        }
-      );
-    } finally {
-      setisLoading(false);
+      toast.error(error.message || error);
     }
   };
 
   return (
-    <section className="mx-auto h-screen w-full max-w-md p-6">
-      <div className="mt-7 rounded-xl border-2 border-indigo-300 bg-white shadow-lg">
-        <div className="p-4 sm:p-7">
-          <div className="text-center">
-            <h1 className="block text-2xl font-bold text-gray-800">
-              Forgot password?
-            </h1>
-            <p className="mt-2 text-sm text-gray-600">
-              Remember your password?{' '}
-              <Link
-                className="font-medium text-blue-600 decoration-2 hover:underline"
-                to="/login"
-              >
-                Login here
-              </Link>
-            </p>
+    <div className="my-4 flex w-full flex-wrap px-4">
+      <div className="my-10 w-full px-4">
+        <div className="relative mx-auto max-w-[525px] rounded-lg border  bg-white px-10 py-16 text-center shadow-md shadow-black sm:px-12 md:px-[60px]">
+          <div className="flex flex-col text-center md:mb-16">
+            <Link to="/" className="mx-auto inline-block max-w-[160px]">
+              <img className="h-20" src={png} alt="logo" />
+            </Link>
+            <h2 className="text-2xl font-semibold text-primary">
+              Set New Password
+            </h2>
           </div>
+          <div className="mt-2 flex w-full flex-col">
+            <div className="mb-6 flex w-full flex-col items-center justify-start">
+              <label htmlFor="password" className="w-full text-start">
+                Password
+              </label>
+              <InputBox
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="h-11 w-full rounded-md border border-slate-700 bg-transparent px-4 text-base outline-none focus-visible:shadow-none"
+              />
+            </div>
 
-          <div className="mt-5">
-            <form onSubmit={handleSubmit}>
-              <div className="grid gap-y-4">
-                <p className="text-center text-sm text-red-400">
-                  {error && 'Please Fill Details Properly'}
-                </p>
-                <div>
-                  <label
-                    htmlFor="password"
-                    className="mb-2 ml-1 block text-sm font-bold"
-                  >
-                    Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      onClickCapture={() => setShowConfirmPassword(false)}
-                      id="password"
-                      name="password"
-                      className="block w-full rounded-md border-2 border-gray-200 px-4 py-3 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                      value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                        setPasswordsMatch(e.target.value === confirmPassword);
-                      }}
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 flex items-center pr-3"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <IoEyeOutline size={23} />
-                      ) : (
-                        <IoEyeOffOutline size={23} />
-                      )}
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <label
-                    htmlFor="confirm-password"
-                    className="mb-2 ml-1 block text-sm font-bold"
-                  >
-                    Confirm Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      onClickCapture={() => setShowPassword(false)}
-                      id="confirm-password"
-                      name="confirm-password"
-                      className={`block w-full rounded-md border-2 border-gray-200 px-4 py-3 text-sm shadow-sm focus:border-blue-500 focus:ring ${
-                        passwordsMatch ? 'border-gray-200' : 'border-red-500'
-                      }`}
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setConfirmPassword(e.target.value);
-                        setPasswordsMatch(e.target.value === password);
-                      }}
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 flex items-center pr-3"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                    >
-                      {showConfirmPassword ? (
-                        <IoEyeOutline size={23} />
-                      ) : (
-                        <IoEyeOffOutline size={23} />
-                      )}
-                    </button>
-                  </div>
-                  {!passwordsMatch && (
-                    <p className="mt-2 text-xs text-red-600">
-                      Passwords do not match
-                    </p>
-                  )}
-                </div>
-                <button
-                  type="submit"
-                  className="inline-flex items-center justify-center gap-2 rounded-md border border-transparent bg-blue-500 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
-                  {isLoading ? 'Loading...' : 'Reset password'}
-                </button>
-              </div>
-            </form>
+            <div className="mb-6 flex w-full flex-col items-center justify-start">
+              <label htmlFor="confirmPassword" className="w-full text-start">
+                Confirm Password
+              </label>
+              <InputBox
+                type="password"
+                placeholder="Confirm Password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="h-11 w-full rounded-md border border-slate-700 bg-transparent px-4 text-base outline-none focus-visible:shadow-none"
+              />
+            </div>
+
+            <div className="mb-7">
+              <button
+                onClick={handleSubmit}
+                className="mt-1 h-11 w-full rounded-md bg-primary px-5 font-medium text-white shadow-md shadow-black transition duration-300 ease-in-out hover:bg-primary-light"
+              >
+                {isLoading ? 'Loading...' : 'Reset Password'}
+              </button>
+            </div>
+          </div>
+          <ul className="-mx-2 mb-12 flex justify-between"></ul>
+          <div>
+            Remember your password?{' '}
+            <Link
+              to={'/login'}
+              className="font-semibold text-primary hover:underline"
+            >
+              Login
+            </Link>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
-}
+};
 
 export default ResetPassword;
