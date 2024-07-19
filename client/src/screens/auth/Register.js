@@ -1,20 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import png from '../../../images/favicon.png';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearError, login } from '../../features/authSlice';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Register, clearError } from '../../features/authSlice.js';
+import { useDispatch, useSelector } from 'react-redux';
 import InputBox from '../../utils/InputBox';
 
-const Login = () => {
+const RegistrationPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    username: '',
+    name: '',
     email: '',
     password: '',
   });
-  const navigate = useNavigate();
+
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.auth);
-  let { isLoading, error, isUserLogin } = data;
+  const { isLoading, error, isUserVerified, isUserLogin } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+    if (isUserLogin) {
+      navigate('/');
+      toast.success('User login successfully');
+    }
+  }, [isUserLogin]);
 
   const checkInput = async (value) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -29,16 +41,21 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (isUserLogin) {
-      navigate('/');
-      toast.success('User login successfully');
-
+    if (isUserVerified === false) {
+      navigate('/login');
+      toast.success('User register successfully');
+      toast.info(
+        'Please Verify your account. A verification link already sent to your email address',
+        { position: 'top-center' }
+      );
       setFormData({
+        name: '',
+        username: '',
         email: '',
         password: '',
       });
     }
-  }, [isUserLogin]);
+  }, [isUserVerified]);
 
   useEffect(() => {
     if (error) {
@@ -48,6 +65,7 @@ const Login = () => {
   }, [error, dispatch]);
 
   const handleChange = (e) => {
+    e.preventDefault();
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -57,25 +75,22 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const loginId = await checkInput(formData.email);
-
-    let loginData;
-    if (loginId == 'email') {
-      loginData = {
-        email: formData.email,
-        password: formData.password,
-      };
-    } else {
-      loginData = {
-        username: formData.email,
-        password: formData.password,
-      };
+    const checkUsername = await checkInput(formData.username);
+    if (checkUsername != 'username') {
+      toast.error('Enter Valid Username');
+      return;
     }
-
     try {
-      dispatch(login({ loginData }));
+      dispatch(
+        Register({
+          name: formData.name,
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        })
+      );
     } catch (error) {
-      console.error('Failed to login:', error);
+      toast.error(error.message || error);
     }
   };
 
@@ -88,17 +103,44 @@ const Login = () => {
               <img className="h-20" src={png} alt="logo" />
             </Link>
             <h2 className="text-2xl font-semibold text-primary">
-              Welcome Back !
+              Create New Account
             </h2>
           </div>
+
           <div className="mt-2 flex w-full flex-col">
             <div className="mb-6 flex w-full flex-col items-center justify-start">
+              <label htmlFor="name" className="w-full text-start">
+                Name
+              </label>
+              <InputBox
+                type="text"
+                placeholder="Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="h-11 w-full rounded-md border border-slate-700 bg-transparent px-4 text-base outline-none focus-visible:shadow-none"
+              />
+            </div>
+            <div className="mb-6 flex w-full flex-col items-center justify-start">
+              <label htmlFor="username" className="w-full text-start">
+                Username
+              </label>
+              <InputBox
+                type="text"
+                placeholder="Username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className="h-11 w-full rounded-md border border-slate-700 bg-transparent px-4 text-base outline-none focus-visible:shadow-none"
+              />
+            </div>
+            <div className="mb-6 flex w-full flex-col items-center justify-start">
               <label htmlFor="email" className="w-full text-start">
-                Email or Username
+                Email{' '}
               </label>
               <InputBox
                 type="email"
-                placeholder="Email or Username"
+                placeholder="Email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
@@ -123,31 +165,24 @@ const Login = () => {
                 onClick={handleSubmit}
                 className="mt-1 h-11 w-full rounded-md bg-primary px-5 font-medium text-white shadow-md shadow-black transition duration-300 ease-in-out hover:bg-primary-light"
               >
-                {isLoading ? 'Loading...' : 'Sign In'}
+                {isLoading ? 'Loading...' : 'Create New Account'}
               </button>
             </div>
           </div>
 
-          <ul className="-mx-2 mb-12 flex justify-between"></ul>
-          <Link
-            to="/forgotpassword"
-            className="mb-1 inline-block font-semibold text-primary hover:text-primary-light hover:underline"
-          >
-            Forget Password?{' '}
-          </Link>
-          <p className="text-body-color text-base">
-            <span className="pr-0.5">Not a member yet?</span>
+          <div>
+            Already Have Account?{' '}
             <Link
-              to="/register"
+              to={'/login'}
               className="font-semibold text-primary hover:underline"
             >
-              Sign Up
+              Login
             </Link>
-          </p>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default RegistrationPage;

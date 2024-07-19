@@ -6,7 +6,7 @@ import Header from './components/Header/Header.js';
 import Footer from './screens/Footer/Footer.js';
 import Body from './components/Home/Body.js';
 import Profile from './screens/User/Profile.js';
-import RegistrationPage from './screens/auth/RegistratonPage.js';
+import Register from './screens/auth/Register.js';
 import Login from './screens/auth/Login.js';
 import Wishlist from './screens/BAG/Wishlist.js';
 import Bag from './screens/BAG/Bag.js';
@@ -19,6 +19,7 @@ import PlaceOrderPage from './screens/order/PlaceOrderPage.js';
 import Notification from './components/Notification.js';
 import ResetPassword from './screens/auth/ResetPassword.js';
 import VerifyEmail from './screens/auth/VerifyEmail.js';
+import ForgotPassword from './screens/auth/ForgotPassword.js';
 import { Provider } from 'react-redux';
 import { persistor, store } from './app/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -28,6 +29,7 @@ import OrderSuccessPage from './screens/order/OrderSuccessPage.js';
 import CollectionPage from './screens/collertion/CollectionPage.js';
 import PrivateRoute from './components/Routes/PrivateRoute.js';
 import Spinner from './components/Spinner.js';
+
 // dashboard imports
 const DashboardHeader = lazy(
   () => import('./components/Dashboard/Header/Header')
@@ -96,7 +98,7 @@ const appRouter = createBrowserRouter([
       },
       {
         path: '/register',
-        element: <RegistrationPage />,
+        element: <Register />,
       },
       {
         path: '/login',
@@ -104,7 +106,7 @@ const appRouter = createBrowserRouter([
       },
       {
         path: '/forgotpassword',
-        element: <Login />,
+        element: <ForgotPassword />,
       },
       {
         path: '/wishlist',
@@ -160,7 +162,7 @@ const appRouter = createBrowserRouter([
         element: <VerifyEmail />,
       },
       {
-        path: '/resetPassword',
+        path: '/resetPassword/:token',
         element: <ResetPassword />,
       },
       {
