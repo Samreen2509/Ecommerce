@@ -77,7 +77,7 @@ function SingleProduct() {
         <div className="mt-2 flex h-[85vh] cursor-pointer items-center justify-center rounded-md bg-gray-200">
           {displayImage && (
             <img
-              className="h-full w-[35vw] rounded-md object-fill"
+              className="h-full w-full rounded-md object-fill md:w-[35vw] "
               src={displayImage}
               alt="image"
             />
