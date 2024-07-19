@@ -57,14 +57,11 @@ export const logout = createAsyncThunk(
 
 export const login = createAsyncThunk(
   'auth/login',
-  async ({ email, password }, { rejectWithValue }) => {
+  async ({ loginData }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `${process.env.BASEURL}/auth/login`,
-        {
-          email,
-          password,
-        },
+        loginData,
         {
           withCredentials: true,
         }
@@ -77,6 +74,7 @@ export const login = createAsyncThunk(
     }
   }
 );
+
 export const Register = createAsyncThunk(
   'auth/register',
   async ({ name, username, email, password }, { rejectWithValue }) => {
@@ -102,6 +100,44 @@ export const Register = createAsyncThunk(
   }
 );
 
+export const forgotPasswordLink = createAsyncThunk(
+  'auth/forgotPasswordLink',
+  async ({ forgotData }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${process.env.BASEURL}/auth/forgotPassword`,
+        forgotData,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue({ message, userInfo });
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  'auth/resetPassword',
+  async ({ resetData }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(
+        `${process.env.BASEURL}/auth/forgotPassword`,
+        resetData,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue({ message, userInfo });
+    }
+  }
+);
+
 const initialState = {
   isLoading: false,
   userInfo: null,
@@ -111,13 +147,51 @@ const initialState = {
   isUserLogin: false,
   refreshToken: null,
   token: null,
+  success: null,
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
+  reducers: {
+    clearError(state) {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
+
+      // reset password
+      .addCase(resetPassword.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.success = true;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      // forgot Passwoard Link
+      .addCase(forgotPasswordLink.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(forgotPasswordLink.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.success = true;
+      })
+      .addCase(forgotPasswordLink.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload.message;
+      })
+
+      //login user
       .addCase(login.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -128,13 +202,14 @@ const authSlice = createSlice({
         state.error = null;
         state.isLoading = false;
         state.isUserLogin = true;
-        // token: action.payload.data.token;
         state.isUserVerified = action.payload.data.userInfo.isEmailVerified;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload.message;
       })
+
+      // register new user
       .addCase(Register.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -148,6 +223,8 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload.message;
       })
+
+      // logout user
       .addCase(logout.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -167,6 +244,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
+
       .addCase(refreshToken.pending, (state, action) => {
         state.isLoading = true;
         state.error = null;
@@ -197,4 +275,5 @@ const authSlice = createSlice({
   },
 });
 
+export const { clearError } = authSlice.actions;
 export default authSlice.reducer;

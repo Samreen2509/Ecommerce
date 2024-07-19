@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import draftToHtml from 'draftjs-to-html';
 
-function ProductDescriptionRender({ description }) {
+function ProductDescriptionRender({ description, sort }) {
   const [htmlContent, setHtmlContent] = useState('');
 
   useEffect(() => {
@@ -9,7 +9,11 @@ function ProductDescriptionRender({ description }) {
       try {
         const rawContentState = JSON.parse(description);
         const htmlContent = draftToHtml(rawContentState);
-        setHtmlContent(htmlContent);
+        if (sort == 'true') {
+          setHtmlContent(htmlContent).substring(0, 20);
+        } else {
+          setHtmlContent(htmlContent);
+        }
       } catch (error) {
         console.error('Error parsing description JSON:', error);
       }
