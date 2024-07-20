@@ -188,7 +188,7 @@ const authSlice = createSlice({
       })
       .addCase(forgotPasswordLink.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload.message;
+        state.error = action.payload;
       })
 
       //login user
@@ -206,7 +206,7 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload.message;
+        state.error = action.payload;
       })
 
       // register new user
@@ -221,7 +221,7 @@ const authSlice = createSlice({
       })
       .addCase(Register.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload.message;
+        state.error = action.payload;
       })
 
       // logout user
@@ -248,17 +248,19 @@ const authSlice = createSlice({
       .addCase(refreshToken.pending, (state, action) => {
         state.isLoading = true;
         state.error = null;
+        state.error = action?.payload;
       })
       .addCase(refreshToken.fulfilled, (state, action) => {
-        state.refreshToken = action.payload.message;
+        state.refreshToken = action.payload;
         state.error = null;
         state.isLoading = false;
       })
       .addCase(refreshToken.rejected, (state, action) => {
         state.refreshToken = null;
         state.isLoading = false;
-        state.error = null;
+        state.error = action?.payload;
       })
+
       .addCase(User.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -270,7 +272,7 @@ const authSlice = createSlice({
       })
       .addCase(User.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = null;
+        state.error = action?.payload;
       });
   },
 });

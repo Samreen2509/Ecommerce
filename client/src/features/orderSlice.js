@@ -130,6 +130,7 @@ const initialState = {
   allOrders: [],
   selectaddress: '',
   SuccessMsg: null,
+  newCreated: null,
 };
 
 export const orderSlice = createSlice({
@@ -153,7 +154,7 @@ export const orderSlice = createSlice({
       state.orderInfoAfterPayment = action.payload.data.orderInfo;
     });
     builder.addCase(createNewOrder.rejected, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = action.payload;
     });
 
@@ -165,9 +166,10 @@ export const orderSlice = createSlice({
     builder.addCase(createAddressId.fulfilled, (state, action) => {
       state.loading = false;
       state.error = null;
+      state.newCreated = action.payload?.data?.addressInfo;
     });
     builder.addCase(createAddressId.rejected, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = action.payload;
     });
 
@@ -182,7 +184,7 @@ export const orderSlice = createSlice({
       state.addresses = action.payload.data.addressInfo;
     });
     builder.addCase(getAddress.rejected, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = action.payload;
     });
 
@@ -197,7 +199,7 @@ export const orderSlice = createSlice({
       state.order = action.payload.data.orderInfo;
     });
     builder.addCase(getOrders.rejected, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = action.payload;
     });
 
@@ -212,7 +214,7 @@ export const orderSlice = createSlice({
       state.allOrders = action.payload.data.orderInfo;
     });
     builder.addCase(getAllOrders.rejected, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = action.payload;
     });
 
@@ -227,7 +229,7 @@ export const orderSlice = createSlice({
       state.error = null;
     });
     builder.addCase(updateOrder.rejected, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = action.payload;
     });
   },

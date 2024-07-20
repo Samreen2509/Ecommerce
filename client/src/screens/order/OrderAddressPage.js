@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { VscLoading } from 'react-icons/vsc';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   createAddressId,
@@ -7,24 +8,15 @@ import {
 } from '../../features/orderSlice';
 
 function OrderAddressPage() {
-  const [userData, setUserData] = useState({
-    phone: '',
-    name: '',
-    email: '',
-    address: '',
-    city: '',
-    pincode: '',
-    state: '',
-    country: 'IND',
-  });
+  const [userData, setUserData] = useState({});
   const [isNewAddress, setIsNewAddress] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);
-  const { addresses, selectaddress, loading } = useSelector(
+  const { addresses, selectaddress, loading, newCreated } = useSelector(
     (state) => state.order
   );
   const [limitAddress, setLimitAddress] = useState(false);
   const dispatch = useDispatch();
-  console.log(selectaddress);
+
   useEffect(() => {
     if (userInfo) {
       dispatch(getAddress(userInfo._id));
@@ -32,12 +24,21 @@ function OrderAddressPage() {
   }, [dispatch, userInfo]);
 
   useEffect(() => {
-    if (addresses.length >= 4) {
-      setLimitAddress(true);
-    } else {
-      setLimitAddress(false);
+    if (newCreated) {
+      dispatch(getAddress(userInfo._id));
+      setIsNewAddress(false);
     }
-  }, [addresses, isNewAddress]);
+  }, [dispatch, userInfo._id, newCreated]);
+
+  useEffect(() => {
+    setLimitAddress(addresses.length >= 4);
+  }, [addresses]);
+
+  useEffect(() => {
+    if (selectaddress) {
+      setIsNewAddress(false);
+    }
+  }, [selectaddress]);
 
   const handleUserDataChange = (e) => {
     const { name, value } = e.target;
@@ -64,7 +65,6 @@ function OrderAddressPage() {
       const selectedAddress = addresses.find(
         (address) => address._id === userData._id
       );
-      console.log(selectedAddress);
       if (selectedAddress) {
         dispatch(getSelectAddress(selectedAddress._id));
       }
@@ -75,26 +75,12 @@ function OrderAddressPage() {
     const selectedAddressId = e.target.value;
     if (selectedAddressId === 'new') {
       setIsNewAddress(true);
-      setUserData({
-        phone: '',
-        name: '',
-        email: '',
-        address: '',
-        city: '',
-        pincode: '',
-        state: '',
-        country: 'IND',
-      });
+      setUserData({});
     } else {
       const selectedAddress = addresses.find(
         (address) => address._id === selectedAddressId
       );
-      console.log(selectedAddress);
       if (selectedAddress) {
-        // setUserData({
-        //   ...userInfo,
-        //   ...selectedAddress,
-        // });
         dispatch(getSelectAddress({ ...userInfo, ...selectedAddress }));
         setIsNewAddress(false);
       }
@@ -102,13 +88,11 @@ function OrderAddressPage() {
   };
 
   const isDisabled =
-    !userData.phone ||
-    !userData.name ||
-    !userData.email ||
-    !userData.address ||
-    !userData.city ||
-    !userData.pincode ||
-    !userData.state;
+    !userData?.address ||
+    !userData?.city ||
+    !userData?.pincode ||
+    !userData?.state ||
+    !userData?.country;
 
   return (
     <div className="flex w-full justify-center gap-4 md:h-screen">
@@ -130,55 +114,15 @@ function OrderAddressPage() {
               ) : (
                 <option value="">No address available</option>
               )}
-              {limitAddress ? null : (
-                <option value="new">Add New Address</option>
-              )}
+              {!limitAddress && <option value="new">Add New Address</option>}
             </select>
           </div>
           {isNewAddress && (
             <>
-              <div className="space-y-2">
-                <input
-                  type="number"
-                  name="phone"
-                  value={userData.phone}
-                  onChange={handleUserDataChange}
-                  placeholder="Mobile Number"
-                  className="w-full rounded-md border border-[#e0e0e0] bg-white px-6 py-3 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                />
-              </div>
-              <div className="-mx-3 flex flex-wrap">
-                <div className="w-full px-3 sm:w-1/2">
-                  <div className="mb-5">
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      value={userData.name}
-                      onChange={handleUserDataChange}
-                      placeholder="Name"
-                      className="w-full rounded-md border border-[#e0e0e0] bg-white px-6 py-3 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                    />
-                  </div>
-                </div>
-                <div className="w-full px-3 sm:w-1/2">
-                  <div className="mb-5">
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      value={userData.email}
-                      onChange={handleUserDataChange}
-                      placeholder="Email"
-                      className="w-full rounded-md border border-[#e0e0e0] bg-white px-6 py-3 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                    />
-                  </div>
-                </div>
-              </div>
               <input
                 type="text"
                 name="address"
-                value={userData.address}
+                value={userData.address || ''}
                 onChange={handleUserDataChange}
                 placeholder="Address"
                 className="w-full rounded-md border border-[#e0e0e0] bg-white px-6 py-3 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
@@ -189,8 +133,7 @@ function OrderAddressPage() {
                     <input
                       type="text"
                       name="city"
-                      id="city"
-                      value={userData.city}
+                      value={userData.city || ''}
                       onChange={handleUserDataChange}
                       placeholder="City"
                       className="w-full rounded-md border border-[#e0e0e0] bg-white px-6 py-3 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
@@ -202,7 +145,7 @@ function OrderAddressPage() {
                     <input
                       type="number"
                       name="pincode"
-                      value={userData.pincode}
+                      value={userData.pincode || ''}
                       onChange={handleUserDataChange}
                       placeholder="Pincode"
                       className="w-full rounded-md border border-[#e0e0e0] bg-white px-6 py-3 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
@@ -213,31 +156,61 @@ function OrderAddressPage() {
               <div className="mb-5 w-full">
                 <select
                   name="state"
-                  value={userData.state}
+                  value={userData.state || ''}
                   onChange={handleUserDataChange}
                   className="w-full rounded-md border border-[#e0e0e0] bg-white px-6 py-3 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                 >
                   <option value="">Select State</option>
+                  <option value="Andhra Pradesh">Andhra Pradesh</option>
                   <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                  <option value="Assam">Assam</option>
                   <option value="Bihar">Bihar</option>
+                  <option value="Chhattisgarh">Chhattisgarh</option>
+                  <option value="Goa">Goa</option>
+                  <option value="Gujarat">Gujarat</option>
                   <option value="Haryana">Haryana</option>
                   <option value="Himachal Pradesh">Himachal Pradesh</option>
+                  <option value="Jharkhand">Jharkhand</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Kerala">Kerala</option>
                   <option value="Madhya Pradesh">Madhya Pradesh</option>
                   <option value="Maharashtra">Maharashtra</option>
                   <option value="Manipur">Manipur</option>
+                  <option value="Meghalaya">Meghalaya</option>
+                  <option value="Mizoram">Mizoram</option>
+                  <option value="Nagaland">Nagaland</option>
+                  <option value="Odisha">Odisha</option>
+                  <option value="Punjab">Punjab</option>
                   <option value="Rajasthan">Rajasthan</option>
+                  <option value="Sikkim">Sikkim</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Telangana">Telangana</option>
+                  <option value="Tripura">Tripura</option>
                   <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Uttarakhand">Uttarakhand</option>
                   <option value="West Bengal">West Bengal</option>
+                  <option value="Andaman and Nicobar Islands">
+                    Andaman and Nicobar Islands
+                  </option>
+                  <option value="Chandigarh">Chandigarh</option>
+                  <option value="Dadra and Nagar Haveli and Daman and Diu">
+                    Dadra and Nagar Haveli and Daman and Diu
+                  </option>
+                  <option value="Lakshadweep">Lakshadweep</option>
                   <option value="Delhi">Delhi</option>
+                  <option value="Puducherry">Puducherry</option>
+                  <option value="Ladakh">Ladakh</option>
+                  <option value="Jammu and Kashmir">Jammu and Kashmir</option>
                 </select>
               </div>
               <div className="mb-5 w-full">
                 <select
                   name="country"
-                  value={userData.country}
+                  value={userData.country || ''}
                   onChange={handleUserDataChange}
                   className="w-full rounded-md border border-[#e0e0e0] bg-white px-6 py-3 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                 >
+                  <option value="">Select</option>
                   <option value="IND">India</option>
                   <option value="USA">United States</option>
                 </select>
@@ -246,13 +219,18 @@ function OrderAddressPage() {
           )}
           {isNewAddress && (
             <button
-              className={`w-1/2 rounded-lg px-4 py-2 text-base text-white ${
-                isDisabled ? 'bg-blue-300' : 'cursor-pointer bg-blue-500'
+              className={`flex h-11 w-1/2 items-center justify-center rounded-lg px-4 text-base text-white shadow-md shadow-black ${
+                isDisabled
+                  ? 'cursor-not-allowed bg-primary-light'
+                  : 'cursor-pointer bg-primary'
               }`}
-              disabled={isDisabled}
               type="submit"
             >
-              {loading ? 'Loading...' : 'Create New Address'}
+              {loading ? (
+                <VscLoading className="animate-spin" />
+              ) : (
+                'Add New Address'
+              )}
             </button>
           )}
         </form>

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
 import { updateToCart, removeFromCart } from '../../features/cartSlice';
 import { useDispatch } from 'react-redux';
+import { debounce } from '../../components/debounce';
 
 function BagProduct({
   mainImage,
@@ -21,10 +22,22 @@ function BagProduct({
     setQuantity(preQuantity);
   }, [preQuantity]);
 
+  useEffect(() => {
+    if (quantity) {
+      debouncedDispatch(_id, quantity, size);
+    }
+  }, [quantity]);
+
+  const debouncedDispatch = useCallback(
+    debounce((productId, quantity, size) => {
+      dispatch(updateToCart({ productId, quantity, size }));
+    }, 300),
+    []
+  );
+
   const handleQuantityInputChange = (e) => {
     const value = e.target.value;
     setQuantity(value);
-    dispatch(updateToCart({ productId, quantity, size }));
   };
 
   const handleRemove = () => {
@@ -55,10 +68,10 @@ function BagProduct({
           <div className="flex flex-col items-start justify-start space-y-2">
             <p className="my-2 flex items-center justify-start text-sm leading-none text-gray-700">
               <span className="text-black">Color: </span> {colorName}{' '}
-              <div
+              <span
                 style={{ backgroundColor: colorHex }}
                 className="mx-5 h-5 w-6 rounded-md"
-              ></div>
+              ></span>
             </p>
             <p className="text-sm leading-none text-gray-800">
               <span className="text-black">Style: </span> Italic Minimal Design

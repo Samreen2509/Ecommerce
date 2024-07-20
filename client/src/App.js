@@ -1,42 +1,47 @@
 import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
-import ErrorPage from './components/Error/ErrorPage';
-import Header from './components/Header/Header.js';
-import Footer from './screens/Footer/Footer.js';
-import Body from './components/Home/Body.js';
-import Profile from './screens/User/Profile.js';
-import Register from './screens/auth/Register.js';
-import Login from './screens/auth/Login.js';
-import Wishlist from './screens/BAG/Wishlist.js';
-import Bag from './screens/BAG/Bag.js';
-import SearchProduct from './screens/product/SearchProduct.js';
-import About from './screens/Footer/About.js';
-import SingleProduct from './screens/product/SingleProduct.js';
-import ErrorPage from './components/Error/ErrorPage';
-import Myorders from './screens/User/MyOrderPage.js';
-import PlaceOrderPage from './screens/order/PlaceOrderPage.js';
-import Notification from './components/Notification.js';
-import ResetPassword from './screens/auth/ResetPassword.js';
-import VerifyEmail from './screens/auth/VerifyEmail.js';
-import ForgotPassword from './screens/auth/ForgotPassword.js';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { persistor, store } from './app/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
-import ProductPage from './screens/product/ProductPage.js';
-import Category from './screens/category/Category.js';
-import OrderSuccessPage from './screens/order/OrderSuccessPage.js';
-import CollectionPage from './screens/collertion/CollectionPage.js';
-import PrivateRoute from './components/Routes/PrivateRoute.js';
-import Spinner from './components/Spinner.js';
+import { store, persistor } from './app/store.js';
+import ScrollToTop from './utils/ScrollTop';
+import Spinner from './components/Spinner';
+import ErrorPage from './components/Error/ErrorPage';
+import Shimmer from './components/Loading/Shimmer.js';
+import PrivateRoute from './components/Routes/PrivateRoute';
 
-// dashboard imports
-const DashboardHeader = lazy(
-  () => import('./components/Dashboard/Header/Header')
+// Layouts
+const Applayout = lazy(() => import('./components/Layout/AppLayout'));
+const DashboardLayout = lazy(
+  () => import('./components/Layout/DashboardLayout')
 );
-const DashboardSidebar = lazy(
-  () => import('./components/Dashboard/Sidebar/Sidebar')
+
+// Screens
+const Body = lazy(() => import('./components/Home/Body'));
+const Profile = lazy(() => import('./screens/User/Profile'));
+const Register = lazy(() => import('./screens/auth/Register'));
+const Login = lazy(() => import('./screens/auth/Login'));
+const ForgotPassword = lazy(() => import('./screens/auth/ForgotPassword'));
+const Wishlist = lazy(() => import('./screens/BAG/Wishlist'));
+const Bag = lazy(() => import('./screens/BAG/Bag'));
+const SearchProduct = lazy(() => import('./screens/product/SearchProduct'));
+const About = lazy(() => import('./screens/Footer/About'));
+const ProductDetailsPage = lazy(
+  () => import('./screens/product/ProductDetailsPage')
 );
+const CollectionPage = lazy(
+  () => import('./screens/collertion/CollectionPage')
+);
+const Category = lazy(() => import('./screens/category/Category'));
+const ProductPage = lazy(() => import('./screens/product/ProductPage'));
+const SingleProduct = lazy(() => import('./screens/product/SingleProduct'));
+const Myorders = lazy(() => import('./screens/User/MyOrderPage'));
+const PlaceOrderPage = lazy(() => import('./screens/order/PlaceOrderPage'));
+const OrderSuccessPage = lazy(() => import('./screens/order/OrderSuccessPage'));
+const VerifyEmail = lazy(() => import('./screens/auth/VerifyEmail'));
+const ResetPassword = lazy(() => import('./screens/auth/ResetPassword'));
+
+// Dashboard Screens
 const Dashboard = lazy(() => import('./screens/dashboard/Dashboard'));
 const DashboardOrder = lazy(() => import('./screens/dashboard/Order'));
 const DashboardProduct = lazy(() => import('./screens/dashboard/Product'));
@@ -48,129 +53,41 @@ const DashboardNotification = lazy(
 );
 const DashboardSetting = lazy(() => import('./screens/dashboard/Setting'));
 const DashboardPayment = lazy(() => import('./screens/dashboard/Payment'));
-import ScrollToTop from './utils/ScrollTop';
-import ProductDetailsPage from './screens/product/ProductDetailsPage.js';
 
-const Applayout = () => {
-  return (
-    <div className="app">
-      <Header />
-      <div className="min-h-[90vh] pt-20">
-        <Outlet />
-      </div>
-      <Footer />
-    </div>
-  );
-};
-
-const DashboardLayout = () => {
-  return (
-    <div className="fixed h-full w-full">
-      <DashboardHeader />
-      <div className="flex">
-        <DashboardSidebar />
-        <div className="custom-h-sidebar flex-grow overflow-auto px-5 py-5">
-          <Outlet />
-        </div>
-      </div>
-    </div>
-  );
-};
-
+// Router
 const appRouter = createBrowserRouter([
   {
     path: '/',
     element: (
       <>
         <ScrollToTop />
-        <Notification />
-        <Applayout />
+        <Suspense fallback={<Shimmer />}>
+          <Applayout />
+        </Suspense>
       </>
     ),
-    children: [
-      {
-        path: '/',
-        element: <Body />,
-      },
-      {
-        path: '/profile',
-        element: <Profile />,
-      },
-      {
-        path: '/register',
-        element: <Register />,
-      },
-      {
-        path: '/login',
-        element: <Login />,
-      },
-      {
-        path: '/forgotpassword',
-        element: <ForgotPassword />,
-      },
-      {
-        path: '/wishlist',
-        element: <Wishlist />,
-      },
-      {
-        path: '/bag',
-        element: <Bag />,
-      },
-      {
-        path: '/search/:query',
-        element: <SearchProduct />,
-      },
-      {
-        path: '/category/:categoryId',
-        element: <ProductDetailsPage />,
-      },
-      {
-        path: '/collections',
-        element: <CollectionPage />,
-      },
-      {
-        path: '/about',
-        element: <About />,
-      },
-      {
-        path: '/category',
-        element: <Category />,
-      },
-      {
-        path: '/products',
-        element: <ProductPage />,
-      },
-      {
-        path: '/singleProduct/:productId',
-        element: <SingleProduct />,
-      },
-
-      {
-        path: '/myorders',
-        element: <Myorders />,
-      },
-      {
-        path: '/placeOrder/payment',
-        element: <PlaceOrderPage />,
-      },
-      {
-        path: '/success',
-        element: <OrderSuccessPage />,
-      },
-      {
-        path: '/emailVerify',
-        element: <VerifyEmail />,
-      },
-      {
-        path: '/resetPassword/:token',
-        element: <ResetPassword />,
-      },
-      {
-        path: '/success',
-        element: <OrderSuccessPage />,
-      },
-    ],
     errorElement: <ErrorPage />,
+    children: [
+      { path: '/', element: <Body /> },
+      { path: '/profile', element: <Profile /> },
+      { path: '/register', element: <Register /> },
+      { path: '/login', element: <Login /> },
+      { path: '/forgotpassword', element: <ForgotPassword /> },
+      { path: '/wishlist', element: <Wishlist /> },
+      { path: '/bag', element: <Bag /> },
+      { path: '/search/:query', element: <SearchProduct /> },
+      { path: '/category/:categoryId', element: <ProductDetailsPage /> },
+      { path: '/collections', element: <CollectionPage /> },
+      { path: '/about', element: <About /> },
+      { path: '/category', element: <Category /> },
+      { path: '/products', element: <ProductPage /> },
+      { path: '/singleProduct/:productId', element: <SingleProduct /> },
+      { path: '/myorders', element: <Myorders /> },
+      { path: '/placeOrder/payment', element: <PlaceOrderPage /> },
+      { path: '/success', element: <OrderSuccessPage /> },
+      { path: '/emailVerify', element: <VerifyEmail /> },
+      { path: '/resetPassword/:token', element: <ResetPassword /> },
+    ],
   },
   {
     path: '/dashboard',
@@ -181,81 +98,18 @@ const appRouter = createBrowserRouter([
         </Suspense>
       </PrivateRoute>
     ),
-    children: [
-      {
-        path: '/dashboard',
-        element: (
-          <Suspense fallback={<Spinner />}>
-            <Dashboard />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/dashboard/order',
-        element: (
-          <Suspense fallback={<Spinner />}>
-            <DashboardOrder />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/dashboard/product',
-        element: (
-          <Suspense fallback={<Spinner />}>
-            <DashboardProduct />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/dashboard/user',
-        element: (
-          <Suspense fallback={<Spinner />}>
-            <DashboardUser />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/dashboard/category',
-        element: (
-          <Suspense fallback={<Spinner />}>
-            <DashboardCategory />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/dashboard/color',
-        element: (
-          <Suspense fallback={<Spinner />}>
-            <DashboardColor />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/dashboard/notification',
-        element: (
-          <Suspense fallback={<Spinner />}>
-            <DashboardNotification />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/dashboard/setting',
-        element: (
-          <Suspense fallback={<Spinner />}>
-            <DashboardSetting />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/dashboard/payment',
-        element: (
-          <Suspense fallback={<Spinner />}>
-            <DashboardPayment />
-          </Suspense>
-        ),
-      },
-    ],
     errorElement: <ErrorPage />,
+    children: [
+      { path: '/dashboard', element: <Dashboard /> },
+      { path: '/dashboard/order', element: <DashboardOrder /> },
+      { path: '/dashboard/product', element: <DashboardProduct /> },
+      { path: '/dashboard/user', element: <DashboardUser /> },
+      { path: '/dashboard/category', element: <DashboardCategory /> },
+      { path: '/dashboard/color', element: <DashboardColor /> },
+      { path: '/dashboard/notification', element: <DashboardNotification /> },
+      { path: '/dashboard/setting', element: <DashboardSetting /> },
+      { path: '/dashboard/payment', element: <DashboardPayment /> },
+    ],
   },
 ]);
 
