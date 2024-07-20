@@ -4,6 +4,20 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 
+const checkWishlist = async (userId) => {
+  let wishlist = await Wishlist.findOne({ owner: userId });
+
+  if (!wishlist) {
+    wishlist = new Wishlist({
+      owner: userId,
+      items: [],
+    });
+    await wishlist.save();
+  }
+
+  return wishlist;
+};
+
 const getWishlist = async (userId) => {
   const wishlistAggregation = await Wishlist.aggregate([
     {
@@ -45,26 +59,42 @@ const getWishlist = async (userId) => {
   );
 };
 
-// export const createWishlist = asyncHandler(async (req, res) => {
-//   const wishlist = await Wishlist.create({
-//     owner: req.user._id,
-//   });
+export const getUserWishlistProduct = asyncHandler(async (req, res) => {
+  const user = req.user;
+  await checkWishlist(user._id);
+  const productData = await getWishlist(user._id);
 
-//   return res
-//     .status(200)
-//     .json(new ApiResponse(200, wishlist, 'wishlist created successfully'));
-// });
-
-export const getUserWishlist = asyncHandler(async (req, res) => {
-  const wishlist = await getWishlist(req.user._id);
+  if (!productData) {
+    throw new ApiError(500, 'somethig went worng');
+  }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, wishlist, 'wishlist fetched successfully'));
+    .json(
+      new ApiResponse(
+        200,
+        { wishlistInfo: productData },
+        'wishlist fetched successfully'
+      )
+    );
+});
+
+export const getUserWishlist = asyncHandler(async (req, res) => {
+  let wishlist = await checkWishlist(req.user._id);
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { wishlistInfo: wishlist },
+        'wishlist fetched successfully'
+      )
+    );
 });
 
 export const addToWishlist = asyncHandler(async (req, res) => {
-  const { productId } = req.query;
+  const { productId } = req.params;
 
   if (!productId) {
     throw new ApiError(400, 'Product ID is required');
@@ -79,13 +109,11 @@ export const addToWishlist = asyncHandler(async (req, res) => {
     );
   }
 
-  const wishlist = await Wishlist.findOne({
-    owner: req.user._id,
-  });
+  let wishlist = await checkWishlist(req.user._id);
 
-  const itemAlreadyAdded = wishlist.items.find((item) => {
-    item.productId.toString() === productId;
-  });
+  const itemAlreadyAdded = wishlist.items.find(
+    (item) => item.productId.toString() === productId
+  );
 
   if (itemAlreadyAdded) {
     throw new ApiError(400, 'Item already exists in the wishlist');
@@ -100,16 +128,22 @@ export const addToWishlist = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, wishlist, 'Item added to the wishlist successfully')
+      new ApiResponse(
+        200,
+        { wishlistInfo: wishlist },
+        'Item added to the wishlist successfully'
+      )
     );
 });
 
 export const removeFromWishlist = asyncHandler(async (req, res) => {
-  const { productId } = req.query;
+  const { productId } = req.params;
 
   if (!productId) {
     throw new ApiError(400, 'Product ID is required');
   }
+
+  await checkWishlist(req.user._id);
 
   const updatedWishlist = await Wishlist.findOneAndUpdate(
     {
@@ -132,12 +166,18 @@ export const removeFromWishlist = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, updatedWishlist, 'Item removed from the wishlist')
+      new ApiResponse(
+        200,
+        { wishlistInfo: updatedWishlist },
+        'Item removed from the wishlist'
+      )
     );
 });
 
 export const clearWishlist = asyncHandler(async (req, res) => {
-  await Wishlist.findOneAndUpdate(
+  await checkWishlist(req.user._id);
+
+  const updatedWishlist = await Wishlist.findOneAndUpdate(
     {
       owner: req.user._id,
     },
@@ -149,11 +189,13 @@ export const clearWishlist = asyncHandler(async (req, res) => {
     { new: true }
   );
 
-  const wishlist = await getWishlist(req.user._id);
-
   return res
     .status(200)
     .json(
-      new ApiResponse(200, wishlist, 'All items are removed from wishlist')
+      new ApiResponse(
+        200,
+        { wishlistInfo: updatedWishlist },
+        'All items are removed from wishlist'
+      )
     );
 });

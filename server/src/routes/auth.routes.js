@@ -13,6 +13,7 @@ import {
   uploadAvatar,
   deleteAvatar,
   deleteUser,
+  getAllUser,
 } from '../controllers/auth.controllers.js';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
 import { upload } from '../middlewares/multer.middleware.js';
@@ -26,6 +27,7 @@ router.route('/logout').post(verifyJWT, logoutUser);
 router.route('/refreshToken').post(refreshUserToken);
 
 router.route('/user').get(verifyJWT, getCurrentUser);
+router.route('/users').get(verifyJWT, getAllUser);
 router
   .route('/user/:id')
   .get(verifyJWT, getUser)

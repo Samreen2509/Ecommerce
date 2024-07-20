@@ -24,16 +24,37 @@ const getCart = async (userId) => {
       },
     },
     {
+      $unwind: '$product',
+    },
+    {
+      $lookup: {
+        from: 'colors',
+        localField: 'product.color',
+        foreignField: '_id',
+        as: 'color',
+      },
+    },
+    {
+      $unwind: '$color',
+    },
+    {
       $project: {
-        product: { $first: '$product' },
+        product: '$product',
         quantity: '$items.quantity',
+        size: '$items.size',
+        color: '$color',
       },
     },
     {
       $group: {
         _id: '$_id',
         items: {
-          $push: '$$ROOT',
+          $push: {
+            product: '$product',
+            quantity: '$quantity',
+            size: '$size',
+            color: '$color',
+          },
         },
         cartTotal: {
           $sum: {
@@ -62,7 +83,8 @@ export const fetchUserCart = asyncHandler(async (req, res) => {
 
 // Controller to add or update item in a cart
 export const addOrUpdateCart = asyncHandler(async (req, res) => {
-  const { productId, quantity = 1 } = req.body;
+  const { productId, quantity = 1, size } = req.body;
+  console.log(req.body);
 
   const cart = await Cart.findOne({
     owner: req.user._id,
@@ -89,17 +111,22 @@ export const addOrUpdateCart = asyncHandler(async (req, res) => {
   if (addedProduct) {
     // if a product already exist in the cart we're updating it's quantity
     addedProduct.quantity = quantity;
+    addedProduct.size = size;
   } else {
     // otherwise we're adding new product
     cart.items.push({
       productId,
       quantity,
+      size,
     });
   }
 
-  await cart.save();
+  console.log('x', addedProduct);
+  const error = await cart.save();
+  console.log(error);
 
   const newCart = await getCart(req.user._id);
+  console.log(newCart);
 
   return res
     .status(200)

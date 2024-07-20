@@ -1,25 +1,25 @@
-import express, { Router } from 'express';
+import { Router } from 'express';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
 import {
   addToWishlist,
   clearWishlist,
-  //   createWishlist,
   getUserWishlist,
+  getUserWishlistProduct,
   removeFromWishlist,
 } from '../controllers/wishlist.controller.js';
 
 const router = Router();
 
-router.use(verifyJWT);
+router.route('/getWishProduct').get(verifyJWT, getUserWishlistProduct);
 
-// router.route('/').post(createWishlist);
+router
+  .route('/')
+  .get(verifyJWT, getUserWishlist)
+  .delete(verifyJWT, clearWishlist);
 
-router.route('/getuserwishlist').get(getUserWishlist);
-
-router.route('/addtowishlist').put(addToWishlist);
-
-router.route('/removefromwishlist').put(removeFromWishlist);
-
-router.route('/clearwishlist').put(clearWishlist);
+router
+  .route('/:productId')
+  .post(verifyJWT, addToWishlist)
+  .delete(verifyJWT, removeFromWishlist);
 
 export default router;

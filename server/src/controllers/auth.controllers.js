@@ -17,9 +17,11 @@ import {
   deleteFromCloudinary,
   uploadOnCloudinary,
 } from '../utils/cloudinary.js';
+import moment from 'moment-timezone';
+import Notification from '../models/notification.model.js';
 
 const ignoreFields =
-  '-password -refreshToken -emailVerificationExpiry -emailVerificationToken -createdAt -updatedAt';
+  '-password -refreshToken -emailVerificationExpiry -emailVerificationToken -createdAt';
 
 const findUser = async (username, email) => {
   try {
@@ -113,6 +115,20 @@ export const registerUser = asyncHandler(async (req, res) => {
 export const loginUser = asyncHandler(async (req, res) => {
   const { username, email, password } = await req.body;
 
+  const userAgent = req.useragent;
+
+  const deviceInfo = {
+    isMobile: userAgent.isMobile,
+    isTablet: userAgent.isTablet,
+    isDesktop: userAgent.isDesktop,
+    isBot: userAgent.isBot,
+    browser: userAgent.browser,
+    version: userAgent.version,
+    os: userAgent.os,
+    platform: userAgent.platform,
+    source: userAgent.source,
+  };
+
   if (!email && !username) {
     throw new ApiError(400, 'missing required fields');
   }
@@ -183,6 +199,14 @@ export const loginUser = asyncHandler(async (req, res) => {
   if (!loggedInUserInfo) {
     throw new ApiError(500, 'something went worng');
   }
+
+  const formattedDate = moment(loggedInUserInfo.updatedAt)
+    .tz('Asia/Kolkata')
+    .format('MMMM D, YYYY [at] h:mm A');
+  await Notification.create({
+    user: loggedInUserInfo._id,
+    notification: `Your account logged in from ${deviceInfo.os} (${deviceInfo.browser}) on ${formattedDate}`,
+  });
 
   return res
     .status(200)
@@ -276,7 +300,22 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, { userinfo: user }, 'user fetched successfully')
+      new ApiResponse(200, { userInfo: user }, 'user fetched successfully')
+    );
+});
+
+export const getAllUser = asyncHandler(async (req, res) => {
+  const user = await req.user;
+  if (user.role !== availableUserRoles.ADMIN) {
+    throw new ApiError(401, "you don't have access");
+  }
+
+  const users = await User.find({}).sort({ createdAt: -1 });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { userInfo: users }, 'user fetched successfully')
     );
 });
 
@@ -300,7 +339,7 @@ export const getUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, { userinfo: req.user }, 'user fetched successfully')
+      new ApiResponse(200, { userInfo: req.user }, 'user fetched successfully')
     );
 });
 
@@ -309,20 +348,18 @@ export const deleteUser = asyncHandler(async (req, res) => {
   const user = await req.user;
 
   let deleteUser = user;
-  if (id != user._id && user.role == availableUserRoles.ADMIN) {
-    const findUser = await User.findById(id);
+  const findUser = await User.findById(id);
 
-    if (!findUser) {
-      throw new ApiError(404, 'user not found');
-    }
-    deleteUser = findUser;
+  if (!findUser) {
+    throw new ApiError(404, 'user not found');
   }
+  deleteUser = findUser;
 
   if (id == user._id) {
     deleteUser = user;
   }
 
-  if (id != user._id && user.role != availableUserRoles.USER) {
+  if (id != user._id && user.role != availableUserRoles.ADMIN) {
     throw new ApiError(500, "you don't have access");
   }
 
@@ -355,13 +392,15 @@ export const updateUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "you don't have access");
   }
 
-  if (!password) {
+  if (user.role != availableUserRoles.ADMIN && !password) {
     throw new ApiError(404, 'please provid password');
   }
 
-  const isPasswordCorrect = await findUser.isPasswordCorrect(password);
-  if (!isPasswordCorrect) {
-    throw new ApiError(401, 'worng password');
+  if (password) {
+    const isPasswordCorrect = await findUser.isPasswordCorrect(password);
+    if (!isPasswordCorrect) {
+      throw new ApiError(401, 'worng password');
+    }
   }
 
   const updateData = {};
@@ -435,7 +474,7 @@ export const forgotPasswordLink = asyncHandler(async (req, res) => {
   const emailData = {
     email: user.email,
     template: 'ForgotPassword',
-    url: `${basePath}${RESET_PASS_PAGE}?token=${token.unHashedToken}`,
+    url: `${basePath}${RESET_PASS_PAGE}/${token.unHashedToken}`,
     subject: 'Reset Your Password',
   };
 
@@ -551,15 +590,13 @@ export const uploadAvatar = asyncHandler(async (req, res) => {
   const uploadedFile = await req.file;
   const { id } = req.params;
   const user = await req.user;
-  let changeAvatarUser = user;
+  let changeAvatarUser;
 
-  if (id != user._id && user.role == availableUserRoles.ADMIN) {
-    const findUser = await User.findById(id);
-    if (!findUser) {
-      throw new ApiError(404, 'user not found');
-    }
-    changeAvatarUser = findUser;
+  const findUser = await User.findById(id);
+  if (!findUser) {
+    throw new ApiError(404, 'user not found');
   }
+  changeAvatarUser = findUser;
 
   if (id != user._id && user.role != availableUserRoles.ADMIN) {
     throw new ApiError(500, "you don't have access");

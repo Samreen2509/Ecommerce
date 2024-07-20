@@ -7,6 +7,7 @@ import {
   getProduct,
   getOneProduct,
   filterProducts,
+  deleteOtherImage,
 } from '../controllers/product.controller.js';
 import { upload } from '../middlewares/multer.middleware.js';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
@@ -21,18 +22,16 @@ router
 router.route('/filterproducts').get(filterProducts);
 
 router
-  .route('/otherImages/:productId')
-  .post(upload.array('otherImages', 4), uploadOtherImages);
-
-router
   .route('/:id')
   .get(getOneProduct)
   .put(verifyJWT, upload.single('mainImage'), updateProduct)
   .delete(verifyJWT, removeProduct);
 
-
 router
   .route('/otherImages/:productId')
   .post(verifyJWT, upload.array('otherImage', 4), uploadOtherImages);
+router
+  .route('/otherImages/:productId/:imageId')
+  .delete(verifyJWT, deleteOtherImage);
 
 export default router;
