@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import DashCard from '../../components/Dashboard/Dashboard/DashCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { getItemsCount } from '../../features/dashboardSlice';
+import { FaSpinner } from 'react-icons/fa';
 
 function Dashboard() {
+  const dispatch = useDispatch();
+  const { itemCounts, isLoading } = useSelector((state) => state.dashboard);
+
+  useEffect(() => {
+    dispatch(getItemsCount());
+  }, [dispatch]);
+
   return (
     <>
       <div className="h-screen w-full">
@@ -14,14 +24,19 @@ function Dashboard() {
           </p>
         </div>
         <div className="grid grid-cols-4 gap-3 p-3">
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
-          <DashCard name="Order" value="34" link="./order" />
+          {isLoading ? (
+            <FaSpinner className="animate-spin" size={20} />
+          ) : (
+            itemCounts &&
+            itemCounts.map((e, index) => (
+              <DashCard
+                name={e[0]}
+                key={index}
+                value={e[1]}
+                link={`./${e[0]}`}
+              />
+            ))
+          )}
         </div>
       </div>
     </>

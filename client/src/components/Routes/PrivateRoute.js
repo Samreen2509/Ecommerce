@@ -1,11 +1,10 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import ErrorPage from '../Error/ErrorPage';
 
-const PrivateRoute = ({ element: Component, ...rest }) => {
-  const { isUserLogin } = useSelector((state) => state.auth);
-
-  return isUserLogin ? <Navigate to="/" /> : <Component {...rest} />;
+const PrivateRoute = ({ children }) => {
+  const { userInfo } = useSelector((state) => state.auth);
+  return userInfo?.role === 'ADMIN' ? children : <ErrorPage />;
 };
 
 export default PrivateRoute;

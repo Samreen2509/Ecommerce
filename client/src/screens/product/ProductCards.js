@@ -1,87 +1,55 @@
 import { Link } from 'react-router-dom';
-import AddToCart from '../BAG/AddToCart';
-import { SiGooglelens } from 'react-icons/si';
-import AddToWishlistBtn from '../BAG/AddToWishlistBtn';
+import WishlistBtn from '../BAG/WishlistBtn';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
-const ProductCard = (props) => {
-  const { sdata } = props;
-  const { mainImage, description, price, _id } = sdata;
-
-  const quantity = 1;
+const ProductCard = ({ sdata }) => {
+  const name = sdata?.name;
+  const description = sdata?.description;
+  const price = sdata?.price;
+  const _id = sdata?._id;
+  const mainImage = sdata?.mainImage;
+  const { isUserLogin } = useSelector((state) => state.auth);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="group m-5 mb-24 flex h-96 w-72 flex-wrap justify-center  rounded-md lg:h-96 lg:w-72 ">
-      <div className="items-center duration-700 hover:scale-110">
-        <div className=" relative flex flex-col ">
-          {/* Wishlist Btn */}
-          <AddToWishlistBtn id={_id} />
-
-          <Link
-            to={`/singleProduct/${_id}`}
-            className="relative right-11 top-28 float-left ml-3 flex h-11 w-11  flex-col items-center justify-center rounded-full opacity-0 transition-all duration-500 hover:bg-black group-hover:right-0  group-hover:opacity-100"
-          >
-            <SiGooglelens className="absolute z-50 h-6 w-9 text-black transition-all duration-300 hover:text-white" />
-          </Link>
-        </div>
-        <Link to={`/singleProduct/${_id}`} className="link">
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="flex h-min w-64 justify-center rounded-md border border-opacity-40 p-1 px-2 shadow transition duration-300 hover:border-transparent hover:shadow-md hover:shadow-black md:py-2 lg:py-2"
+    >
+      <Link to={`/singleProduct/${_id}`} className="flex flex-col">
+        <div className="relative">
           <img
-            className="h-96 w-72 object-contain hover:border-2 hover:border-solid hover:border-gray-600"
+            className="aspect-auto h-72 w-60 rounded-md"
             alt="cardImg"
             loading="true"
-            src={mainImage.url}
+            src={mainImage?.url}
           />
-        </Link>
-
-        <AddToCart
-          id={_id}
-          quantity={quantity}
-          className="relative bottom-0 right-11 m-auto flex w-96 scale-50 items-center justify-center rounded-lg px-10 py-8 text-center  text-xl text-white opacity-0 transition-all duration-500 hover:bg-orange-600 group-hover:bottom-24 group-hover:opacity-100"
-        />
-      </div>
-
-      <div>
-        <div className="relative bottom-20 right-8 m-auto">
-          <h3 className="w-64">
-            {description} - {price}
-          </h3>
+          {window.innerWidth < 913 ? (
+            <WishlistBtn id={_id} isUserLogin={isUserLogin} />
+          ) : (
+            <div className={`${isHovered ? 'block' : 'hidden'}`}>
+              <WishlistBtn id={_id} isUserLogin={isUserLogin} />
+            </div>
+          )}
         </div>
-      </div>
+        <div className="mt-2 flex w-full flex-col items-center justify-center px-2">
+          <h1 className="w-full text-start text-sm font-medium text-opacity-85 md:text-base lg:text-base">
+            {name?.substring(0, 20)}..
+          </h1>
+          <p className="w-full text-start text-base font-normal text-opacity-80">
+            {name?.substring(0, 40)}..
+          </p>
+          <p className="flex w-full items-end justify-start text-start  text-sm font-semibold text-red-800 md:text-base lg:text-base">
+            Rs. {price}
+            <span className="ml-2 text-sm font-normal text-yellow-800 text-opacity-60 line-through">
+              Rs .{price + 278}
+            </span>
+          </p>
+        </div>
+      </Link>
     </div>
-    // <div className=" group m-10 mb-24 flex flex-wrap justify-center rounded-md sm:h-40 sm:w-40 md:h-96 md:w-1/2 lg:h-96 lg:w-72">
-    //   <div className="items-center duration-700 md:hover:scale-110 lg:hover:scale-110">
-    //     <div className=" relative flex flex-col ">
-    //       {/* Wishlist Btn */}
-    //       <AddToWishlistBtn id={_id} />
-
-    //       <Link
-    //         to={`/singleProduct/${_id}`}
-    //         className="relative right-11 top-28 float-left ml-3 flex h-11 w-11  flex-col items-center justify-center rounded-full opacity-0 transition-all duration-500 hover:bg-black group-hover:right-0  group-hover:opacity-100"
-    //       >
-    //         <SiGooglelens className="absolute z-50 h-6 w-9 text-black transition-all duration-300 hover:text-white" />
-    //       </Link>
-    //     </div>
-    //     <Link to={`/singleProduct/${_id}`} className="link">
-    //       <img
-    //         className="m-auto object-contain hover:border-2 hover:border-solid hover:border-gray-600 sm:h-40 sm:w-40 md:h-96 md:w-full lg:h-96 lg:w-72"
-    //         alt="cardImg"
-    //         loading="true"
-    //         src={mainImage.url}
-    //       />
-    //     </Link>
-
-    //     <AddToCart
-    //       id={_id}
-    //       quantity={quantity}
-    //       className="relative bottom-0 right-11 m-auto flex w-96 scale-50 items-center justify-center rounded-lg px-10 py-8 text-center  text-xl text-white opacity-0 transition-all duration-500 hover:bg-orange-600 group-hover:bottom-24 group-hover:opacity-100"
-    //     />
-    //   </div>
-
-    //   <div className="relative bottom-20  m-auto">
-    //     <h3 className="w-32 text-sm">
-    //       {description} - {price}
-    //     </h3>
-    //   </div>
-    // </div>
   );
 };
 

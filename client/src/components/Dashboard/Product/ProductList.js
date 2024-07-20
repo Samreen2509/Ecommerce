@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductListItem from './ProductListItem';
+import { useDispatch, useSelector } from 'react-redux';
+import AddButton from '../Utils/AddButton';
+import { getAllProducts } from '../../../features/productSlice';
+import Pagination from '../../../screens/product/Pagination';
 
 function ProductList() {
-  // const [data, setData] = useState([])
-  const data = [
-    {
-      _id: '665aef6a063c039a8c19c5a4',
-      payment: {
-        price: 4553,
-        status: 'Pending',
-      },
-      status: 'Pending',
-    },
-  ];
+  const dispatch = useDispatch();
+  const { products, SuccessMsg } = useSelector((state) => state.product);
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    dispatch(getAllProducts({ page }));
+  }, [dispatch, page, SuccessMsg]);
 
   return (
     <>
@@ -32,6 +32,7 @@ function ProductList() {
               Canceled
             </li>
           </ul>
+          <AddButton />
         </div>
         <div className="flex h-12 w-full items-center justify-center rounded-tl-md rounded-tr-md bg-gray-800 text-white">
           <div className="flex h-full w-10 items-center justify-center border-r px-3">
@@ -55,20 +56,34 @@ function ProductList() {
           <div className="flex h-full w-36 items-center justify-center px-3 text-base font-medium">
             Setting
           </div>
+          <div className="flex h-full w-36 items-center justify-center px-3 text-base font-medium">
+            Delete
+          </div>
         </div>
         <div className="my-1 flex w-full flex-col items-center justify-center rounded-bl-md rounded-br-md border text-gray-800">
-          {data.map((item, index) => {
+          {products?.map((item, index) => {
             return (
               <ProductListItem
                 key={index}
                 id={item._id}
-                index={index + 1}
+                index={page == 1 ? index + 1 : (page - 1) * 12 + (index + 1)}
                 name={item.name}
                 stock={item.stock}
                 price={item.price}
               />
             );
           })}
+        </div>
+        <div className="my-5 flex w-full items-center px-5">
+          <Pagination
+            currentPage={page}
+            totalPages={Math.ceil(products?.length >= 12 ? page + 1 : page)}
+            onPageChange={setPage}
+            style={{
+              position: 'justify-end',
+              color: 'bg-gray-800',
+            }}
+          />
         </div>
       </div>
     </>

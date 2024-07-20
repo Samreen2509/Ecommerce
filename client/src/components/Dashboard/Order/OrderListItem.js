@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoSettingsSharp } from 'react-icons/io5';
 import OrderSettingDialog from './OrderSettingDialog';
+import { capitalizeFirstLetter } from '../Utils/Capitalize';
 
-function OrderListItem({ id, index, status, payment }) {
-  const [isSettingDialog, setIsSeetingDialog] = useState(false);
+function OrderListItem({ id, index, status, payment, user }) {
+  const [isSettingDialog, setIsSettingDialog] = useState(false);
 
   const handleSettingClick = () => {
-    setIsSeetingDialog(!isSettingDialog);
+    setIsSettingDialog(!isSettingDialog);
   };
 
   return (
@@ -21,7 +22,7 @@ function OrderListItem({ id, index, status, payment }) {
           {index}
         </div>
 
-        <div className="flex h-full w-full cursor-pointer items-center justify-start border-r px-2 text-base hover:underline">
+        <div className="flex h-full flex-1 cursor-pointer items-center justify-start border-r px-2 text-base hover:underline">
           <Link
             className="flex h-full w-full items-center justify-start"
             to={`./?id=${id}`}
@@ -31,15 +32,15 @@ function OrderListItem({ id, index, status, payment }) {
         </div>
 
         <div className="flex h-full w-36 items-center justify-center border-r px-3 text-base">
-          {status}
+          {capitalizeFirstLetter(status)}
         </div>
 
         <div className="flex h-full w-36 items-center justify-center border-r px-3 text-base">
-          {payment.price}
+          Rs. {payment?.price}
         </div>
 
         <div className="flex h-full w-36 items-center justify-center border-r px-3 text-base">
-          {payment.status}
+          {capitalizeFirstLetter(payment?.status)}
         </div>
 
         <div
@@ -51,7 +52,13 @@ function OrderListItem({ id, index, status, payment }) {
       </div>
 
       {isSettingDialog && (
-        <OrderSettingDialog id={id} status={status} title={title} />
+        <OrderSettingDialog
+          id={id}
+          status={status}
+          userId={user?._id}
+          orderId={id}
+          onClose={() => setIsSettingDialog(false)}
+        />
       )}
     </>
   );

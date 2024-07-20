@@ -7,25 +7,25 @@ function VerifyEmail() {
   const [error, seterror] = useState();
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token');
-  console.log(token);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
       const verifyEmail = async () => {
         try {
-          const res = await GlobalApi.emailVerify({ token });
+          await GlobalApi.emailVerify({ token });
           toast.success('Your Verified Successfully', {
             position: 'top-center',
           });
-          console.log('Email verified successfully:', res);
-          navigate('/');
+          console.log('Email verified successfully:');
+          navigate('/login');
         } catch (error) {
           console.log(error.response.data);
           seterror(error.response.data.message);
           toast.error(error.response.data.message, {
             position: 'top-center',
           });
+          navigate('/login');
         }
       };
 

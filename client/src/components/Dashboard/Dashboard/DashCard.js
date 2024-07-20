@@ -12,7 +12,7 @@ function DashCard({ name, value, link }) {
           <h1 className="mb-1 w-full text-center text-4xl font-medium text-black text-opacity-75">
             {value}
           </h1>
-          <p className="w-full text-center text-base font-medium text-opacity-75">
+          <p className="w-full text-center text-base font-medium capitalize text-opacity-75">
             {name}
           </p>
         </Link>

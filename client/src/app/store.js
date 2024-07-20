@@ -16,6 +16,12 @@ import cartSlice from '../features/cartSlice';
 import categorySlice from '../features/categorySlice';
 import wishlistSlice from '../features/wishlistSlice';
 import orderSlice from '../features/orderSlice';
+import colorSlice from '../features/colorSlice';
+import userSlice from '../features/userSlice';
+import notificationSlice from '../features/notificationSlice';
+import dashboardSlice from '../features/dashboardSlice';
+import paymentSlice from '../features/paymentSlice';
+import productSlice from '../features/productSlice';
 
 const authPersistConfig = {
   key: 'auth',
@@ -31,7 +37,12 @@ export const store = configureStore({
     cart: cartSlice,
     wishlist: wishlistSlice,
     order: orderSlice,
+    color: colorSlice,
     auth: persistedAuthReducer,
+    user: userSlice,
+    dashboard: dashboardSlice,
+    notification: notificationSlice,
+    payment: paymentSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

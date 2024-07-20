@@ -5,7 +5,6 @@ const BASE_URL = process.env.BASEURL;
 export const createNewOrder = createAsyncThunk(
   'order/createNewOrder',
   async ({ data, userId }, { rejectWithValue }) => {
-    console.log({ data });
     try {
       const response = await axios.post(`${BASE_URL}/order/${userId}`, data, {
         headers: { 'Content-Type': 'application/json' },
@@ -23,11 +22,50 @@ export const createNewOrder = createAsyncThunk(
 export const getOrders = createAsyncThunk(
   'order/getOrders',
   async ({ userId }, { rejectWithValue }) => {
-    console.log(userId);
     try {
       const response = await axios.get(
         `${BASE_URL}/order/${userId}`,
 
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const getAllOrders = createAsyncThunk(
+  'order/getAllOrders',
+  async ({ page }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/order`, {
+        headers: { 'Content-Type': 'application/json' },
+        params: {
+          page,
+          limit: 12,
+        },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const updateOrder = createAsyncThunk(
+  'order/updateOrder',
+  async ({ orderData, userId, orderId }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/order/${userId}/${orderId}`,
+        orderData,
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
@@ -89,7 +127,10 @@ const initialState = {
   paymentUrl: null,
   orderInfoAfterPayment: [],
   addresses: [],
+  allOrders: [],
   selectaddress: '',
+  SuccessMsg: null,
+  newCreated: null,
 };
 
 export const orderSlice = createSlice({
@@ -105,55 +146,90 @@ export const orderSlice = createSlice({
       state.loading = true;
       state.error = null;
     });
+    //create new order
     builder.addCase(createNewOrder.fulfilled, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = null;
-      console.log(action.payload);
       state.paymentUrl = action.payload.data.paymentInfo;
       state.orderInfoAfterPayment = action.payload.data.orderInfo;
     });
     builder.addCase(createNewOrder.rejected, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = action.payload;
     });
+
+    // create addresss
     builder.addCase(createAddressId.pending, (state) => {
       state.loading = true;
       state.error = null;
     });
     builder.addCase(createAddressId.fulfilled, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = null;
+      state.newCreated = action.payload?.data?.addressInfo;
     });
     builder.addCase(createAddressId.rejected, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = action.payload;
     });
+
+    // get address
     builder.addCase(getAddress.pending, (state) => {
       state.loading = true;
       state.error = null;
     });
     builder.addCase(getAddress.fulfilled, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = null;
-      // state.addressId = action.payload.data.addressInfo.map((e) => e._id);
       state.addresses = action.payload.data.addressInfo;
     });
     builder.addCase(getAddress.rejected, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = action.payload;
     });
+
+    // get user's all order
     builder.addCase(getOrders.pending, (state) => {
       state.loading = true;
       state.error = null;
     });
     builder.addCase(getOrders.fulfilled, (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = null;
-      console.log(action.payload);
       state.order = action.payload.data.orderInfo;
     });
     builder.addCase(getOrders.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // get all order
+    builder.addCase(getAllOrders.pending, (state) => {
       state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getAllOrders.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = null;
+      state.allOrders = action.payload.data.orderInfo;
+    });
+    builder.addCase(getAllOrders.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // update Order
+    builder.addCase(updateOrder.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(updateOrder.fulfilled, (state, action) => {
+      state.SuccessMsg = action.payload.data;
+      state.loading = false;
+      state.error = null;
+    });
+    builder.addCase(updateOrder.rejected, (state, action) => {
+      state.loading = false;
       state.error = action.payload;
     });
   },

@@ -4,34 +4,40 @@ import { Link } from 'react-router-dom';
 import { updateToCart, removeFromCart } from '../../features/cartSlice';
 import { useDispatch } from 'react-redux';
 import { debounce } from '../../components/debounce';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
-function BagProduct({ data, isLoading }) {
-  const [quantity, setQuantity] = useState(data.quantity);
-
+function BagProduct({
+  mainImage,
+  price,
+  name,
+  _id,
+  colorName,
+  colorHex,
+  preQuantity,
+  size,
+}) {
+  const [quantity, setQuantity] = useState(preQuantity);
   const dispatch = useDispatch();
-  const { mainImage, price, name, _id, color } = data.product;
 
   useEffect(() => {
-    setQuantity(data.quantity);
-  }, [data]);
+    setQuantity(preQuantity);
+  }, [preQuantity]);
 
-  const updateCartQuantity = useCallback(
-    debounce((productId, newQuantity) => {
-      dispatch(updateToCart({ productId, quantity: newQuantity }));
-    }, 2000),
-    [dispatch]
+  useEffect(() => {
+    if (quantity) {
+      debouncedDispatch(_id, quantity, size);
+    }
+  }, [quantity]);
+
+  const debouncedDispatch = useCallback(
+    debounce((productId, quantity, size) => {
+      dispatch(updateToCart({ productId, quantity, size }));
+    }, 300),
+    []
   );
 
-  const handleQuantityChange = (newQuantity) => {
-    if (newQuantity < 0) return;
-    setQuantity(newQuantity);
-    updateCartQuantity(_id, newQuantity);
-  };
-
-  const handleSelectChange = (event) => {
-    const newQuantity = parseInt(event.target.value, 10);
-    handleQuantityChange(newQuantity);
+  const handleQuantityInputChange = (e) => {
+    const value = e.target.value;
+    setQuantity(value);
   };
 
   const handleRemove = () => {
@@ -45,14 +51,13 @@ function BagProduct({ data, isLoading }) {
         className="w-full pb-4 md:w-40 md:pb-8"
       >
         <img
-          className="hidden w-full md:block"
+          className="hidden w-full rounded-md md:block"
           draggable="false"
           src={mainImage?.url}
           alt="product"
         />
-        <img className="w-full md:hidden" src={mainImage?.url} alt="product" />
       </Link>
-      <div className="flex w-full flex-col items-start justify-between space-y-4 border-b border-gray-200 pb-8 md:flex-row md:space-y-0">
+      <div className="flex w-full flex-col items-start justify-between space-y-4 pb-8 md:flex-row md:space-y-0">
         <Link
           to={`/singleProduct/${_id}`}
           className="flex w-full flex-col items-start justify-start space-y-8"
@@ -61,8 +66,12 @@ function BagProduct({ data, isLoading }) {
             {name}
           </h3>
           <div className="flex flex-col items-start justify-start space-y-2">
-            <p className="text-sm leading-none text-gray-700">
-              <span className="text-black">Color: </span> {color}
+            <p className="my-2 flex items-center justify-start text-sm leading-none text-gray-700">
+              <span className="text-black">Color: </span> {colorName}{' '}
+              <span
+                style={{ backgroundColor: colorHex }}
+                className="mx-5 h-5 w-6 rounded-md"
+              ></span>
             </p>
             <p className="text-sm leading-none text-gray-800">
               <span className="text-black">Style: </span> Italic Minimal Design
@@ -70,38 +79,45 @@ function BagProduct({ data, isLoading }) {
           </div>
         </Link>
 
-        <div className="flex w-full flex-col justify-between gap-y-10">
-          <div className="flex w-full items-start justify-between space-x-8">
-            <p className="text-base leading-6 xl:text-lg">
-              ₹{price?.toFixed(0)}{' '}
-              <span className="text-red-300 line-through"> ₹{price + 100}</span>
+        <div className="ml-10 flex w-full flex-col justify-between gap-y-10">
+          <div className=" flex w-full items-start justify-between space-x-8">
+            <p className="flex flex-col items-center justify-center text-base leading-6 text-gray-800 xl:text-lg">
+              <span className="text-sm">Size</span>
+              {size}
             </p>
-            <p className="text-base leading-6 text-gray-800 xl:text-lg">
-              {quantity}
+            <p className="flex flex-col items-center justify-center text-base leading-6 xl:text-lg">
+              <span className="text-sm">Price</span>₹{price?.toFixed(0)}
             </p>
-            <p className="text-base font-semibold leading-6 text-gray-800 xl:text-lg">
-              ₹{quantity * price?.toFixed(0)}
+            <p className="flex flex-col items-center justify-center text-base font-semibold leading-6 text-gray-800 xl:text-lg">
+              <span className="text-sm font-normal">Total</span>₹
+              {quantity * price?.toFixed(0)}
             </p>
           </div>
           <div className="flex h-full w-full items-center justify-between space-x-8">
-            <div className="flex items-start justify-between gap-2">
-              <select
-                id="quantity"
-                value={quantity}
-                onChange={handleSelectChange}
-                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            <div className="flex h-11 items-center justify-center">
+              <div
+                onClick={() => {
+                  setQuantity(quantity - 1);
+                }}
+                className="flex h-full w-11 cursor-pointer items-center justify-center rounded-bl-md rounded-tl-md bg-primary text-xl font-semibold text-white transition duration-200 ease-in-out hover:bg-primary-light"
               >
-                <option value="" disabled>
-                  Choose Quantity
-                </option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-              </select>
-              {isLoading && (
-                <AiOutlineLoading3Quarters size={40} className="animate-spin" />
-              )}
+                -
+              </div>
+              <input
+                type="text"
+                name="quantityInput"
+                value={quantity}
+                onChange={handleQuantityInputChange}
+                className="flex h-full w-12 items-center justify-center border-y px-2 text-center outline-none"
+              />
+              <div
+                onClick={() => {
+                  setQuantity(quantity + 1);
+                }}
+                className="flex h-full w-11 cursor-pointer items-center justify-center rounded-br-md rounded-tr-md bg-primary text-xl font-semibold text-white transition duration-200 ease-in-out hover:bg-primary-light"
+              >
+                +
+              </div>
             </div>
 
             <div className="flex w-full items-end justify-end">

@@ -1,191 +1,251 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-import Shimmer from '../../components/Loading/Shimmer.js';
-import ProductCard from './ProductCards.js';
-import { getAllProducts } from '../../features/productSlice.js';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { filterProducts, getAllProducts } from '../../features/productSlice';
+import { getAllCategory } from '../../features/categorySlice';
+import { getAllColor } from '../../features/colorSlice';
+import ProductCard from './ProductCards';
+import Pagination from './Pagination';
+import Spinner from '../../components/Spinner';
+import { useSearchParams } from 'react-router-dom';
 import {
-  getAllCategory,
-  getOneCategory,
-} from '../../features/categorySlice.js';
+  MobileFiltersDialog,
+  ProductFilters,
+  SortAndViewOptions,
+} from './ProductFilters';
 
 function ProductPage() {
-  const { products, loading } = useSelector((state) => state.product);
-  const { categories } = useSelector((state) => state.category);
-  const [isCategoyInLargeDiv, setIsInLargeDiv] = useState(false);
-  const [isSizeInlargeDiv, setIsSizeInlargeDiv] = useState(false);
-  const [isPriceInlargeDiv, setIsPriceInlargeDiv] = useState(false);
-  const [IsCallFilterData, setIsCallFilterData] = useState(false);
-  const [filteredProduct, setFilteredProduct] = useState([]);
-  const displayProductSize = ['XS', 'S', 'M', 'L', 'XL', 'XXL']; // All sizes to display
   const dispatch = useDispatch();
+  const { filterProduct, products, loading } = useSelector(
+    (state) => state.product
+  );
+  const { category } = useSelector((state) => state.category);
+  const { colors } = useSelector((state) => state.color);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [formState, setFormState] = useState([]);
+  const [selectedSort, setSelectedSort] = useState('low_to_high');
+  const [page, setPage] = useState(1);
+  const [isCallFilterData, setIsCallFilterData] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const totalPages = 3;
 
   useEffect(() => {
-    dispatch(getAllProducts());
     dispatch(getAllCategory());
+    dispatch(getAllColor());
   }, [dispatch]);
 
-  const filterCategoryData = (id) => {
-    setIsCallFilterData(true);
-    dispatch(getOneCategory(id));
-    const filteredData =
-      products.data?.productInfo.filter((product) => product.category === id) ||
-      [];
+  useEffect(() => {
+    const size = searchParams.get('size');
+    const categoryId = searchParams.get('categoryId');
+    const colorId = searchParams.get('colorId');
+    const sortBy = searchParams.get('sortBy');
 
-    setFilteredProduct((prevProducts) => [...prevProducts, ...filteredData]);
+    const filterData = {
+      categoryId: categoryId ? categoryId.split(',') : [],
+      colorId: colorId ? colorId.split(',') : '',
+      size: size ? size.split(',') : '',
+      sortBy: sortBy || '',
+    };
+    if (size || categoryId || size || sortBy) {
+      setIsCallFilterData(true);
+      dispatch(filterProducts({ filterData }));
+    } else {
+      dispatch(getAllProducts({ page }));
+    }
+
+    console.log(filterData);
+  }, [dispatch, page, selectedSort, searchParams]);
+
+  useEffect(() => {
+    const size = searchParams.get('size');
+    const categoryId = searchParams.get('categoryId');
+    const colorId = searchParams.get('colorId');
+
+    const updatedFilters = [];
+
+    if (colors) {
+      updatedFilters.push({
+        id: 'color',
+        name: 'Color',
+        options: colors.map((item) => ({
+          key: item._id,
+          value: item._id,
+          label: item.name,
+          checked: colorId ? colorId.split(',').includes(item._id) : false,
+        })),
+      });
+    }
+    if (category) {
+      updatedFilters.push({
+        id: 'category',
+        name: 'Category',
+        options: category.map((item) => ({
+          key: item._id,
+          value: item._id,
+          label: item.name,
+          checked: categoryId
+            ? categoryId.split(',').includes(item._id)
+            : false,
+        })),
+      });
+    }
+
+    updatedFilters.push({
+      id: 'size',
+      name: 'Size',
+      options: [
+        {
+          value: 'X',
+          label: 'X',
+          checked: size ? size.split(',').includes('X') : false,
+        },
+        {
+          value: 'XL',
+          label: 'XL',
+          checked: size ? size.split(',').includes('XL') : false,
+        },
+        {
+          value: 'S',
+          label: 'S',
+          checked: size ? size.split(',').includes('S') : false,
+        },
+        {
+          value: 'M',
+          label: 'M',
+          checked: size ? size.split(',').includes('M') : false,
+        },
+        {
+          value: 'L',
+          label: 'L',
+          checked: size ? size.split(',').includes('L') : false,
+        },
+      ],
+    });
+
+    setFormState(updatedFilters);
+  }, [colors, category, searchParams]);
+
+  const handleSortClick = (value) => {
+    setSelectedSort(value);
   };
 
-  const filterSizeData = (productSize) => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     setIsCallFilterData(true);
-    const filteredData = products.data?.productInfo.filter(
-      (product) => product.size === productSize || []
-    );
-    setFilteredProduct((prevProducts) => [...prevProducts, ...filteredData]);
+
+    const formData = new FormData(event.target);
+    const selectedFilters = formState.reduce((acc, section) => {
+      acc[section.id] = formData.getAll(`${section.id}[]`);
+      return acc;
+    }, {});
+
+    const filterData = {
+      page: page,
+      ...(selectedFilters.category && { categoryId: selectedFilters.category }),
+      ...(selectedFilters.color && {
+        colorId: selectedFilters.color.join(','),
+      }),
+      ...(selectedFilters.size && { size: selectedFilters.size.join(',') }),
+      sortBy: selectedSort,
+    };
+
+    setSearchParams({
+      page: page,
+      ...(selectedFilters.category && {
+        categoryId: selectedFilters.category.join(','),
+      }),
+      ...(selectedFilters.color && {
+        colorId: selectedFilters.color.join(','),
+      }),
+      ...(selectedFilters.size && { size: selectedFilters.size.join(',') }),
+      sortBy: selectedSort,
+    });
+    console.log(filterData);
+    dispatch(filterProducts({ filterData }));
   };
 
-  console.log('filteredProduct:', filteredProduct);
+  const sortProducts = (products) => {
+    return products.slice().sort((a, b) => {
+      if (selectedSort === 'low_to_high') {
+        return a.price - b.price;
+      } else if (selectedSort === 'high_to_low') {
+        return b.price - a.price;
+      } else {
+        return 0;
+      }
+    });
+  };
 
-  if (loading) {
-    return <Shimmer />;
-  }
+  const renderProducts = (productList) => (
+    <>
+      {sortProducts(productList).map((product) => (
+        <ProductCard key={product._id} sdata={product} />
+      ))}
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
+      )}
+    </>
+  );
 
   return (
-    <div className="body m-auto">
-      <div className="mt-5 flex flex-col justify-center md:flex-row lg:flex-row">
-        {/* Filter section */}
-        <div className="md:m-32 lg:m-32">
-          <h3>FILTERS</h3>
-          <div className="flex items-center md:flex-col lg:flex-col">
-            {/* CATEGORIES */}
-            <div className="w-56 border-2 border-gray-200 p-3">
-              <div>
-                <div className="flex justify-between">
-                  <h4 className="mb-2">CATEGORIES</h4>
-                  <h3
-                    onClick={() => setIsInLargeDiv(!isCategoyInLargeDiv)}
-                    className=" cursor-pointer"
-                  >
-                    +
-                  </h3>
-                </div>
-                {categories?.data?.map((category) => (
-                  <div
-                    className="flex items-center gap-2"
-                    style={{ display: isCategoyInLargeDiv ? 'block' : 'none' }}
-                    key={category._id}
-                  >
-                    <input
-                      type="radio"
-                      id={category._id}
-                      className="m-1 text-black"
-                      onClick={() => filterCategoryData(category._id)}
-                    />
-                    <label htmlFor={category._id}>{category.name}</label>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* SIZE */}
-            <div className="w-56 border-2 border-gray-200 p-3">
-              <div>
-                <div className="flex justify-between">
-                  <h4 className="mb-2">SIZE</h4>
-                  <h3
-                    onClick={() => setIsSizeInlargeDiv(!isSizeInlargeDiv)}
-                    className=" cursor-pointer"
-                  >
-                    +
-                  </h3>
-                </div>
-                {displayProductSize.map((size, i) => (
-                  <div
-                    className="flex items-center gap-2"
-                    style={{ display: isSizeInlargeDiv ? 'block' : 'none' }}
-                    key={i}
-                  >
-                    <input
-                      type="radio"
-                      id={i}
-                      className="m-1 text-black"
-                      onClick={() => filterSizeData(size)}
-                    />
-                    <label htmlFor={i}>{size}</label>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* PRICE */}
-            <div className="w-56 border-2 border-gray-200 p-3">
-              <div>
-                <div className="flex justify-between">
-                  <h4 className="mb-2">PRICE</h4>
-                  <h3
-                    onClick={() => setIsPriceInlargeDiv(!isPriceInlargeDiv)}
-                    className=" cursor-pointer"
-                  >
-                    +
-                  </h3>
-                </div>
-                {products.data?.productInfo.map((product) => (
-                  <div
-                    className="flex items-center gap-2"
-                    style={{ display: isPriceInlargeDiv ? 'block' : 'none' }}
-                    key={product._id}
-                  >
-                    <input
-                      type="radio"
-                      id={product._id}
-                      className="m-1 text-black"
-                      onClick={() => filterDataCall(product._id)}
-                    />
-                    <label htmlFor={product._id}>{product.price}</label>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Product section */}
-        <div className="mt-5 h-auto w-full md:mt-32 lg:mt-32">
-          {/* <hr className="block hidden" /> */}
-          <h1 className="m-auto ml-10 text-2xl font-bold md:text-3xl lg:text-5xl">
-            All Products
+    <div className="h-full bg-white">
+      <MobileFiltersDialog
+        mobileFiltersOpen={mobileFiltersOpen}
+        setMobileFiltersOpen={setMobileFiltersOpen}
+        formState={formState}
+        handleSubmit={handleSubmit}
+      />
+
+      <main className="mx-auto px-4 sm:px-6 md:max-w-7xl lg:max-w-full lg:px-20">
+        <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-6">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+            New Arrivals
           </h1>
-          <div className="mb-32 flex flex-wrap justify-center">
-            {!IsCallFilterData ? (
-              products.data?.productInfo.length ? (
-                products.data?.productInfo.map((product) => (
-                  <Link
-                    to={`/singleProduct/${product._id}`}
-                    className="link"
-                    key={product._id}
-                  >
-                    <ProductCard sdata={product} />
-                  </Link>
+
+          <SortAndViewOptions
+            handleSortClick={handleSortClick}
+            setMobileFiltersOpen={setMobileFiltersOpen}
+          />
+        </div>
+
+        <section aria-labelledby="products-heading" className="pb-16 pt-6">
+          <h2 id="products-heading" className="sr-only">
+            Products
+          </h2>
+          <div className="flex gap-x-8 gap-y-10 lg:grid-cols-4">
+            {/* Filters */}
+            <ProductFilters formState={formState} handleSubmit={handleSubmit} />
+
+            {/* Product grid */}
+            <div className="mt-2 flex w-full flex-wrap gap-x-10 gap-y-10">
+              {loading ? (
+                <Spinner />
+              ) : !isCallFilterData ? (
+                products && products.length > 0 ? (
+                  renderProducts(products)
+                ) : (
+                  <div className="mr-24 mt-20">
+                    <h1 className="text-3xl">Products are not available</h1>
+                  </div>
+                )
+              ) : filterProduct && filterProduct.length > 0 ? (
+                sortProducts(filterProduct).map((product) => (
+                  <ProductCard key={product._id} sdata={product} />
                 ))
               ) : (
                 <div className="mr-24 mt-20">
-                  <h1 className="text-3xl">Product is not available</h1>
+                  <h1 className="text-3xl">
+                    Filtered products are not available
+                  </h1>
                 </div>
-              )
-            ) : filteredProduct.length ? (
-              filteredProduct.map((product) => (
-                <Link
-                  to={`/singleProduct/${product._id}`}
-                  className="link"
-                  key={product._id}
-                >
-                  <ProductCard sdata={product} />
-                </Link>
-              ))
-            ) : (
-              <div className="mr-24 mt-20">
-                <h1 className="text-3xl">Product is not available</h1>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }

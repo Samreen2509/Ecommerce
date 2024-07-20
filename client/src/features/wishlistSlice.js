@@ -7,7 +7,23 @@ export const getWishListProducts = createAsyncThunk(
   'wishlist/getWishListProducts',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_URL}/wishlist/getuserwishlist`, {
+      const response = await axios.get(`${BASE_URL}/wishlist/getWishProduct`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const getWishList = createAsyncThunk(
+  'wishlist/getWishList',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/wishlist`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
@@ -21,10 +37,10 @@ export const getWishListProducts = createAsyncThunk(
 
 export const addToWishlist = createAsyncThunk(
   'wishlist/addToWishlist',
-  async ({ productId }, { rejectWithValue }) => {
+  async ({ id }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(
-        `${BASE_URL}/wishlist/addtowishlist?productId=${productId}`,
+      const response = await axios.post(
+        `${BASE_URL}/wishlist/${id}`,
         {},
         {
           headers: { 'Content-Type': 'application/json' },
@@ -42,16 +58,12 @@ export const addToWishlist = createAsyncThunk(
 
 export const removeFromWishlist = createAsyncThunk(
   'wishlist/removeFromWishlist',
-  async ({ _id }, { rejectWithValue }) => {
+  async ({ id }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(
-        `${BASE_URL}/wishlist/removefromwishlist?productId=${_id}`,
-        {},
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        }
-      );
+      const response = await axios.delete(`${BASE_URL}/wishlist/${id}`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || error.message;
@@ -80,7 +92,8 @@ export const wishlistSlice = createSlice({
       .addCase(addToWishlist.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.totalWishProductsId = action.payload.data.items.map(
+        state.totalWishProducts = action.payload.data.wishlistInfo.items.length;
+        state.totalWishProductsId = action.payload.data.wishlistInfo.items.map(
           (item) => item.productId
         );
       })
@@ -88,6 +101,7 @@ export const wishlistSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
+
       .addCase(getWishListProducts.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -95,16 +109,17 @@ export const wishlistSlice = createSlice({
       .addCase(getWishListProducts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.wishlistProducts = action.payload.data.items;
-        state.totalWishProducts = action.payload.data.items.length;
-        state.totalWishProductsId = action.payload.data.items.map(
-          (item) => item.product._id
+        state.wishlistProducts = action.payload.data.wishlistInfo?.items;
+        state.totalWishProducts = action.payload.data.wishlistInfo.items.length;
+        state.totalWishProductsId = action.payload.data.wishlistInfo.items?.map(
+          (item) => item?.product?._id
         );
       })
       .addCase(getWishListProducts.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
+
       .addCase(removeFromWishlist.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -112,6 +127,11 @@ export const wishlistSlice = createSlice({
       .addCase(removeFromWishlist.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
+        state.wishlistProducts = action.payload.data.wishlistInfo?.items;
+        state.totalWishProducts = action.payload.data.wishlistInfo.items.length;
+        state.totalWishProductsId = action.payload.data.wishlistInfo.items.map(
+          (item) => item.productId
+        );
       })
       .addCase(removeFromWishlist.rejected, (state, action) => {
         state.isLoading = false;

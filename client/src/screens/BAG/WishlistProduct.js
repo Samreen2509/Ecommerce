@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
-import AddToCart from './AddToCart';
+import AddToBag from './AddToBag';
 import {
   getWishListProducts,
   removeFromWishlist,
 } from '../../features/wishlistSlice';
 import { useDispatch } from 'react-redux';
 
-function WishlistProduct({ data }) {
-  const { mainImage, price, name, _id, color } = data?.product;
+function WishlistProduct({ mainImage, price, name, _id, color }) {
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
 
   const handleRemove = () => {
-    dispatch(removeFromWishlist({ _id }));
+    dispatch(removeFromWishlist({ id: _id }));
     dispatch(getWishListProducts());
   };
 
@@ -22,8 +21,6 @@ function WishlistProduct({ data }) {
     e.preventDefault();
     setQuantity(Number(e.target.value));
   };
-
-  if (!data) return null;
 
   return (
     <div className="mt-4 flex w-full flex-col items-start justify-start md:mt-6 md:flex-row md:items-center md:space-x-6 xl:space-x-8">
@@ -67,7 +64,7 @@ function WishlistProduct({ data }) {
               {quantity}
             </p>
             <p className="text-base font-semibold leading-6 text-gray-800 xl:text-lg ">
-              ₹{price?.toFixed(0)}{' '}
+              ₹{price?.toFixed(0) * quantity}{' '}
             </p>
           </div>
           <div className="flex h-full w-full items-center justify-between space-x-8 ">
@@ -88,11 +85,13 @@ function WishlistProduct({ data }) {
                 <option value="4">4</option>
               </select>
             </div>
-            <div className="flex w-full items-start">
-              <AddToCart
+            <div className="flex w-full items-center">
+              <AddToBag
                 id={_id}
                 quantity={quantity}
-                className="flex rounded-md bg-green-400 px-2 py-1 text-white"
+                productId={_id}
+                wishlistBtn={true}
+                className="flex rounded-md px-2 py-1 text-white"
               />
             </div>
 

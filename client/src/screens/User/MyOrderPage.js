@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMyOrders, getOrders } from '../../features/orderSlice';
+import { getOrders } from '../../features/orderSlice';
+import ProductOrder from './ProductOrder';
 
 const Myorders = () => {
   const { order } = useSelector((state) => state.order);
@@ -8,24 +9,29 @@ const Myorders = () => {
   const dispatch = useDispatch();
 
   const userId = userInfo._id;
-  // const orderId = `6659f1d26e81ba01f532a072`;
 
-  console.log(order);
-  console.log(userId);
   useEffect(() => {
-    // dispatch(getMyOrders({ userId, orderId }));
     dispatch(getOrders({ userId }));
-  }, [dispatch]);
+  }, []);
 
   return (
-    <div className="w-full rounded-md bg-white p-8">
-      <div className=" flex items-center justify-between pb-6">
-        <div>
-          <h2 className="font-semibold text-gray-600">My Order</h2>
-          <span className="text-xs">All products</span>
+    <div className="mt-3 flex w-full flex-col items-center justify-center rounded-md bg-white">
+      <div className="flex w-full items-center justify-between">
+        <div className="flex w-full flex-col items-center justify-center">
+          <h2 className="m-auto text-2xl font-bold md:text-4xl lg:my-10 lg:text-5xl">
+            My Orders
+          </h2>
         </div>
       </div>
-      <div>NO DATA HERE</div>
+      <div className="rounded-md border-2 px-10 lg:w-[90vw]">
+        {order.length === 0 ? (
+          <div>No orders found</div>
+        ) : (
+          order.map((order, index) => (
+            <ProductOrder key={index} orderData={order} />
+          ))
+        )}
+      </div>
     </div>
   );
 };
