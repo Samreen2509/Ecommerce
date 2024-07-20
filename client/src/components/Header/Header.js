@@ -108,7 +108,11 @@ function Header() {
                   key={index}
                   className="h-10 w-full border-b text-start hover:bg-gray-300 hover:text-primary"
                 >
-                  <Link to={item.link} className="capitalize">
+                  <Link
+                    onClick={() => setSidemenu(!Sidemenu)}
+                    to={item.link}
+                    className="capitalize"
+                  >
                     {item.text}
                   </Link>
                 </div>
