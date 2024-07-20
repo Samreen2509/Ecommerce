@@ -57,23 +57,6 @@ function ProductOrder({ orderData }) {
         <div className="flex w-full flex-col items-start justify-between space-y-4 border-b border-gray-200 pb-8 md:flex-row md:space-y-0">
           <div className="flex w-full flex-col items-start justify-start space-y-8">
             <h3 className="text-xl font-semibold capitalize leading-6 text-gray-800 xl:text-2xl">
-              Customer
-            </h3>
-            <div className="flex flex-col items-start justify-start space-y-2">
-              <p className="text-sm leading-none text-gray-700">
-                <span className="text-black">Email: </span>{' '}
-                {orderData.customer.email}
-              </p>
-              <p className="text-sm leading-none text-gray-800">
-                <span className="text-black">name: </span>{' '}
-                {orderData.customer.name}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="flex w-full flex-col items-start justify-between space-y-4 border-b border-gray-200 pb-8 md:flex-row md:space-y-0">
-          <div className="flex w-full flex-col items-start justify-start space-y-8">
-            <h3 className="text-xl font-semibold capitalize leading-6 text-gray-800 xl:text-2xl">
               Payment
             </h3>
             <div className="flex flex-col items-start justify-start space-y-2">
