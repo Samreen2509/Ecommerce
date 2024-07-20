@@ -19,10 +19,12 @@ import img5 from '../../../images/clothBanner4.avif';
 import img6 from '../../../images/banner1.jpg';
 import img7 from '../../../images/banner2.jpg';
 import img8 from '../../../images/banner3.jpg';
+
 import { refreshToken } from '../../features/authSlice.js';
 
 const Body = () => {
   const { category } = useSelector((state) => state.category);
+
   const { products } = useSelector((state) => state.product);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -59,6 +61,7 @@ const Body = () => {
     }
     dispatch(getAllCategory());
     dispatch(getAllProducts({ page: 1 }));
+
   }, [dispatch]);
 
   useEffect(() => {
@@ -96,6 +99,7 @@ const Body = () => {
             {category?.slice(0, 4).map((category, index) => (
               <CategoryCard key={index} sdata={category} />
             ))}
+
           </div>
 
           <Button

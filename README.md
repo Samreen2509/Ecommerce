@@ -2,9 +2,10 @@
 
 Our E-commerce Website offers a seamless shopping experience with a wide range of products, secure payments, detailed descriptions, and easy navigation. Create an account to track orders, save favorites, and access exclusive discounts.
 
-## License
 
+## License
 This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License - see the LICENSE file for details ([Click Here](./LICENSE)).
+
 
 ## Installation
 
@@ -26,6 +27,7 @@ Our E-commerce Website, developed in collaboration with our LinkedIn connections
 - [<img src="https://github.com/Aditya-Deshmukh9.png" width="30px"/><sub><br><a href="https://github.com/Aditya-Deshmukh9">Aditya Deshmukh</a></sub>](https://github.com/Aditya-Deshmukh9)<br><br>
 - [<img src="https://github.com/Md-Kutub-Islam.png" width="30px"/><sub><br><a href="https://github.com/Md-Kutub-Islam">Kutub</a></sub>](https://github.com/Md-Kutub-Islam)<br><br>
 - [<img src="https://github.com/Samreen2509.png" width="30px"/><sub><br><a href="https://github.com/Samreen2509">Samreen Akhtar</a></sub>](https://github.com/Samreen2509)<br>
+
 
 ### Server Team
 
