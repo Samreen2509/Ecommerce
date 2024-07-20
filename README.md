@@ -2,7 +2,7 @@
 
 Our E-commerce Website offers a seamless shopping experience with a wide range of products, secure payments, detailed descriptions, and easy navigation. Create an account to track orders, save favorites, and access exclusive discounts.
 
-<img src="./client/images/web1.png" alt="Project Screenshot" width="600" />
+<img src="./client/images/web1.png" alt="Project Screenshot" />
 
 
 ## License
