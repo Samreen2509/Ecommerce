@@ -84,6 +84,7 @@ export const fetchUserCart = asyncHandler(async (req, res) => {
 // Controller to add or update item in a cart
 export const addOrUpdateCart = asyncHandler(async (req, res) => {
   const { productId, quantity = 1, size } = req.body;
+  console.log(req.body);
 
   const cart = await Cart.findOne({
     owner: req.user._id,
@@ -110,6 +111,7 @@ export const addOrUpdateCart = asyncHandler(async (req, res) => {
   if (addedProduct) {
     // if a product already exist in the cart we're updating it's quantity
     addedProduct.quantity = quantity;
+    addedProduct.size = size;
   } else {
     // otherwise we're adding new product
     cart.items.push({
@@ -119,9 +121,12 @@ export const addOrUpdateCart = asyncHandler(async (req, res) => {
     });
   }
 
-  await cart.save();
+  console.log('x', addedProduct);
+  const error = await cart.save();
+  console.log(error);
 
   const newCart = await getCart(req.user._id);
+  console.log(newCart);
 
   return res
     .status(200)
