@@ -6,12 +6,13 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './app/store.js';
 import ScrollToTop from './utils/ScrollTop';
 import Spinner from './components/Spinner';
+import Shimmer from './components/Loading/Shimmer';
 import ErrorPage from './components/Error/ErrorPage';
-import Shimmer from './components/Loading/Shimmer.js';
 import PrivateRoute from './components/Routes/PrivateRoute';
+import Notification from './components/Notification.js';
 
 // Layouts
-const Applayout = lazy(() => import('./components/Layout/AppLayout'));
+const AppLayout = lazy(() => import('./components/Layout/AppLayout'));
 const DashboardLayout = lazy(
   () => import('./components/Layout/DashboardLayout')
 );
@@ -61,8 +62,9 @@ const appRouter = createBrowserRouter([
     element: (
       <>
         <ScrollToTop />
+        <Notification />
         <Suspense fallback={<Shimmer />}>
-          <Applayout />
+          <AppLayout />
         </Suspense>
       </>
     ),
@@ -94,6 +96,7 @@ const appRouter = createBrowserRouter([
     element: (
       <PrivateRoute>
         <Suspense fallback={<Spinner />}>
+          <Notification />
           <DashboardLayout />
         </Suspense>
       </PrivateRoute>

@@ -206,7 +206,7 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = action.payload?.message;
       })
 
       // register new user
@@ -221,7 +221,7 @@ const authSlice = createSlice({
       })
       .addCase(Register.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = action.payload?.message;
       })
 
       // logout user
@@ -242,7 +242,7 @@ const authSlice = createSlice({
       })
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = action.payload?.message;
       })
 
       .addCase(refreshToken.pending, (state, action) => {
@@ -258,7 +258,7 @@ const authSlice = createSlice({
       .addCase(refreshToken.rejected, (state, action) => {
         state.refreshToken = null;
         state.isLoading = false;
-        state.error = action?.payload;
+        state.error = action.payload?.message;
       })
 
       .addCase(User.pending, (state) => {
@@ -272,7 +272,7 @@ const authSlice = createSlice({
       })
       .addCase(User.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action?.payload;
+        state.error = action.payload?.message;
       });
   },
 });
